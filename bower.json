@@ -1,0 +1,19 @@
+{
+  "name": "plannings-tool",
+  "version": "0.1-ALPHA",
+  "homepage": "https://github.com/Mentoraat/plannings-tool",
+  "authors": [
+    "Tim van der Lippe <tvanderlippe@gmail.com>"
+  ],
+  "description": "Planningstool to assist students in their first year on the university",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

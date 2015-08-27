@@ -8,8 +8,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css" />
     <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -20,7 +20,7 @@
     <!--[if lte IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-    <md-toolbar class="header" layout="row" class="md-whiteframe-z1">
+    <md-toolbar class="header" layout="column" class="md-whiteframe-z1">
       <div class="md-toolbar-tools">
         <md-button class="md-icon-button" aria-label="Menu">
           <md-icon md-svg-icon="images/icons/menu55.svg"></md-icon>
@@ -40,40 +40,14 @@
         </md-button>
       </div>
     </md-toolbar>
-    <div flex layout="column" tabIndex="-1" role="main" class="content-container">
-      <md-sidenav flex class="site-sidenav md-sidenav-right md-whiteframe-z1"
-                    md-component-id="right">
-
-        <md-toolbar class="md-whiteframe-z1">
-          <h1 class="fullheight">Users</h1>
-        </md-toolbar>
-
-        <md-list>
-          <md-list-item>
-              <md-button>
-                <md-icon md-svg-icon="images/icons/nfc1.svg"></md-icon>
-                NFC
-              </md-button>
-          </md-list-item>
-        </md-list>
-
-      </md-sidenav>
-      <md-content flex class="container">
-        <div ng-view=""></div>
-      </md-content>
+    <div layout="row">
+      <div flex layout="column" tabIndex="-1" role="main" class="content-container">
+        <md-content flex class="container">
+          <div ui-view="main"></div>
+        </md-content>
+      </div>
+      <md-sidenav flex class="site-sidenav md-sidenav-right md-whiteframe-z1 md-locked-open" md-component-id="right" ui-view="modal"></md-sidenav>
     </div>
-
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-     <script>
-       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-       ga('create', 'UA-XXXXX-X');
-       ga('send', 'pageview');
-    </script>
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
@@ -81,6 +55,8 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
@@ -88,15 +64,20 @@
     <script src="bower_components/moment/moment.js"></script>
     <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
     <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+    <script src="bower_components/ui-router-extras/release/ct-ui-router-extras.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
+        <script src="scripts/controllers/event.js"></script>
         <script src="scripts/controllers/about.js"></script>
+        <script src="scripts/controllers/overviewController.js"></script>
+        
+        <script src="scripts/services/stateService.js"></script>
         <!-- endbuild -->
 </body>
 </html>

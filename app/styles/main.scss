@@ -10,6 +10,20 @@ h3 {
   font-family: 'Roboto', sans-serif;
 }
 
+md-button {
+  border: 0;
+  border-radius: 3px;
+  font-size: 14px;
+  margin: 6px 8px;
+  min-width: 88px;
+  outline: none;
+  padding: 0 6px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+
 .header {
   background: $tudelft-main;
   color: $white;
@@ -36,6 +50,22 @@ h3 {
 
 .fc-axis {
   background: $lightgrey;
+}
+
+.draggable {
+  cursor: pointer;
+  z-index: 99999;
+}
+
+.fc-highlight,
+.ui-draggable-dragging {
+  background: $highlight;
+  opacity: .7;
+}
+
+.fc-highlight {
+  height: 100px;
+  width: 220px;
 }
 
 // Responsive: Portrait tablets and up

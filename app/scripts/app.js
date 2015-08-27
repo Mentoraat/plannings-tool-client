@@ -16,21 +16,53 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.calendar'
+    'ui.calendar',
+    'ui.router',
+    'ct.ui.router.extras'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'mainController',
-        controllerAs: 'main'
+  .config(function ($stateProvider, $urlRouterProvider) {
+    // For any unmatched url, redirect to /
+    $urlRouterProvider.otherwise("/");
+
+    $stateProvider
+      .state('home', {
+        url: "/",
+        views: {
+          "main": {
+            templateUrl: "views/main.html",
+            controller: 'mainController',
+            controllerAs: 'main'
+          },
+          "modal": {
+            templateUrl: "views/modals/overview.html",
+            controller: 'overviewController'
+          }
+        },
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl',
-        controllerAs: 'about'
-      })
-      .otherwise({
-        redirectTo: '/'
+      .state('edit-event', {
+        url: "/edit",
+        views: {
+          "main": {
+            templateUrl: "views/main.html",
+            controller: 'mainController',
+            controllerAs: 'main'
+          },
+          "modal": {
+            templateUrl: "views/modals/editEvent.html",
+            controller: 'eventController'
+          }
+        },
       });
-  });
+  })
+  .config(function($logProvider) {
+    // Change to false for production.
+    $logProvider.debugEnabled(true);
+  })
+  .run(['$rootScope', function ($rootScope) {
+      $rootScope.previousState = 'home';
+      $rootScope.previousStateParam = [];
+      $rootScope.$on('$stateChangeSuccess', function(event, to, toParams, fr, fromParams) {
+          $rootScope.previousState = fr.name;
+          $rootScope.previousStateParam = fromParams;
+      });
+  }]);

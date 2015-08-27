@@ -42,18 +42,7 @@
           right: 'today prev,next'
         },
 
-        allDayText: 'Hele dag',
-        dayNames: ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag'],
-        dayNamesShort: ['Zo', 'Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'],
-        monthNames: ['Januari', 'Februari', 'Maart', 'April', 'Mei', 'Juni', 'Juli', 'Augustus', 'September', 'Oktober', 'November', 'December'],
-        monthNamesShort: ['Jan', 'Feb', 'Mrt', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'],
-
-        buttonText: {
-          today:    'Vandaag',
-          month:    'Maand',
-          week:     'Week',
-          day:      'Dag'
-        },
+        allDayText: 'All day',
 
         dayClick: $scope.alertEventOnClick,
         eventDrop: $scope.alertOnDrop,

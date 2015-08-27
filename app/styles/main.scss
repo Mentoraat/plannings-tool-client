@@ -24,16 +24,6 @@ h3 {
   top: $header-height;
 }
 
-md-sidenav {
-  width: $sidebar-width;
-  max-width: $sidebar-width;
-}
-
-md-content {
-  height: 100%;
-  width: 100% - $sidebar-width;
-}
-
 .fullheight {
   height: 100%;
   line-height: 100%;

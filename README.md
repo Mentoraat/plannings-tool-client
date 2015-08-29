@@ -1,7 +1,15 @@
 # planningtool
 
-This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
-version 0.12.1.
+## Installation instructions
+
+```
+bower install
+npm install
+sudo npm install -g grunt
+sudo npm install -g grunt-cli
+sudo apt-get install ruby-full
+sudo gem install compass
+```
 
 ## Build & development
 

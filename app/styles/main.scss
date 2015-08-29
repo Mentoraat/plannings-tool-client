@@ -1,0 +1,42 @@
+// bower:scss
+// endbower
+@import 'reset';
+@import 'fonts';
+@import 'variables';
+
+h1,
+h2,
+h3 {
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  background: $tudelft-main;
+  color: $white;
+  height: $header-height;
+
+  md-icon {
+    color: $white;
+  }
+}
+
+.site-sidenav {
+  top: $header-height;
+}
+
+.fullheight {
+  height: 100%;
+  line-height: 100%;
+  padding: 20px;
+}
+
+.fc-minor {
+  background: $darkgrey;
+}
+
+.fc-axis {
+  background: $lightgrey;
+}
+
+// Responsive: Portrait tablets and up
+@media screen and (min-width: 768px) {}

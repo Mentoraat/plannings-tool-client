@@ -8,25 +8,9 @@
  * Controller of the planningtoolApp
  */
 angular.module('planningtoolApp')
-  .controller('mainController', function ($scope, $log, $state) {
+  .controller('mainController', function ($scope, $log, $state, events) {
     $scope.eventSource = {
-      events: [ // put the array in the `events` property
-          {
-              title  : 'event1',
-              start  : '2015-08-01'
-          },
-          {
-              title  : 'event2',
-              start  : '2015-08-27',
-              end    : '2015-08-28'
-          },
-          {
-              title  : 'event3',
-              start  : '2015-08-09T12:30:00',
-              editable : false,
-          }
-      ],
-
+      events: events.items
     };
 
     $scope.uiConfig = {
@@ -46,7 +30,6 @@ angular.module('planningtoolApp')
           right: 'today prev,next'
         },
 
-        allDayText: 'All day',
         allDayText: 'All Day',
 
         dayClick:     function(event, jsEvent, view) { $scope.dayClicked(event, jsEvent, view);    },

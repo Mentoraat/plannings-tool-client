@@ -37,11 +37,6 @@ angular
             templateUrl: "views/modals/overview.html",
             controller: 'overviewController'
           }
-        },
-        resolve: {
-          events: ['eventService', function(eventService) {
-            return eventService.get('aba62cd5-caa6-4e42-a5d6-4909f03038bf');
-          }]
         }
       })
       .state('edit-event', {

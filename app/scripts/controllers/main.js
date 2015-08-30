@@ -8,10 +8,12 @@
  * Controller of the planningtoolApp
  */
 angular.module('planningtoolApp')
-  .controller('mainController', function ($scope, $log, $state, events) {
-    $scope.eventSource = {
-      events: events.items
-    };
+  .controller('mainController', function ($scope, $log, $state) {
+    $scope.eventSource = [
+      {
+        url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences'
+      }
+    ];
 
     $scope.uiConfig = {
       calendar:{

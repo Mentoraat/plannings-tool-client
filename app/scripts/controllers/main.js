@@ -9,25 +9,11 @@
  */
 angular.module('planningtoolApp')
   .controller('mainController', function ($scope, $log, $state) {
-    $scope.eventSource = {
-      events: [ // put the array in the `events` property
-          {
-              title  : 'event1',
-              start  : '2015-08-01'
-          },
-          {
-              title  : 'event2',
-              start  : '2015-08-27',
-              end    : '2015-08-28'
-          },
-          {
-              title  : 'event3',
-              start  : '2015-08-09T12:30:00',
-              editable : false,
-          }
-      ],
-
-    };
+    $scope.eventSource = [
+      {
+        url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences'
+      }
+    ];
 
     $scope.uiConfig = {
       calendar:{

@@ -16,7 +16,8 @@ module.exports = function (grunt) {
   require('jit-grunt')(grunt, {
     useminPrepare: 'grunt-usemin',
     ngtemplates: 'grunt-angular-templates',
-    cdnify: 'grunt-google-cdn'
+    cdnify: 'grunt-google-cdn',
+    configureProxies: 'grunt-connect-proxy'
   });
 
   // Configurable paths for the application
@@ -76,21 +77,52 @@ module.exports = function (grunt) {
         livereload: 35729
       },
       livereload: {
+        proxies: [
+          {
+            context: '/v1',
+            host: 'localhost',
+            port: 9000,
+            https: false,
+            xforward: false
+          }
+        ],
         options: {
           open: true,
-          middleware: function (connect) {
-            return [
-              connect.static('.tmp'),
-              connect().use(
-                '/bower_components',
-                connect.static('./bower_components')
-              ),
-              connect().use(
-                '/app/styles',
-                connect.static('./app/styles')
-              ),
-              connect.static(appConfig.app)
-            ];
+          middleware: function (connect, options) {
+              if (!Array.isArray(options.base)) {
+                  options.base = [options.base];
+              }
+
+              // Setup the proxy
+              var middlewares = [
+                require('grunt-connect-proxy/lib/utils').proxyRequest,
+                connect.static('.tmp'),
+                connect().use(
+                  '/bower_components',
+                  connect.static('./bower_components')
+                ),
+                connect().use(
+                  '/app/styles',
+                  connect.static('./app/styles')
+                ),
+                connect.static(appConfig.app),
+                function(req, res, next) {
+                  res.setHeader('Access-Control-Allow-Origin', '*');
+                  res.setHeader('Access-Control-Allow-Methods', '*');
+                  next();
+                }
+              ];
+
+              // Serve static files.
+              options.base.forEach(function(base) {
+                  middlewares.push(connect.static(base));
+              });
+
+              // Make directory browse-able.
+              var directory = options.directory || options.base[options.base.length - 1];
+              middlewares.push(connect.directory(directory));
+
+              return middlewares;
           }
         }
       },
@@ -447,6 +479,7 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
+      'configureProxies:livereload',
       'connect:livereload',
       'watch'
     ]);

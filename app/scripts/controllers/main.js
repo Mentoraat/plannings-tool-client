@@ -8,7 +8,7 @@
  * Controller of the planningtoolApp
  */
 angular.module('planningtoolApp')
-  .controller('mainController', function ($scope, $log, $state) {
+  .controller('mainController', function ($scope, $log, $state, $http, $animate) {
     $scope.eventSource = [
       {
         url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences'
@@ -36,7 +36,7 @@ angular.module('planningtoolApp')
 
         dayClick:     function(event, jsEvent, view) { $scope.dayClicked(event, jsEvent, view);    },
         eventClick:   function(event, jsEvent, view) { $scope.eventClicked(event, jsEvent, view);  },
-        eventDrop:    function(event, jsEvent, view) { $scope.eventDropped(event, jsEvent, view);  },
+        eventDrop:    function(event, delta, revertFunc, jsEvent, ui, view) { $scope.eventDropped(event, delta, revertFunc, jsEvent, ui, view);  },
         eventReceive: function(event, jsEvent, view) { $scope.eventReceived(event, jsEvent, view); },
       }
     };
@@ -60,8 +60,20 @@ angular.module('planningtoolApp')
       $state.go('edit-event');
     };
 
-    $scope.eventDropped = function(event) {
-      $log.debug('Dropped event named ' + event.title);
+    $scope.eventDropped = function(event, delta, revertFunc, jsEvent, ui, view) {
+      $log.debug('Event "' + event.title + '" has been modified! Sending...');
+      $animate.addClass("checking");
+
+      $http.put("/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", event)
+        .then(function(success){
+          $log.debug("Successful PUT: " + success);
+        },function(error){
+          $log.error(error);
+          revertFunc();
+        })
+        .finally(function() {
+          $animate.removeClass("checking");
+        });
     };
 
   /**

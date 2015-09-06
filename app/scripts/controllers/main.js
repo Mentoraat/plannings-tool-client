@@ -8,7 +8,7 @@
  * Controller of the planningtoolApp
  */
 angular.module('planningtoolApp')
-  .controller('mainController', function ($scope, $log, $state, $http, $animate) {
+  .controller('mainController', function ($scope, $log, $state, httpService, $animate) {
     $scope.eventSource = [
       {
         url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences'
@@ -60,17 +60,16 @@ angular.module('planningtoolApp')
       $state.go('edit-event');
     };
 
-    $scope.eventDropped = function(event, delta, revertFunc, jsEvent, ui, view) {
+    $scope.eventDropped = function(event) {
       $log.debug('Event "' + event.title + '" has been modified! Sending...');
       $animate.addClass("checking");
 
-      $http.put("/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", event)
-        .then(function(success){
-          $log.debug("Successful PUT: " + success);
-        },function(error){
-          $log.error(error);
-          revertFunc();
-        })
+      var putEvent = angular.copy(event);
+      putEvent.start = event.start.format('YYYY-MM-DD,hh:mm:ss');
+      putEvent.end = event.end.format('YYYY-MM-DD,hh:mm:ss');
+
+      httpService
+        .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)
         .finally(function() {
           $animate.removeClass("checking");
         });

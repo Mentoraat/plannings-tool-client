@@ -11,7 +11,13 @@ angular.module('planningtoolApp')
   .controller('mainController', function ($scope, $log, $state, httpService, $animate) {
     $scope.eventSource = [
       {
-        url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences'
+        url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences',
+        eventDataTransform: function(event) {
+          event.start = moment.tz(event.start, 'Europe/Amsterdam');
+          event.end = moment.tz(event.end, 'Europe/Amsterdam');
+
+          return event;
+        }
       }
     ];
 
@@ -23,6 +29,7 @@ angular.module('planningtoolApp')
         timeFormat: 'H:mm',
         axisFormat: 'H:mm',
         slotLabelFormat: 'H:mm',
+        timezone: 'local',
 
         droppable: true,
 
@@ -65,8 +72,8 @@ angular.module('planningtoolApp')
       $animate.addClass("checking");
 
       var putEvent = angular.copy(event);
-      putEvent.start = event.start.format('YYYY-MM-DD,hh:mm:ss');
-      putEvent.end = event.end.format('YYYY-MM-DD,hh:mm:ss');
+      putEvent.start = event.start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+      putEvent.end = event.end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
 
       httpService
         .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)

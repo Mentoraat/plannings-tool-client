@@ -3,7 +3,7 @@
 </md-toolbar>
 
 <md-list>
-  <md-list-item>
-      <div class='draggable' data-event='{"title":"my event", "start":"2015-08-06","end":"2015-08-07"}'>Opdracht 1</div>
+  <md-list-item ng-repeat='assignment in assignments'>
+      <div draggable class='draggable' data-event='{{assignment}}'>Opdracht 1</div>
   </md-list-item>
 </md-list>

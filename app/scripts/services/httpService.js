@@ -13,6 +13,10 @@ angular.module('planningtoolApp')
         return processRequest($http.put, endpoint, options);
       };
 
+      this.post = function(endpoint, options) {
+        return processRequest($http.post, endpoint, options);
+      };
+
       function processRequest(method, endpoint, options) {
         options = options || {};
         options.params = options.params || {};

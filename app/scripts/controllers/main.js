@@ -18,6 +18,9 @@ angular.module('planningtoolApp')
 
           return event;
         }
+      },
+      {
+        events: []
       }
     ];
 
@@ -44,9 +47,21 @@ angular.module('planningtoolApp')
         dayClick:     function(event, jsEvent, view) { $scope.dayClicked(event, jsEvent, view);    },
         eventClick:   function(event, jsEvent, view) { $scope.eventClicked(event, jsEvent, view);  },
         eventDrop:    function(event, delta, revertFunc, jsEvent, ui, view) { $scope.eventDropped(event, delta, revertFunc, jsEvent, ui, view);  },
-        eventReceive: function(event, jsEvent, view) { $scope.eventReceived(event, jsEvent, view); },
+        eventResize:  function(event) { $scope.eventResize(event);},
+        drop:         function(date) {
+          // this references the event that is being dropped
+          $scope.drop(this, date);
+          $(this).remove();
+        },
       }
     };
+
+    function correctMoments(event, start, end) {
+      event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+      event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+
+      return event;
+    }
 
     /**
      * Activated when a day on the calendar is clicked.
@@ -71,9 +86,7 @@ angular.module('planningtoolApp')
       $log.debug('Event "' + event.title + '" has been modified! Sending...');
       $animate.addClass("checking");
 
-      var putEvent = angular.copy(event);
-      putEvent.start = event.start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
-      putEvent.end = event.end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+      var putEvent = correctMoments(angular.copy(event), event.start, event.end);
 
       httpService
         .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)
@@ -82,22 +95,60 @@ angular.module('planningtoolApp')
         });
     };
 
-  /**
-   * Fires when event from sidebar is added to the agenda.
-   * Deletes the clone from the sidebar and updates the server of the changes
-   * @param  {Object} event - The event added to the agenda
-   */
-    $scope.eventReceived = function(event) {
-      $log.debug('Received event named ' + event.title);
+    /**
+     * Fires when event from sidebar is added to the agenda.
+     * Deletes the clone from the sidebar and updates the server of the changes
+     * @param  {Object} event - The event added to the agenda
+     */
+    $scope.drop = function(event, date) {
+      var assignment = angular.copy($(event).data('event'));
 
-      // Add the event to the array of events.
-      $scope.eventSource.events.push(event);
+      $log.debug('Received assignment named ' + assignment.name);
 
-      //TODO: Clean up old item
+      var start = date;
+      var end = moment(start).add(assignment.length, 'hours');
 
+      var postEvent = {
+        assignment: assignment,
+        user: {
+          id: 1,
+          name: 'me',
+          uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
+          accessToken: 'asdf'
+        }
+      };
 
-      $log.info($scope.eventSource.events);
+      postEvent = correctMoments(postEvent, start, end);
+
+      /*
+        The original assignment has already been added,
+        so we have to revert this. We can only remove events
+        by a 'unique' id, so therefore we assign both to 1 and
+        immediately delete it.
+      */
+      $(event).data('event').id = 1;
+      $('#calendar').fullCalendar('removeEvents', 1);
+
+      httpService
+        .post("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", postEvent)
+        .finally(function() {
+          $animate.removeClass("checking");
+          postEvent.title = assignment.name;
+          postEvent.start = start;
+          postEvent.end = end;
+          $scope.eventSource[1].events.push(postEvent);
+        });
     };
 
+    $scope.eventResize = function(event) {
+      $log.debug('Updating time of event ' + event.title);
 
+      var putEvent = correctMoments(angular.copy(event), event.start, event.end);
+
+      httpService
+        .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)
+        .finally(function() {
+          $animate.removeClass("checking");
+        });
+    };
   });

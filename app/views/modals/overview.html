@@ -2,8 +2,9 @@
   <h1 class="fullheight">Overview</h1>
 </md-toolbar>
 
-<md-list>
-  <md-list-item ng-repeat='assignment in assignments'>
-      <div draggable class='draggable' data-event='{{assignment}}'>Opdracht 1</div>
-  </md-list-item>
-</md-list>
+<div class="upcomingEventsContainer" ng-hide="upcomingEvents.length == 0" ui-sortable="draggable" ng-model="upcomingEvents">
+  <div ng-repeat="assignment in assignments" class='draggable assignment--unplanned' data-event='{{assignment}}'>
+    <div class="assignment--name">{{assignment.name}}</div>
+  </div>
+
+</div>

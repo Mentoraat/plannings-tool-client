@@ -82,11 +82,18 @@ angular.module('planningtoolApp')
       $state.go('edit-event');
     };
 
-    $scope.eventDropped = function(event) {
+    $scope.eventDropped = function(event, delta, revertFunc, jsEvent, ui, view) {
+      $log.error(typeof(event.editable))  ;
+      if(!event.editable === "true") {
+        revertFunc();
+        return;
+      }
       $log.debug('Event "' + event.title + '" has been modified! Sending...');
       $animate.addClass("checking");
 
       var putEvent = correctMoments(angular.copy(event), event.start, event.end);
+
+      $log.info(putEvent);
 
       httpService
         .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)

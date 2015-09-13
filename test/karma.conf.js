@@ -37,6 +37,7 @@ module.exports = function(config) {
       'bower_components/angular-ui-calendar/src/calendar.js',
       'bower_components/angular-ui-router/release/angular-ui-router.js',
       'bower_components/jquery-ui/jquery-ui.js',
+      'bower_components/angular-ui-sortable/sortable.js',
       'bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js',
       'bower_components/ui-router-extras/release/ct-ui-router-extras.js',
       'bower_components/angular-mocks/angular-mocks.js',

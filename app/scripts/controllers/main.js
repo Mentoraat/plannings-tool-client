@@ -46,7 +46,7 @@ angular.module('planningtoolApp')
 
         dayClick:     function(event, jsEvent, view) { $scope.dayClicked(event, jsEvent, view);    },
         eventClick:   function(event, jsEvent, view) { $scope.eventClicked(event, jsEvent, view);  },
-        eventDrop:    function(event, delta, revertFunc, jsEvent, ui, view) { $scope.eventDropped(event, delta, revertFunc, jsEvent, ui, view);  },
+        eventDrop:    function(event, delta, revertFunc) { $scope.eventDropped(event, delta, revertFunc);  },
         eventResize:  function(event) { $scope.eventResize(event);},
         drop:         function(date) {
           // this references the event that is being dropped
@@ -82,18 +82,16 @@ angular.module('planningtoolApp')
       $state.go('edit-event');
     };
 
-    $scope.eventDropped = function(event, delta, revertFunc, jsEvent, ui, view) {
-      $log.error(typeof(event.editable))  ;
-      if(!event.editable === "true") {
+    $scope.eventDropped = function(event, delta, revertFunc) {
+      if(event.editable !== true) {
         revertFunc();
         return;
       }
+
       $log.debug('Event "' + event.title + '" has been modified! Sending...');
       $animate.addClass("checking");
 
       var putEvent = correctMoments(angular.copy(event), event.start, event.end);
-
-      $log.info(putEvent);
 
       httpService
         .put("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", putEvent)
@@ -122,7 +120,8 @@ angular.module('planningtoolApp')
           name: 'me',
           uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
           accessToken: 'asdf'
-        }
+        },
+        editable: true
       };
 
       postEvent = correctMoments(postEvent, start, end);

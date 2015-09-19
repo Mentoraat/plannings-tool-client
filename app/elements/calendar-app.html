@@ -30,6 +30,7 @@
     }
 
     function drop(event, date) {
+      console.log(event);
       var assignment = copy(event);
 
       var start = date;
@@ -109,7 +110,7 @@
             eventDrop:    this.eventDropped,
             eventResize:  this.eventResize,
             drop:         function(date) {
-              drop(this.dataEvent, date);
+              drop(this.data, date);
             }
         };
       },
@@ -118,6 +119,7 @@
       eventClicked: function(event) {
       },
       eventDropped: function(event, delta, revertFunc) {
+        console.log("dropped");
         if (event.editable !== true) {
           revertFunc();
           return;

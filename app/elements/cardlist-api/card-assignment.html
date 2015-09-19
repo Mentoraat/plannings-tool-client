@@ -1,0 +1,48 @@
+<dom-module id="card-assignment">
+  <style>
+    :host {
+      display: block;
+      z-index: 999;
+    }
+  </style>
+  <template>
+    <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
+      <div class="card-content">
+        Due: <span>{{timeConverter(data.deadline)}}</span>
+      </div>
+      <div class="card-actions">
+        <paper-button>Plan</paper-button>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'card-assignment',
+
+      properties: {
+        data: {
+          type: Object
+        }
+      },
+
+      timeConverter: function(UNIX_timestamp) {
+        var a = new Date(UNIX_timestamp * 1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        return time;
+      },
+
+      attached: function() {
+        $(this).draggable({
+          zIndex: 1000
+        });
+      }
+    });
+  </script>
+</dom-module>

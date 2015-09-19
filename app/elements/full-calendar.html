@@ -1,0 +1,37 @@
+<dom-module id="full-calendar">
+  <script src='../../bower_components/jquery/dist/jquery.min.js'></script>
+  <script src='../../bower_components/moment/min/moment.min.js'></script>
+  <script src='../../bower_components/fullcalendar/dist/fullcalendar.js'></script>
+
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <div id="calendar">
+
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'full-calendar',
+      properties: {
+        config: {
+          type: Object
+        },
+        events: {
+          type: Array
+        }
+      },
+      attached: function() {
+        this.async(function() {
+          var calendar = this.config;
+          calendar.eventSources = this.events;
+          console.log(calendar);
+          $(this.$.calendar).fullCalendar(calendar);
+        });
+      }
+    });
+  </script>
+</dom-module>

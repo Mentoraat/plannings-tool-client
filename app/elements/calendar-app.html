@@ -13,7 +13,7 @@
       events: function() {
         return [
           {
-            url: 'http://localhost:9000/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences',
+            url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences',
             eventDataTransform: function(event) {
               event.start = moment.tz(event.start, 'Europe/Amsterdam');
               event.end = moment.tz(event.end, 'Europe/Amsterdam');

@@ -8,6 +8,23 @@
     <full-calendar config="{{config()}}" events="{{events()}}"></full-calendar>
   </template>
   <script>
+    function correctMoments(event, start, end) {
+      event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+      event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+
+      return event;
+    }
+
+    function copy(object) {
+      var copyOfObject = Object.create(Object.getPrototypeof(object));
+
+      for (var key in object) {
+        copyOfObject[key] = copy(object[key]);
+      }
+
+      return copyOfObject;
+    }
+
     Polymer({
       is: 'calendar-app',
       events: function() {
@@ -46,16 +63,65 @@
 
             allDayText: 'All Day',
 
-            dayClick:     function(event, jsEvent, view) { $scope.dayClicked(event, jsEvent, view);    },
-            eventClick:   function(event, jsEvent, view) { $scope.eventClicked(event, jsEvent, view);  },
-            eventDrop:    function(event, delta, revertFunc) { $scope.eventDropped(event, delta, revertFunc);  },
-            eventResize:  function(event) { $scope.eventResize(event);},
-            drop:         function(date) {
-              // this references the event that is being dropped
-              $scope.drop(this, date);
-              $(this).remove();
-            }
+            dayClick:     this.dayClicked,
+            eventClick:   this.eventClicked,
+            eventDrop:    this.eventDropped,
+            eventResize:  this.eventResize,
+            drop:         this.drop
         };
+      },
+      dayClicked: function(event) {
+      },
+      eventClicked: function(event) {
+      },
+      eventDropped: function(event, delta, revertFunc) {
+        if (event.editable !== true) {
+          revertFunc();
+          return;
+        }
+
+        var putEvent = correctMoments(copy(event), event.start, event.end);
+      },
+      drop: function(event, date) {
+        var assignment = copy($(event).data('event'));
+
+        var start = date;
+        var end = moment(start).add(assignment.length, 'hours');
+
+        var postEvent = {
+          assignment: assignment,
+          user: {
+            id: 1,
+            name: 'me',
+            uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
+            accessToken: 'asdf'
+          },
+          editable: true
+        };
+
+        postEvent = correctMoments(postEvent, start, end);
+
+        /*
+          The original assignment has already been added,
+          so we have to revert this. We can only remove events
+          by a 'unique' id, so therefore we assign both to 1 and
+          immediately delete it.
+        */
+        $(event).data('event').id = 1;
+        // TODO: $('#calendar').fullCalendar('removeEvents', 1);
+
+        // httpService
+        //   .post("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", postEvent)
+        //   .finally(function() {
+        //     $animate.removeClass("checking");
+        //     postEvent.title = assignment.name;
+        //     postEvent.start = start;
+        //     postEvent.end = end;
+        //     $scope.eventSource[1].events.push(postEvent);
+        //   });
+      },
+      eventResize: function(event) {
+        var putEvent = correctMoments(copy(event), event.start, event.end);
       }
     });
   </script>

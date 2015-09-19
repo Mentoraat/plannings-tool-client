@@ -1,19 +1,12 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 
+<!--
+  API url respons needs to be a JSON list. every object in the list needs a name (string) and a deadline (UNIX-timestamp) field.
+-->
 <dom-module id="cardslist-api">
   <template>
     <style>
@@ -27,10 +20,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       paper-card {
         padding: 10px;
-        width: 100%;
+        height: auto;
         --paper-card-header: {
           background: #E1E1E1;
         }
+      }
+
+      /*
+        /deep/ is deprecated.
+        when paper-card fixes this this line can be removed.
+      */
+      paper-card /deep/ paper-material {
+        height: auto;
       }
 
       paper-spinner {
@@ -54,47 +55,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-
+    <!--
+      API call to {{apiurl}}
+      optional {{apiparams}}
+    -->
     <iron-ajax
       auto
-      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"
-      params='{}'
+      url="{{apiurl}}"
+      params='{{apiparams}}'
       handle-as="json"
       debounce-duration="300"
       id="ajax"
       loading="{{loading}}"
-      last-response="{{unplannedEvents}}">
+      last-response="{{responseCollection}}">
     </iron-ajax>
 
-    <core-drag-drop>
-    </core-drag-drop>
+    <!--
+      Enables drag & drop features
+    -->
+    <core-drag-drop></core-drag-drop>
 
     <section>
+      <!--
+        While loading, show spinner
+      -->
       <template is="dom-if" if="{{loading}}">
         <div class="center">
           <paper-spinner active></paper-spinner>
         </div>
       </template>
+
+      <!--
+        Shows if we're not loading data
+      -->
       <template is="dom-if" if="{{!loading}}">
         <div class="align-right">
           <paper-icon-button icon="refresh" class="refresh-button" on-click="reLoadList"></paper-icon-button>
         </div>
-        <template is="dom-repeat" items="{{unplannedEvents.items}}" as="unplannedEvent">
-          <!-- <paper-material elevation="2" class="paper-font-body2" draggable="true">
-            <span>{{unplannedEvent.name}}</span>
-          </paper-material> -->
-
-          <paper-card heading="{{unplannedEvent.name}}" elevation="2" draggable="true" data-event="{{unplannedEvent}}">
+        <template is="dom-repeat" items="{{responseCollection.items}}" as="responsItem">
+          <paper-card heading="{{responsItem.name}}" elevation="2" draggable="true" data-event="{{responsItem}}">
             <div class="card-content">
-
-              Due: <span>{{timeConverter(unplannedEvent.deadline)}}</span>
+              Due: <span>{{timeConverter(responsItem.deadline)}}</span>
             </div>
             <div class="card-actions">
-              <paper-button>Plan in</paper-button>
+              <paper-button>Plan</paper-button>
             </div>
           </paper-card>
         </template>
       </template>
+
     </section>
   </template>
   <script>
@@ -103,11 +112,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'cardslist-api',
 
       properties: {
-        foo: {
-          type: String,
-          value: 'cardslist-api',
-          notify: true
-        }
+        apiurl: "",
+        apiparams: "{}"
       },
 
       reLoadList: function() {

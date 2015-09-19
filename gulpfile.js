@@ -21,6 +21,8 @@ var path = require('path');
 var fs = require('fs');
 var glob = require('glob');
 var historyApiFallback = require('connect-history-api-fallback');
+var url = require('url');
+var proxy = require('proxy-middleware');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -179,6 +181,9 @@ gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 // Watch Files For Changes & Reload
 gulp.task('serve', ['styles', 'elements', 'images'], function () {
+  var proxyOptions = url.parse("http://localhost:9000/v1/");
+  proxyOptions.route = "/v1";
+
   browserSync({
     notify: false,
     logPrefix: 'PSK',
@@ -196,11 +201,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: function(req, res, next) {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Headers', '*');
-        next();
-      },
+      middleware: [proxy(proxyOptions)],
       routes: {
         '/bower_components': 'bower_components'
       }

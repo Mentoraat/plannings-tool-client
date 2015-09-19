@@ -1,0 +1,134 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="cardslist-api">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      section {
+        padding: 5px;
+      }
+
+      paper-card {
+        padding: 10px;
+        width: 100%;
+        --paper-card-header: {
+          background: #E1E1E1;
+        }
+      }
+
+      paper-spinner {
+        margin: 0 auto;
+      }
+
+      paper-button {
+        background: #00A6D6;
+      }
+
+      .align-right {
+        padding: 5px;
+        display: block;
+        width: 100%;
+        text-align: right;
+      }
+
+      .center {
+        text-align: center;
+        width: 100%;
+      }
+    </style>
+
+
+    <iron-ajax
+      auto
+      url="http://localhost:9000/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"
+      params='{}'
+      handle-as="json"
+      debounce-duration="300"
+      id="ajax"
+      loading="{{loading}}"
+      last-response="{{unplannedEvents}}">
+    </iron-ajax>
+
+    <core-drag-drop>
+    </core-drag-drop>
+
+    <section>
+      <template is="dom-if" if="{{loading}}">
+        <div class="center">
+          <paper-spinner active></paper-spinner>
+        </div>
+      </template>
+      <template is="dom-if" if="{{!loading}}">
+        <div class="align-right">
+          <paper-icon-button icon="refresh" class="refresh-button" on-click="reLoadList"></paper-icon-button>
+        </div>
+        <template is="dom-repeat" items="{{unplannedEvents.items}}" as="unplannedEvent">
+          <!-- <paper-material elevation="2" class="paper-font-body2" draggable="true">
+            <span>{{unplannedEvent.name}}</span>
+          </paper-material> -->
+
+          <paper-card heading="{{unplannedEvent.name}}" elevation="2" draggable="true" data-event="{{unplannedEvent}}">
+            <div class="card-content">
+
+              Due: <span>{{timeConverter(unplannedEvent.deadline)}}</span>
+            </div>
+            <div class="card-actions">
+              <paper-button>Plan in</paper-button>
+            </div>
+          </paper-card>
+        </template>
+      </template>
+    </section>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'cardslist-api',
+
+      properties: {
+        foo: {
+          type: String,
+          value: 'cardslist-api',
+          notify: true
+        }
+      },
+
+      reLoadList: function() {
+        var ajax = document.querySelector('iron-ajax');
+        ajax.generateRequest();
+      },
+      timeConverter: function(UNIX_timestamp) {
+        var a = new Date(UNIX_timestamp * 1000);
+        var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        var year = a.getFullYear();
+        var month = months[a.getMonth()];
+        var date = a.getDate();
+        var hour = a.getHours();
+        var min = a.getMinutes();
+        var sec = a.getSeconds();
+        var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+        return time;
+      }
+    });
+  })();
+  </script>
+</dom-module>

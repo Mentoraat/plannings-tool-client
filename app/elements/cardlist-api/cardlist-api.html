@@ -22,11 +22,13 @@
         margin: 0 auto;
       }
 
-      .align-right {
-        padding: 5px;
-        display: block;
+      .assignments-title {
         width: 100%;
-        text-align: right;
+        text-align: center;
+      }
+
+      .assignments-title > div {
+        display: inline;
       }
 
       .center {
@@ -69,10 +71,14 @@
         Shows if we're not loading data
       -->
       <template is="dom-if" if="{{!loading}}">
-        <div class="align-right">
-          <paper-icon-button icon="refresh" class="refresh-button" on-click="reLoadList"></paper-icon-button>
-        </div>
-        <card-list collection="{{responseCollection}}"></card-list>
+        <card-list collection="{{responseCollection}}">
+          <div class="assignments-title">
+            <div>
+              Assignments
+            </div>
+            <paper-icon-button icon="refresh" class="refresh-button" on-tap="reLoadList"></paper-icon-button>
+          </div>
+        </card-list>
       </template>
 
     </section>

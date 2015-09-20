@@ -8,6 +8,7 @@
     <full-calendar config="{{config()}}" events="{{events()}}"></full-calendar>
   </template>
   <script>
+  (function() {
     function correctMoments(event, start, end) {
       event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
       event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
@@ -27,44 +28,6 @@
       }
 
       return value;
-    }
-
-    function drop(event, date) {
-      console.log(event);
-      var assignment = copy(event);
-
-      var start = date;
-      var end = moment(start).add(assignment.length, 'hours');
-
-      var postEvent = {
-        assignment: assignment,
-        user: {
-          id: 1,
-          name: 'me',
-          uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
-          accessToken: 'asdf'
-        },
-        editable: true
-      };
-
-      postEvent = correctMoments(postEvent, start, end);
-
-      /*
-        The original assignment has already been added,
-        so we have to revert this. We can only remove events
-        by a 'unique' id, so therefore we assign both to 1 and
-        immediately delete it.
-      */
-
-      // httpService
-      //   .post("users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences", postEvent)
-      //   .finally(function() {
-      //     $animate.removeClass("checking");
-      //     postEvent.title = assignment.name;
-      //     postEvent.start = start;
-      //     postEvent.end = end;
-      //     $scope.eventSource[1].events.push(postEvent);
-      //   });
     };
 
     Polymer({
@@ -109,9 +72,13 @@
             eventClick:   this.eventClicked,
             eventDrop:    this.eventDropped,
             eventResize:  this.eventResize,
-            drop:         function(date) {
-              drop(this.data, date);
-            }
+            drop:         (function(that) {
+              return function(date) {
+                // this references the element dragged in onto the full-calendar
+                that.drop(this, date);
+              }
+              // this references the Polymer object
+            })(this)
         };
       },
       dayClicked: function(event) {
@@ -129,7 +96,29 @@
       },
       eventResize: function(event) {
         var putEvent = correctMoments(copy(event), event.start, event.end);
+      },
+      drop: function(event, date) {
+        console.log(this)
+        console.log(event)
+        var assignment = copy(event.data);
+
+        var start = date;
+        var end = moment(start).add(assignment.length, 'hours');
+
+        var postEvent = {
+          assignment: assignment,
+          user: {
+            id: 1,
+            name: 'me',
+            uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
+            accessToken: 'asdf'
+          },
+          editable: true
+        };
+
+        postEvent = correctMoments(postEvent, start, end);
       }
     });
+  })();
   </script>
 </dom-module>

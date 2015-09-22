@@ -17,10 +17,21 @@
           type: Object
         },
         events: {
-          type: Array
+          type: Array,
+          observer: 'refetchEvents'
         }
       },
       attached: function() {
+        this.init();
+      },
+      refetchEvents: function(newValue, oldValue) {
+        if (oldValue !== undefined) {
+          $(this.$.calendar).fullCalendar('destroy');
+        }
+
+        this.init();
+      },
+      init: function() {
         this.async(function() {
           var calendar = this.config;
           calendar.eventSources = this.events;

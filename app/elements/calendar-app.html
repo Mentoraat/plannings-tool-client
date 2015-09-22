@@ -5,12 +5,12 @@
     }
   </style>
   <template>
-    <<iron-ajax
+    <iron-ajax
       id="occurrences"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences"
       handle-as="json"
       content-type="application/json"></iron-ajax>
-    <full-calendar config="{{config()}}" events="[[eventSources]]"></full-calendar>
+    <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
   </template>
   <script>
   (function() {
@@ -49,9 +49,6 @@
 
                   return event;
                 }
-              },
-              {
-                events: []
               }
             ]
         }
@@ -94,7 +91,6 @@
       eventClicked: function(event) {
       },
       eventDropped: function(event, delta, revertFunc) {
-        console.log("dropped");
         if (event.editable !== true) {
           revertFunc();
           return;
@@ -128,6 +124,8 @@
         ajax.body = postEvent;
         ajax.method = 'POST';
         ajax.generateRequest();
+
+        this.notifyPath('eventSources', this.eventSources.slice());
       }
     });
   })();

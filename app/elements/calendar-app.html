@@ -127,6 +127,10 @@
 
         $(event).remove();
 
+        /*
+          Requires slice in order to trigger propagation.
+          https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
+        */
         this.notifyPath('eventSources', this.eventSources.slice());
       }
     });

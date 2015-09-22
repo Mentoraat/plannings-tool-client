@@ -24,17 +24,11 @@
     }
   </style>
   <template>
-    <paper-header-panel>
-      <paper-toolbar class="flex">
-        <paper-material elevation="2"></paper-material>
-        <content></content>
-      </paper-toolbar>
-      <div id="cards">
-        <template is="dom-repeat" items="{{collection.items}}">
-          <card-assignment data="{{item}}"></card-assignment>
-        </template>
-      </div>
-    </paper-header-panel>
+    <div id="cards">
+      <template is="dom-repeat" items="{{collection.items}}">
+        <card-assignment data="{{item}}"></card-assignment>
+      </template>
+    </div>
   </template>
   <script>
     Polymer({

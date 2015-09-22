@@ -125,6 +125,8 @@
         ajax.method = 'POST';
         ajax.generateRequest();
 
+        $(event).remove();
+
         this.notifyPath('eventSources', this.eventSources.slice());
       }
     });

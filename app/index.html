@@ -55,17 +55,7 @@
   <template is="dom-bind" id="app">
 
   <paper-drawer-panel id="paperDrawerPanel" right-drawer>
-    <!-- Drawer Scroll Header Panel -->
-    <paper-scroll-header-panel drawer fixed>
-
-      <!-- Drawer Toolbar -->
-      <paper-toolbar id="drawerToolbar">
-        <span class="paper-font-title">Menu</span>
-      </paper-toolbar>
-
-      <cardslist-api apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
-
-    </paper-scroll-header-panel>
+    <card-list-header-panel drawer></card-list-header-panel>
 
     <!-- Main Area -->
     <paper-scroll-header-panel main fixed>

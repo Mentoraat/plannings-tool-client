@@ -23,7 +23,7 @@
 
     function copy(value) {
       if (value !== null && typeof value === 'object') {
-        var copyOfValue = {};
+        var copyOfValue = Object.create(Object.getPrototypeOf(value));
 
         for (var key in value) {
           copyOfValue[key] = copy(value[key]);
@@ -75,8 +75,8 @@
 
             dayClick:     this.dayClicked,
             eventClick:   this.eventClicked,
-            eventDrop:    this.eventDropped,
-            eventResize:  this.eventResize,
+            eventDrop:    this.updateEvent.bind(this),
+            eventResize:  this.updateEvent.bind(this),
             drop:         (function(that) {
               return function(date) {
                 // this references the element dragged in onto the full-calendar
@@ -90,16 +90,12 @@
       },
       eventClicked: function(event) {
       },
-      eventDropped: function(event, delta, revertFunc) {
-        if (event.editable !== true) {
-          revertFunc();
-          return;
-        }
+      updateEvent: function(event) {
+        var fixedEvent = {
+          assignment: event.assignment,
+        };
 
-        var putEvent = correctMoments(copy(event), event.start, event.end);
-      },
-      eventResize: function(event) {
-        var putEvent = correctMoments(copy(event), event.start, event.end);
+        this.performAjax('PUT', correctMoments(fixedEvent, event.start, event.end));
       },
       drop: function(event, date) {
         var assignment = copy(event.data);
@@ -118,12 +114,7 @@
           editable: true
         };
 
-        postEvent = correctMoments(postEvent, start, end);
-
-        var ajax = this.$.occurrences;
-        ajax.body = postEvent;
-        ajax.method = 'POST';
-        ajax.generateRequest();
+        this.performAjax('POST', correctMoments(postEvent, start, end));
 
         $(event).remove();
 
@@ -132,6 +123,17 @@
           https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
         */
         this.notifyPath('eventSources', this.eventSources.slice());
+      },
+      performAjax: function(type, data) {
+        var ajax = this.$.occurrences;
+
+        ajax.method = type;
+
+        if (data) {
+          ajax.body = data;
+        }
+
+        ajax.generateRequest();
       }
     });
   })();

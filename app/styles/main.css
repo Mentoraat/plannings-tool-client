@@ -11,6 +11,10 @@ th {
   font-weight: normal;
 }
 
+#mainContainer.paper-scroll-header-panel {
+  right: -15px;
+}
+
 #paperToggle {
   position: absolute;
   right: 0;

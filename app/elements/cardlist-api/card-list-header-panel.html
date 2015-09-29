@@ -1,0 +1,40 @@
+<dom-module id="card-list-header-panel">
+  <style>
+    :host {
+      display: block;
+    }
+
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
+    .assignments-title {
+      width: 100%;
+    }
+
+    .assignments-title > div {
+      display: inline;
+    }
+
+    .refresh-button {
+      float: right;
+    }
+  </style>
+  <template>
+    <paper-scroll-header-panel fixed>
+      <paper-toolbar class="flex">
+        <div class="assignments-title paper-font-title">Assignments</div>
+        <paper-icon-button icon="refresh" class="refresh-button" on-tap="reLoadList"></paper-icon-button>
+      </paper-toolbar>
+      <cardslist-api id="api" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+    </paper-scroll-header-panel>
+  </template>
+  <script>
+    Polymer({
+      is: 'card-list-header-panel',
+      reLoadList: function() {
+        this.$.api.reLoadList();
+      }
+    });
+  </script>
+</dom-module>

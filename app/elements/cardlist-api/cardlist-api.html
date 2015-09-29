@@ -1,0 +1,90 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
+
+<!--
+  API url respons needs to be a JSON list. every object in the list needs a name (string) and a deadline (UNIX-timestamp) field.
+-->
+<dom-module id="cardslist-api">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      section {
+        padding: 5px;
+      }
+
+      paper-spinner {
+        margin: 0 auto;
+      }
+
+      .center {
+        text-align: center;
+        width: 100%;
+      }
+    </style>
+
+    <!--
+      API call to {{apiurl}}
+      optional {{apiparams}}
+    -->
+    <iron-ajax
+      auto
+      url="{{apiurl}}"
+      params='{{apiparams}}'
+      handle-as="json"
+      debounce-duration="300"
+      id="ajax"
+      loading="{{loading}}"
+      last-response="{{responseCollection}}">
+    </iron-ajax>
+
+    <!--
+      Enables drag & drop features
+    -->
+    <core-drag-drop></core-drag-drop>
+
+    <section>
+      <!--
+        While loading, show spinner
+      -->
+      <template is="dom-if" if="{{loading}}">
+        <div class="center">
+          <paper-spinner active></paper-spinner>
+        </div>
+      </template>
+
+      <!--
+        Shows if we're not loading data
+      -->
+      <template is="dom-if" if="{{!loading}}">
+        <card-list collection="{{responseCollection}}"></card-list>
+      </template>
+
+    </section>
+  </template>
+  <script>
+    Polymer({
+      is: 'cardslist-api',
+
+      properties: {
+        apiurl: {
+          type: String
+        },
+        apiparams: {
+          type: Object,
+          value: {}
+        }
+      },
+
+      reLoadList: function() {
+        this.$.ajax.generateRequest();
+      }
+
+    });
+  </script>
+</dom-module>

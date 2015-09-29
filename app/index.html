@@ -1,86 +1,84 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width">
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
-    <link rel="stylesheet" href="bower_components/fullcalendar/dist/fullcalendar.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
-    <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <!-- endbuild -->
-  </head>
-  <body layout="column" ng-app="planningtoolApp">
-    <!--[if lte IE 8]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-    <md-toolbar class="header" layout="column" class="md-whiteframe-z1">
-      <div class="md-toolbar-tools">
-        <md-button class="md-icon-button" aria-label="Menu">
-          <md-icon md-svg-icon="images/icons/menu55.svg"></md-icon>
-        </md-button>
-        <h2>
-          <a class="navbar-brand" href="#/">Planningtool</a>
-        </h2>
-        <span flex></span>
-        <md-button class="md-icon-button" aria-label="Home">
-          <md-icon md-svg-icon="images/icons/home149.svg"></md-icon>
-        </md-button>
-        <md-button class="md-icon-button" aria-label="About">
-          <md-icon md-svg-icon="images/icons/home149.svg"></md-icon>
-        </md-button>
-        <md-button class="md-icon-button" aria-label="Contact">
-          <md-icon md-svg-icon="images/icons/phone370.svg"></md-icon>
-        </md-button>
-      </div>
-    </md-toolbar>
-    <div layout="row">
-      <div flex layout="column" tabIndex="-1" role="main" class="content-container">
-        <md-content flex class="container">
-          <div ui-view="main"></div>
-        </md-content>
-      </div>
-      <md-sidenav flex class="site-sidenav md-sidenav-right md-whiteframe-z1 md-locked-open ng-enter" md-component-id="right" ui-view="modal"></md-sidenav>
-    </div>
+<html lang="">
 
-    <!-- build:js(.) scripts/vendor.js -->
-    <!-- bower:js -->
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-aria/angular-aria.js"></script>
-    <script src="bower_components/angular-material/angular-material.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/fullcalendar/dist/fullcalendar.js"></script>
-    <script src="bower_components/angular-ui-calendar/src/calendar.js"></script>
-    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/angular-ui-sortable/sortable.js"></script>
-    <script src="bower_components/moment-timezone/builds/moment-timezone-with-data-2010-2020.js"></script>
-    <script src="bower_components/ui-router-extras/release/ct-ui-router-extras.js"></script>
-    <!-- endbower -->
-    <!-- endbuild -->
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TU Delft Planningstool</title>
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/event.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-        <script src="scripts/controllers/overviewController.js"></script>
-        <script src="scripts/services/stateService.js"></script>
-        <script src="scripts/services/httpService.js"></script>
-        <script src="scripts/services/eventService.js"></script>
-        <!-- endbuild -->
+  <!-- Chrome for Android theme color -->
+  <meta name="theme-color" content="#303F9F">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Tile color for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PSK">
+  <link rel="icon" sizes="192x192" href="images/touch/chrome-touch-icon-192x192.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="TU Delft Planningstool">
+  <link rel="apple-touch-icon" href="images/touch/apple-touch-icon.png">
+
+  <!-- Tile icon for Win8 (144x144) -->
+  <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <script src='bower_components/jquery/dist/jquery.min.js'></script>
+  <script src='bower_components/jquery-ui/jquery-ui.min.js'></script>
+  <script src='bower_components/moment/min/moment.min.js'></script>
+  <script src='bower_components/moment-timezone/builds/moment-timezone-with-data.min.js'></script>
+  <script src='bower_components/fullcalendar/dist/fullcalendar.js'></script>
+  <link rel='stylesheet' href='bower_components/fullcalendar/dist/fullcalendar.css' />
+
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <!-- endbuild -->
+
+  <!-- will be replaced with elements/elements.vulcanized.html -->
+  <link rel="import" href="elements/elements.html">
+  <!-- endreplace-->
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild-->
+</head>
+
+<body unresolved class="fullbleed layout vertical">
+  <span id="browser-sync-binding"></span>
+
+  <template is="dom-bind" id="app">
+
+  <paper-drawer-panel id="paperDrawerPanel" right-drawer>
+    <card-list-header-panel drawer></card-list-header-panel>
+
+    <!-- Main Area -->
+    <paper-scroll-header-panel main fixed>
+
+      <!-- Main Toolbar -->
+      <paper-toolbar id="mainToolbar">
+        <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+        <span class="flex"></span>
+
+        <!-- Application name -->
+        <div class="middle middle-container center horizontal layout">
+          <div class="app-name paper-font-title">Planningstool</div>
+        </div>
+
+      </paper-toolbar>
+
+      <!-- Main Content -->
+      <div class="content">
+        <calendar-app></calendar-app>
+      </div>
+    </paper-scroll-header-panel>
+  </paper-drawer-panel>
+</template>
 </body>
+
 </html>

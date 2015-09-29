@@ -1,0 +1,141 @@
+<dom-module id="calendar-app">
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <template>
+    <iron-ajax
+      id="occurrences"
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences"
+      handle-as="json"
+      content-type="application/json"></iron-ajax>
+    <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
+  </template>
+  <script>
+  (function() {
+    function correctMoments(event, start, end) {
+      event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+      event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
+
+      return event;
+    }
+
+    function copy(value) {
+      if (value !== null && typeof value === 'object') {
+        var copyOfValue = Object.create(Object.getPrototypeOf(value));
+
+        for (var key in value) {
+          copyOfValue[key] = copy(value[key]);
+        }
+
+        return copyOfValue;
+      }
+
+      return value;
+    };
+
+    Polymer({
+      is: 'calendar-app',
+      properties: {
+        eventSources:  {
+          type: Array,
+          value: [
+              {
+                url: '/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences',
+                eventDataTransform: function(event) {
+                  event.start = moment.tz(event.start, 'Europe/Amsterdam');
+                  event.end = moment.tz(event.end, 'Europe/Amsterdam');
+
+                  return event;
+                }
+              }
+            ]
+        }
+      },
+      config: function() {
+          return {
+            editable: true,
+
+            defaultView: 'agendaWeek',
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            slotLabelFormat: 'H:mm',
+            timezone: 'local',
+
+            droppable: true,
+
+            header:{
+              left: 'agendaDay agendaWeek month',
+              center: 'title',
+              right: 'today prev,next'
+            },
+
+            allDayText: 'All Day',
+
+            dayClick:     this.dayClicked,
+            eventClick:   this.eventClicked,
+            eventDrop:    this.updateEvent.bind(this),
+            eventResize:  this.updateEvent.bind(this),
+            drop:         (function(that) {
+              return function(date) {
+                // this references the element dragged in onto the full-calendar
+                that.drop(this, date);
+              }
+              // this references the Polymer object
+            })(this)
+        };
+      },
+      dayClicked: function(event) {
+      },
+      eventClicked: function(event) {
+      },
+      updateEvent: function(event) {
+        var fixedEvent = {
+          assignment: event.assignment,
+        };
+
+        this.performAjax('PUT', correctMoments(fixedEvent, event.start, event.end));
+      },
+      drop: function(event, date) {
+        var assignment = copy(event.data);
+
+        var start = date;
+        var end = moment(start).add(assignment.length, 'hours');
+
+        var postEvent = {
+          assignment: assignment,
+          user: {
+            id: 1,
+            name: 'me',
+            uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
+            accessToken: 'asdf'
+          },
+          editable: true
+        };
+
+        this.performAjax('POST', correctMoments(postEvent, start, end));
+
+        $(event).remove();
+
+        /*
+          Requires slice in order to trigger propagation.
+          https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
+        */
+        this.notifyPath('eventSources', this.eventSources.slice());
+      },
+      performAjax: function(type, data) {
+        var ajax = this.$.occurrences;
+
+        ajax.method = type;
+
+        if (data) {
+          ajax.body = data;
+        }
+
+        ajax.generateRequest();
+      }
+    });
+  })();
+  </script>
+</dom-module>

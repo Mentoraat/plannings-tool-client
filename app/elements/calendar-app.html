@@ -11,13 +11,14 @@
       handle-as="json"
       content-type="application/json"></iron-ajax>
     <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
+
+    <edit-event-modal id="editEvent" event="{{editEvent}}"></edit-event-modal>
   </template>
   <script>
   (function() {
     function correctMoments(event, start, end) {
       event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
-      event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
-
+      event.end   = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
       return event;
     }
 
@@ -33,7 +34,7 @@
       }
 
       return value;
-    };
+    }
 
     Polymer({
       is: 'calendar-app',
@@ -73,8 +74,8 @@
 
             allDayText: 'All Day',
 
-            dayClick:     this.dayClicked,
-            eventClick:   this.eventClicked,
+            dayClick:     this.dayClicked.bind(this),
+            eventClick:   this.eventClicked.bind(this),
             eventDrop:    this.updateEvent.bind(this),
             eventResize:  this.updateEvent.bind(this),
             drop:         (function(that) {
@@ -89,6 +90,11 @@
       dayClicked: function(event) {
       },
       eventClicked: function(event) {
+        if(event.editable){
+          var dialog = this.$.editEvent;
+          dialog.event = event;
+          dialog.openDialog();
+        }
       },
       updateEvent: function(event) {
         var fixedEvent = {

@@ -4,6 +4,13 @@
       display: block;
     }
 
+    paper-button {
+      background: #00A6D6;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
+    }
+
     paper-toolbar {
       margin-bottom: 5px;
     }
@@ -15,24 +22,21 @@
       right: 0;
       top: 0;
     }
-
-    paper-button {
-      background: #00A6D6;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-    }
   </style>
   <template>
     <div id="cards">
       <template is="dom-repeat" items="{{collection.items}}">
         <card-assignment data="{{item}}"></card-assignment>
       </template>
+      <template is="dom-if" if="{{hasNoItems(collection.items)}}">
+        You're done planning. Good job!
+      </template>
     </div>
   </template>
   <script>
     Polymer({
       is: 'card-list',
+
       properties: {
         collection: {
           type: Array
@@ -40,6 +44,9 @@
         name: {
           type: String
         }
+      },
+      hasNoItems: function(arr) {
+        return arr.length == 0;
       }
     });
   </script>

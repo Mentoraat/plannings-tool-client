@@ -21,6 +21,10 @@
       display: inline;
     }
 
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
     .refresh-button {
       float: right;
     }
@@ -44,6 +48,7 @@
   <script>
     Polymer({
       is: 'card-list-header-panel',
+
       reLoadList: function() {
         this.$.unplanned.reLoadList();
       }

@@ -24,6 +24,7 @@
     }
   </style>
   <template>
+    <span>{{name}}</span>
     <div id="cards">
       <template is="dom-repeat" items="{{collection.items}}">
         <card-assignment data="{{item}}"></card-assignment>
@@ -36,6 +37,9 @@
       properties: {
         collection: {
           type: Array
+        },
+        name: {
+          type: String
         }
       }
     });

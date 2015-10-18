@@ -62,7 +62,7 @@
         Shows if we're not loading data
       -->
       <template is="dom-if" if="{{!loading}}">
-        <card-list collection="{{responseCollection}}"></card-list>
+        <card-list collection="{{responseCollection}}" name="{{name}}"></card-list>
       </template>
 
     </section>
@@ -72,6 +72,9 @@
       is: 'cardslist-api',
 
       properties: {
+        name: {
+          type:String
+        },
         apiurl: {
           type: String
         },

@@ -8,6 +8,11 @@
       height: 100%;
     }
 
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+
     .assignments-title {
       width: 100%;
     }
@@ -19,6 +24,10 @@
     .refresh-button {
       float: right;
     }
+
+    cardslist-api {
+      flex: 1;
+    }
   </style>
   <template>
     <paper-scroll-header-panel fixed>
@@ -26,14 +35,18 @@
         <div class="assignments-title paper-font-title">Assignments</div>
         <paper-icon-button icon="refresh" class="refresh-button" on-tap="reLoadList"></paper-icon-button>
       </paper-toolbar>
-      <cardslist-api id="api" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+      <div class="container">
+        <cardslist-api id="unplanned" name="Unplanned" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+        <cardslist-api id="unfinished" name="Unfinished" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments/status/UNFINISHED"></cardslist-api>
+        <cardslist-api id="unfinished" name="Missed" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments/missed"></cardslist-api>
+      </div>
     </paper-scroll-header-panel>
   </template>
   <script>
     Polymer({
       is: 'card-list-header-panel',
       reLoadList: function() {
-        this.$.api.reLoadList();
+        this.$.unplanned.reLoadList();
       }
     });
   </script>

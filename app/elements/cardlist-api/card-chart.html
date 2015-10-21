@@ -1,0 +1,25 @@
+<dom-module id="card-chart">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <iron-ajax
+      auto
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments/stats"
+      handle-as="json"
+      last-response="{{data}}"></iron-ajax>
+    <svg-piechart
+      data="{{data}}"
+      colors='[
+        "rgb(139, 195, 74)",
+        "rgba(255, 0, 0, .7)"
+      ]'></svg-piechart>
+  </template>
+  <script>
+    Polymer({
+      is: 'card-chart',
+    });
+  </script>
+</dom-module>

@@ -12,7 +12,7 @@
       content-type="application/json"></iron-ajax>
     <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
 
-    <edit-event-modal id="editEvent" event="{{editEvent}}"></edit-event-modal>
+    <edit-event-modal id="editEvent" event="{{editEvent}}" on-finished="finishEvent"></edit-event-modal>
   </template>
   <script>
   (function() {
@@ -38,6 +38,7 @@
 
     Polymer({
       is: 'calendar-app',
+      
       properties: {
         eventSources:  {
           type: Array,
@@ -54,6 +55,7 @@
             ]
         }
       },
+
       config: function() {
           return {
             editable: true,
@@ -90,14 +92,20 @@
       dayClicked: function(event) {
       },
       eventClicked: function(event) {
-        if(event.editable){
+        if (event.editable){
           var dialog = this.$.editEvent;
           dialog.event = event;
           dialog.openDialog();
         }
       },
+      finishEvent: function(event) {
+        var fixedEvent = event.detail;
+        fixedEvent.status = "FINISHED";
+        this.updateEvent(fixedEvent);
+      },
       updateEvent: function(event) {
         var fixedEvent = {
+          status: event.status,
           assignment: event.assignment,
         };
 

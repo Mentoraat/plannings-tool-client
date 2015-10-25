@@ -20,16 +20,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       #editEventDialog {
         --paper-dialog-background-color: #fff;
       }
+
+      .button-container {
+        display: flex;
+      }
+      
+      .button-container paper-button {
+        flex: 1;
+      }
     </style>
     <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
       <h2>Edit Occurrence</h2>
       <paper-input label="title" floatinglabel value="{{event.title}}"></paper-input>
       <paper-input label="datetime" floatinglabel alwaysFloatLabel type="datetime-local" value="{{event._start}}"></paper-input>
 
-
-      <paper-button tabindex="0" dialog-dismiss><iron-icon icon="clear"></iron-icon>cancel</paper-button>
-
-
+      <div class="button-container">
+        <paper-button tabindex="0" dialog-dismiss on-tap="finishEvent"><iron-icon icon="check"></iron-icon>Finish</paper-button>
+        <paper-button tabindex="0" dialog-dismiss><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+      </div>
     </paper-dialog>
   </template>
   <script>
@@ -54,6 +62,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       cancelDialog: function() {
         this.$.editEventDialog.cancel();
+      },
+      finishEvent: function() {
+        this.fire('finished', this.event);
       }
     });
   })();

@@ -26,7 +26,7 @@
   <template>
     <div id="cards">
       <template is="dom-repeat" items="{{collection.items}}">
-        <card-assignment data="{{item}}"></card-assignment>
+        <card-assignment data="{{item}}" on-dropped="updateCollection"></card-assignment>
       </template>
       <template is="dom-if" if="{{hasNoItems(collection.items)}}">
         You're done planning. Good job!
@@ -45,8 +45,12 @@
           type: String
         }
       },
+
       hasNoItems: function(arr) {
         return arr.length === 0;
+      },
+      updateCollection: function() {
+        this.fire('force-refresh');
       }
     });
   </script>

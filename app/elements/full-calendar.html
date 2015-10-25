@@ -12,6 +12,7 @@
   <script>
     Polymer({
       is: 'full-calendar',
+
       properties: {
         config: {
           type: Object
@@ -21,9 +22,11 @@
           observer: 'refetchEvents'
         }
       },
+
       attached: function() {
         this.init();
       },
+      
       /*
         Refetching of events doesn't work.
         This uses the same solution as ui-angular,

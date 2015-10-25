@@ -54,14 +54,18 @@
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
         return time;
       },
-      
+
       /*
         Equivalent of domReady. So we know the element is loaded and can
         be made draggable.
       */
       attached: function() {
+        var that = this;
         $(this).draggable({
-          zIndex: 1000
+          zIndex: 1000,
+          stop: function() {
+            that.fire('dropped');
+          }
         });
       }
     });

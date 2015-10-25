@@ -22,7 +22,7 @@
       paper-spinner {
         margin: 0 auto;
       }
-      
+
       section {
         padding: 5px;
       }
@@ -43,11 +43,6 @@
       last-response="{{responseCollection}}">
     </iron-ajax>
 
-    <!--
-      Enables drag & drop features
-    -->
-    <core-drag-drop></core-drag-drop>
-
     <section>
       <!--
         While loading, show spinner
@@ -62,7 +57,7 @@
         Shows if we're not loading data
       -->
       <template is="dom-if" if="{{!loading}}">
-        <card-list collection="{{responseCollection}}" name="{{name}}"></card-list>
+        <card-list collection="{{responseCollection}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
       </template>
 
     </section>
@@ -84,10 +79,17 @@
         }
       },
 
-      reLoadList: function() {
+      reloadList: function() {
         this.$.ajax.generateRequest();
-      }
+      },
 
+      pendingReload: function() {
+        this.loading = true;
+
+        this.async(function() {
+          this.reloadList();
+        }, 1000);
+      }
     });
   </script>
 </dom-module>

@@ -38,7 +38,7 @@
 
     Polymer({
       is: 'calendar-app',
-      
+
       properties: {
         eventSources:  {
           type: Array,
@@ -84,12 +84,12 @@
               return function(date) {
                 // this references the element dragged in onto the full-calendar
                 that.drop(this, date);
-              }
+              };
               // this references the Polymer object
             })(this)
         };
       },
-      dayClicked: function(event) {
+      dayClicked: function() {
       },
       eventClicked: function(event) {
         if (event.editable){

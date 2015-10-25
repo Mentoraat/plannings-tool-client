@@ -24,6 +24,7 @@
   </style>
   <template>
     <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
+      <span>{{data.course.edition.courseId}}</span>
       <div class="card-content">
         Due: <span>{{timeConverter(data.deadline)}}</span>
       </div>

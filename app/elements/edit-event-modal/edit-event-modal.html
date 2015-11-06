@@ -21,24 +21,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --paper-dialog-background-color: #fff;
       }
 
-      .button-container {
-        display: flex;
+      .saveButton {
+        background: #4285f4;
+        color: #fff;
       }
 
-      .button-container paper-button {
-        flex: 1;
+      .cancelButton {
+        color: #f44336;
+      }
+
+      .finishButton {
+        background: #4caf50;
+        color: #fff;
       }
     </style>
     <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
       <div>
         <template is="dom-if" if="{{!finished}}" restamp="true">
           <h2>Edit Occurrence</h2>
-          <paper-input label="title" floatinglabel value="{{event.title}}"></paper-input>
-          <paper-input label="datetime" floatinglabel alwaysFloatLabel type="datetime-local" value="{{event._start}}"></paper-input>
+          <paper-input label="title" floatinglabel value="{{title}}"></paper-input>
+          <paper-input label="time" floatinglabel type="datetime-local" value="{{start}}"></paper-input>
 
-          <div class="button-container">
-            <paper-button tabindex="0" dialog-dismiss on-tap="finishEvent" id="finishEventButton"><iron-icon icon="check"></iron-icon>Finish</paper-button>
-            <paper-button tabindex="0" dialog-dismiss><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+          <div class="buttons">
+            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton"><iron-icon icon="save"></iron-icon>Save</paper-button>
+            <paper-button tabindex="0" dialog-dismiss class="cancelButton"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton"><iron-icon icon="check"></iron-icon>Finish</paper-button>
           </div>
         </template>
         <template is="dom-if" if="{{finished}}" restamp="true">
@@ -67,6 +74,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       openDialog: function() {
         this.finished = false;
+        this.start = moment(this.event.start).format('YYYY-MM-DDTHH:mm:ss');
+        this.title = this.event.title;
+
         this.$.editEventDialog.open();
 
         if (this.event.status === "FINISHED") {
@@ -77,7 +87,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.editEventDialog.cancel();
       },
       finishEvent: function() {
-        this.fire('finished', this.event);
+        this.event.status = "FINISHED";
+        this.fire('updated', this.event);
+      },
+      saveEvent: function() {
+        this.event.title = this.title;
+
+        this.event.end = this.event.end.add(
+          moment.duration(
+            moment(this.start).diff(this.event.start)
+          ).asHours(),
+          'hours'
+        );
+        this.event.start = moment(this.start);
+
+        this.fire('updated', this.event);
       }
     });
   })();

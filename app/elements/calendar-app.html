@@ -9,10 +9,11 @@
       id="occurrences"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences"
       handle-as="json"
-      content-type="application/json"></iron-ajax>
-    <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
+      content-type="application/json"
+      on-response="ajaxResponse"></iron-ajax>
+    <full-calendar id="calendar" config="[[config()]]" events="[[eventSources]]"></full-calendar>
 
-    <edit-event-modal id="editEvent" event="{{editEvent}}" on-finished="finishEvent"></edit-event-modal>
+    <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal"></edit-event-modal>
   </template>
   <script>
   (function() {
@@ -54,6 +55,13 @@
               }
             ]
         }
+      },
+      ready: function() {
+        this.ajaxResponse = function(request) {
+          if (request.target.method === 'PUT') {
+            this.$.calendar.rerenderEvents();
+          }
+        };
       },
 
       config: function() {
@@ -98,10 +106,8 @@
           dialog.openDialog();
         }
       },
-      finishEvent: function(event) {
-        var fixedEvent = event.detail;
-        fixedEvent.status = "FINISHED";
-        this.updateEvent(fixedEvent);
+      updateEventFromModal: function(event) {
+        this.updateEvent(event.detail);
       },
       updateEvent: function(event) {
         var fixedEvent = {

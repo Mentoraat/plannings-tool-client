@@ -19,14 +19,18 @@
         },
         events: {
           type: Array,
-          observer: 'refetchEvents'
+          observer: 'observeEvents'
         }
       },
 
       attached: function() {
-        this.init();
+        this.async(function() {
+          var calendar = this.config;
+          calendar.eventSources = this.events;
+          $(this.$.calendar).fullCalendar(calendar);
+        });
       },
-      
+
       /*
         Refetching of events doesn't work.
         This uses the same solution as ui-angular,
@@ -34,19 +38,18 @@
         and then recreate it. /sadface
         @see https://github.com/angular-ui/ui-calendar/blob/6e0c509e6a822926893334545f9af53fdb439a8a/src/calendar.js#L334
       */
-      refetchEvents: function(newValue, oldValue) {
+      observeEvents: function(newValue, oldValue) {
         if (oldValue !== undefined) {
-          $(this.$.calendar).fullCalendar('destroy');
+          this.refetchEvents();
         }
-
-        this.init();
       },
-      init: function() {
-        this.async(function() {
-          var calendar = this.config;
-          calendar.eventSources = this.events;
-          $(this.$.calendar).fullCalendar(calendar);
-        });
+
+      refetchEvents: function() {
+        $(this.$.calendar).fullCalendar('refetchEvents');
+      },
+
+      rerenderEvents: function() {
+        $(this.$.calendar).fullCalendar('rerenderEvents');
       }
     });
   </script>

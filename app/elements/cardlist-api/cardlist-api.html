@@ -57,7 +57,7 @@
         Shows if we're not loading data
       -->
       <template is="dom-if" if="{{!loading}}">
-        <card-list collection="{{responseCollection}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
+        <card-list collection="{{responseCollection.items}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
       </template>
 
     </section>

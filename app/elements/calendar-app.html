@@ -60,6 +60,7 @@
         switch (request.target.method) {
           case 'PUT':
             this.$.calendar.rerenderEvents();
+            this.fire('events-refreshed');
             break;
           case 'POST':
             /*

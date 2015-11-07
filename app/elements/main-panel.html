@@ -1,0 +1,36 @@
+<dom-module id="main-panel">
+  <template>
+    <paper-drawer-panel id="paperDrawerPanel" right-drawer>
+      <card-list-header-panel id="cardList" drawer></card-list-header-panel>
+
+      <!-- Main Area -->
+      <paper-scroll-header-panel main fixed>
+
+        <!-- Main Toolbar -->
+        <paper-toolbar id="mainToolbar">
+          <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+          <span class="flex"></span>
+
+          <!-- Application name -->
+          <div class="middle middle-container center horizontal layout">
+            <div class="app-name paper-font-title">Planningstool</div>
+          </div>
+
+        </paper-toolbar>
+
+        <!-- Main Content -->
+        <div class="content">
+          <calendar-app on-events-refreshed="refreshEvents"></calendar-app>
+        </div>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
+  </template>
+  <script>
+    Polymer({
+      is: 'main-panel',
+      refreshEvents: function() {
+        this.$.cardList.refresh();
+      }
+    });
+  </script>
+</dom-module>

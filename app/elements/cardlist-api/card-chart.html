@@ -13,6 +13,7 @@
     </style>
     <iron-ajax
       auto
+      id="ajax"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments/stats"
       handle-as="json"
       last-response="{{data}}"></iron-ajax>
@@ -27,6 +28,9 @@
   <script>
     Polymer({
       is: 'card-chart',
+      reloadStats: function() {
+        this.$.ajax.generateRequest();
+      }
     });
   </script>
 </dom-module>

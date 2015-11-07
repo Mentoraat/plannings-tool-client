@@ -93,13 +93,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       saveEvent: function() {
         this.event.title = this.title;
 
-        this.event.end = this.event.end.add(
-          moment.duration(
-            moment(this.start).diff(this.event.start)
-          ).asHours(),
-          'hours'
-        );
-        this.event.start = moment(this.start);
+        var diff = moment.duration(
+          moment(this.start).diff(this.event.start)
+        ).asHours();
+
+        /*
+          Switch to $.fullCalendar.moment because they require
+          their own implementation when altering time. Just because...
+        */
+        this.event.start = $.fullCalendar.moment(this.start);
+        this.event.end = $.fullCalendar.moment(this.event.end).add(diff, 'hours');
 
         this.fire('updated', this.event);
       }

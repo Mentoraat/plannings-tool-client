@@ -56,14 +56,11 @@
             ]
         }
       },
-      ready: function() {
-        this.ajaxResponse = function(request) {
-          if (request.target.method === 'PUT') {
-            this.$.calendar.rerenderEvents();
-          }
-        };
+      ajaxResponse: function(request) {
+        if (request.target.method === 'PUT') {
+          this.$.calendar.rerenderEvents();
+        }
       },
-
       config: function() {
           return {
             editable: true,

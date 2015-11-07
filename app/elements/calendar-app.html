@@ -57,8 +57,16 @@
         }
       },
       ajaxResponse: function(request) {
-        if (request.target.method === 'PUT') {
-          this.$.calendar.rerenderEvents();
+        switch (request.target.method) {
+          case 'PUT':
+            this.$.calendar.rerenderEvents();
+            break;
+          case 'POST':
+            /*
+              Requires slice in order to trigger propagation.
+              https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
+            */
+            this.notifyPath('eventSources', this.eventSources.slice());
         }
       },
       config: function() {
@@ -134,12 +142,6 @@
         this.performAjax('POST', correctMoments(postEvent, start, end));
 
         $(event).remove();
-
-        /*
-          Requires slice in order to trigger propagation.
-          https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
-        */
-        this.notifyPath('eventSources', this.eventSources.slice());
       },
       performAjax: function(type, data) {
         var ajax = this.$.occurrences;

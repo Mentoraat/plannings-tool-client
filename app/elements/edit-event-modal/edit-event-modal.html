@@ -1,0 +1,113 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="edit-event-modal">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      #editEventDialog {
+        --paper-dialog-background-color: #fff;
+      }
+
+      .saveButton {
+        background: #4285f4;
+        color: #fff;
+      }
+
+      .cancelButton {
+        color: #f44336;
+      }
+
+      .finishButton {
+        background: #4caf50;
+        color: #fff;
+      }
+    </style>
+    <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
+      <div>
+        <template is="dom-if" if="{{!finished}}" restamp="true">
+          <h2>Edit Occurrence</h2>
+          <paper-input label="title" floatinglabel value="{{title}}"></paper-input>
+          <paper-input label="time" floatinglabel type="datetime-local" value="{{start}}"></paper-input>
+          <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
+
+          <div class="buttons">
+            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton"><iron-icon icon="save"></iron-icon>Save</paper-button>
+            <paper-button tabindex="0" dialog-dismiss class="cancelButton"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton"><iron-icon icon="check"></iron-icon>Finish</paper-button>
+          </div>
+        </template>
+        <template is="dom-if" if="{{finished}}" restamp="true">
+          <h2>Finished Occurrence</h2>
+          <paper-button tabindex="0" dialog-dismiss><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+        </template>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+  (function() {
+    Polymer({
+      is: 'edit-event-modal',
+
+      properties: {
+        event: {
+          type: Object
+        }
+      },
+
+      ready: function() {
+        this.async(function() {
+          this.finished = false;
+        });
+      },
+
+      openDialog: function() {
+        this.finished = false;
+        this.start = moment(this.event.start).format('YYYY-MM-DDTHH:mm:ss');
+        this.title = this.event.title;
+
+        this.length = moment.duration(
+          this.event.end.diff(this.event.start)
+        ).asHours();
+
+        this.$.editEventDialog.open();
+
+        if (this.event.status === "FINISHED") {
+          this.finished = true;
+        }
+      },
+      cancelDialog: function() {
+        this.$.editEventDialog.cancel();
+      },
+      finishEvent: function() {
+        this.event.status = "FINISHED";
+        this.fire('updated', this.event);
+      },
+      saveEvent: function() {
+        this.event.title = this.title;
+
+        /*
+          Switch to $.fullCalendar.moment because they require
+          their own implementation when altering time. Just because...
+        */
+        this.event.start = $.fullCalendar.moment(this.start);
+        this.event.end = $.fullCalendar.moment(this.start).add(this.length, 'hours');
+
+        this.fire('updated', this.event);
+      }
+    });
+  })();
+  </script>
+</dom-module>

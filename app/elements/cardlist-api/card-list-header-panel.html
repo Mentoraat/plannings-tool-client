@@ -10,7 +10,9 @@
 
     .container {
       display: flex;
+      justify-content: space-between;
       flex-direction: column;
+      height: 100%;
     }
 
     .assignments-title {
@@ -21,31 +23,38 @@
       display: inline;
     }
 
+    paper-scroll-header-panel {
+      height: 100%;
+    }
+
     .refresh-button {
       float: right;
     }
 
     cardslist-api {
       flex: 1;
+      overflow-y: scroll;
     }
   </style>
   <template>
     <paper-scroll-header-panel fixed>
       <paper-toolbar class="flex">
         <div class="assignments-title paper-font-title">Assignments</div>
-        <paper-icon-button icon="refresh" class="refresh-button" on-tap="reLoadList"></paper-icon-button>
+        <paper-icon-button icon="refresh" class="refresh-button" on-tap="refresh"></paper-icon-button>
       </paper-toolbar>
       <div class="container">
         <cardslist-api id="unplanned" name="Unplanned" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
-        <card-chart></card-chart>
+        <card-chart id="chart"></card-chart>
       </div>
     </paper-scroll-header-panel>
   </template>
   <script>
     Polymer({
       is: 'card-list-header-panel',
-      reLoadList: function() {
-        this.$.unplanned.reLoadList();
+
+      refresh: function() {
+        this.$.unplanned.reloadList();
+        this.$.chart.reloadStats();
       }
     });
   </script>

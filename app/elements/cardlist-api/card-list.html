@@ -2,6 +2,14 @@
   <style>
     :host {
       display: block;
+      max-width: 100%;
+    }
+
+    paper-button {
+      background: #00A6D6;
+      margin-left: auto;
+      margin-right: auto;
+      display: block;
     }
 
     paper-toolbar {
@@ -15,24 +23,21 @@
       right: 0;
       top: 0;
     }
-
-    paper-button {
-      background: #00A6D6;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-    }
   </style>
   <template>
     <div id="cards">
-      <template is="dom-repeat" items="{{collection.items}}">
-        <card-assignment data="{{item}}"></card-assignment>
+      <template is="dom-repeat" items="{{collection}}">
+        <card-assignment data="{{item}}" on-dropped="updateCollection"></card-assignment>
+      </template>
+      <template is="dom-if" if="{{hasNoItems(collection)}}">
+        You're done planning. Good job!
       </template>
     </div>
   </template>
   <script>
     Polymer({
       is: 'card-list',
+
       properties: {
         collection: {
           type: Array
@@ -40,6 +45,19 @@
         name: {
           type: String
         }
+      },
+
+      hasNoItems: function(arr) {
+        return arr.length === 0;
+      },
+      updateCollection: function() {
+        this.fire('force-refresh');
+        /*
+          Explicitly empty the collection, as jQuery draggable removed the element,
+          but Polymer does not receive a trigger for this.
+          If we don't do this, dom-repeat deletes a TemplateInstance too much.
+        */
+        this.collection = [];
       }
     });
   </script>

@@ -9,15 +9,17 @@
       id="occurrences"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences"
       handle-as="json"
-      content-type="application/json"></iron-ajax>
-    <full-calendar config="[[config()]]" events="[[eventSources]]"></full-calendar>
+      content-type="application/json"
+      on-response="ajaxResponse"></iron-ajax>
+    <full-calendar id="calendar" config="[[config()]]" events="[[eventSources]]"></full-calendar>
+
+    <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal"></edit-event-modal>
   </template>
   <script>
   (function() {
     function correctMoments(event, start, end) {
       event.start = start.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
-      event.end = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
-
+      event.end   = end.tz('Europe/Amsterdam').format('YYYY-MM-DD,HH:mm:ss');
       return event;
     }
 
@@ -33,10 +35,11 @@
       }
 
       return value;
-    };
+    }
 
     Polymer({
       is: 'calendar-app',
+
       properties: {
         eventSources:  {
           type: Array,
@@ -51,6 +54,20 @@
                 }
               }
             ]
+        }
+      },
+      ajaxResponse: function(request) {
+        switch (request.target.method) {
+          case 'PUT':
+            this.$.calendar.rerenderEvents();
+            this.fire('events-refreshed');
+            break;
+          case 'POST':
+            /*
+              Requires slice in order to trigger propagation.
+              https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
+            */
+            this.notifyPath('eventSources', this.eventSources.slice());
         }
       },
       config: function() {
@@ -73,25 +90,34 @@
 
             allDayText: 'All Day',
 
-            dayClick:     this.dayClicked,
-            eventClick:   this.eventClicked,
+            dayClick:     this.dayClicked.bind(this),
+            eventClick:   this.eventClicked.bind(this),
             eventDrop:    this.updateEvent.bind(this),
             eventResize:  this.updateEvent.bind(this),
             drop:         (function(that) {
               return function(date) {
                 // this references the element dragged in onto the full-calendar
                 that.drop(this, date);
-              }
+              };
               // this references the Polymer object
             })(this)
         };
       },
-      dayClicked: function(event) {
+      dayClicked: function() {
       },
       eventClicked: function(event) {
+        if (event.editable){
+          var dialog = this.$.editEvent;
+          dialog.event = event;
+          dialog.openDialog();
+        }
+      },
+      updateEventFromModal: function(event) {
+        this.updateEvent(event.detail);
       },
       updateEvent: function(event) {
         var fixedEvent = {
+          status: event.status,
           assignment: event.assignment,
         };
 
@@ -117,12 +143,6 @@
         this.performAjax('POST', correctMoments(postEvent, start, end));
 
         $(event).remove();
-
-        /*
-          Requires slice in order to trigger propagation.
-          https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
-        */
-        this.notifyPath('eventSources', this.eventSources.slice());
       },
       performAjax: function(type, data) {
         var ajax = this.$.occurrences;

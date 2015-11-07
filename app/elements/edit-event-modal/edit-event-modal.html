@@ -41,6 +41,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <h2>Edit Occurrence</h2>
           <paper-input label="title" floatinglabel value="{{title}}"></paper-input>
           <paper-input label="time" floatinglabel type="datetime-local" value="{{start}}"></paper-input>
+          <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
 
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton"><iron-icon icon="save"></iron-icon>Save</paper-button>
@@ -77,6 +78,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.start = moment(this.event.start).format('YYYY-MM-DDTHH:mm:ss');
         this.title = this.event.title;
 
+        this.length = moment.duration(
+          this.event.end.diff(this.event.start)
+        ).asHours();
+
         this.$.editEventDialog.open();
 
         if (this.event.status === "FINISHED") {
@@ -93,16 +98,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       saveEvent: function() {
         this.event.title = this.title;
 
-        var diff = moment.duration(
-          moment(this.start).diff(this.event.start)
-        ).asHours();
-
         /*
           Switch to $.fullCalendar.moment because they require
           their own implementation when altering time. Just because...
         */
         this.event.start = $.fullCalendar.moment(this.start);
-        this.event.end = $.fullCalendar.moment(this.event.end).add(diff, 'hours');
+        this.event.end = $.fullCalendar.moment(this.start).add(this.length, 'hours');
 
         this.fire('updated', this.event);
       }

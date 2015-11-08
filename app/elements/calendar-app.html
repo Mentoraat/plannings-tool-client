@@ -107,8 +107,11 @@
       dayClicked: function() {
       },
       renderColor: function(event, element) {
-        console.log(event);
         element.css('background-color', event.color);
+
+        if (event.status === "FINISHED") {
+          element.css('border', 'green 5px solid');
+        }
       },
       eventClicked: function(event) {
         if (event.editable){

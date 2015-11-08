@@ -54,6 +54,9 @@
 
       refresh: function() {
         this.$.unplanned.reloadList();
+        this.refreshChart();
+      },
+      refreshChart: function() {
         this.$.chart.reloadStats();
       }
     });

@@ -1,6 +1,6 @@
 <dom-module id="main-panel">
   <template>
-    <paper-drawer-panel id="paperDrawerPanel" right-drawer>
+    <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="300px">
       <card-list-header-panel id="cardList" drawer></card-list-header-panel>
 
       <!-- Main Area -->
@@ -29,7 +29,7 @@
     Polymer({
       is: 'main-panel',
       refreshEvents: function() {
-        this.$.cardList.refresh();
+        this.$.cardList.refreshChart();
       }
     });
   </script>

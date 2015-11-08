@@ -59,15 +59,11 @@
       ajaxResponse: function(request) {
         switch (request.target.method) {
           case 'PUT':
-            this.$.calendar.rerenderEvents();
+            this.$.calendar.updateEvent(request.target.originalEvent);
             this.fire('events-refreshed');
             break;
           case 'POST':
-            /*
-              Requires slice in order to trigger propagation.
-              https://github.com/Polymer/polymer/issues/2068#issuecomment-120819262
-            */
-            this.notifyPath('eventSources', this.eventSources.slice());
+            this.$.calendar.renderEvent(request.target.lastResponse);
         }
       },
       config: function() {
@@ -94,6 +90,7 @@
             eventClick:   this.eventClicked.bind(this),
             eventDrop:    this.updateEvent.bind(this),
             eventResize:  this.updateEvent.bind(this),
+            eventAfterRender: this.renderColor.bind(this),
             drop:         (function(that) {
               return function(date) {
                 // this references the element dragged in onto the full-calendar
@@ -104,6 +101,13 @@
         };
       },
       dayClicked: function() {
+      },
+      renderColor: function(event, element) {
+        element.css('background-color', event.color);
+
+        if (event.status === "FINISHED") {
+          element.css('border', '#15D115 5px solid');
+        }
       },
       eventClicked: function(event) {
         if (event.editable){
@@ -121,6 +125,7 @@
           assignment: event.assignment,
         };
 
+        this.$.occurrences.originalEvent = event;
         this.performAjax('PUT', correctMoments(fixedEvent, event.start, event.end));
       },
       drop: function(event, date) {

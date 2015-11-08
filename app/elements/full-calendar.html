@@ -50,6 +50,14 @@
 
       rerenderEvents: function() {
         $(this.$.calendar).fullCalendar('rerenderEvents');
+      },
+
+      renderEvent: function(event) {
+        $(this.$.calendar).fullCalendar('renderEvent', event);
+      },
+
+      updateEvent: function(event) {
+        $(this.$.calendar).fullCalendar('updateEvent', event);
       }
     });
   </script>

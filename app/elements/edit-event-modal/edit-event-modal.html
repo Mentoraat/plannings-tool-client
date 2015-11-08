@@ -34,24 +34,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         background: #4caf50;
         color: #fff;
       }
+
+      .buttons {
+        margin-top: 5px;
+      }
     </style>
     <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
       <div>
         <template is="dom-if" if="{{!finished}}" restamp="true">
-          <h2>Edit Occurrence</h2>
-          <paper-input label="title" floatinglabel value="{{title}}"></paper-input>
+          <paper-toolbar><span>Edit Occurrence</span></paper-toolbar>
+          <span>Change the start time and lenght of the occurrence.</span>
           <paper-input label="time" floatinglabel type="datetime-local" value="{{start}}"></paper-input>
           <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
 
           <div class="buttons">
-            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton"><iron-icon icon="save"></iron-icon>Save</paper-button>
-            <paper-button tabindex="0" dialog-dismiss class="cancelButton"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton"><iron-icon icon="check"></iron-icon>Finish</paper-button>
+            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
+            <paper-button tabindex="0" dialog-dismiss class="cancelButton" title="Don't save the changes"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton" title="You have finished the assignment"><iron-icon icon="check"></iron-icon>Finish</paper-button>
           </div>
         </template>
         <template is="dom-if" if="{{finished}}" restamp="true">
-          <h2>Finished Occurrence</h2>
-          <paper-button tabindex="0" dialog-dismiss><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+          <paper-toolbar><span>This Occurrence Was Finished</span></paper-toolbar>
+          <span>You finished this occurrence. It took you {{length}} hours.</span>
+
+          <div class="buttons">
+            <paper-button tabindex="0" dialog-dismiss class="saveButton"><iron-icon icon="clear"></iron-icon>Close</paper-button>
+            <paper-button tabindex="0" dialog-confirm class="cancelButton" on-tap="unfinishEvent" title="You have unfinished the assignment"><iron-icon icon="check"></iron-icon>Unfinish</paper-button>
+          </div>
         </template>
       </div>
     </paper-dialog>
@@ -92,7 +101,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.editEventDialog.cancel();
       },
       finishEvent: function() {
-        this.event.status = "FINISHED";
+        this.updateEvent('FINISHED');
+      },
+      unfinishEvent: function() {
+        this.updateEvent('UNFINISHED');
+      },
+      updateEvent: function(status) {
+        this.event.status = status;
         this.fire('updated', this.event);
       },
       saveEvent: function() {

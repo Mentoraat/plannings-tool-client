@@ -6,6 +6,12 @@
   </style>
   <template>
     <iron-ajax
+      auto
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf"
+      handle-as="json"
+      content-type="application/json"
+      last-response="{{user}}"></iron-ajax>
+    <iron-ajax
       id="occurrences"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/occurrences"
       handle-as="json"
@@ -103,7 +109,8 @@
       dayClicked: function() {
       },
       renderColor: function(event, element) {
-        element.css('background-color', event.color);
+        var edition = (event.assignment ? event.assignment : event).course.edition;
+        element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);
 
         if (event.status === "FINISHED") {
           element.css('border', '#15D115 5px solid');

@@ -70,7 +70,9 @@
             this.fire('events-refreshed');
             break;
           case 'POST':
+            this.lastEvent.dropped();
             this.$.calendar.renderEvent(request.target.lastResponse);
+            break;
         }
       },
       config: function() {
@@ -172,9 +174,8 @@
           editable: true
         };
 
+        this.lastEvent = event;
         this.performAjax('POST', correctMoments(postEvent, start, end));
-
-        $(event).remove();
       },
       performAjax: function(type, data) {
         var ajax = this.$.occurrences;

@@ -39,6 +39,9 @@
       properties: {
         data: {
           type: Object
+        },
+        index: {
+          type: Number
         }
       },
 
@@ -60,13 +63,14 @@
         be made draggable.
       */
       attached: function() {
-        var that = this;
         $(this).draggable({
           zIndex: 1000,
-          stop: function() {
-            that.fire('dropped');
-          }
+          revert: true
         });
+      },
+
+      dropped: function() {
+        this.fire('dropped', {index: this.index});
       }
     });
   </script>

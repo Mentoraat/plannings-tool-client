@@ -48,7 +48,7 @@
         <paper-spinner active></paper-spinner>
       </div>
 
-      <card-list hidden$="{{loading}}" collection="{{responseCollection.items}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
+      <card-list hidden$="{{loading}}" collection="{{responseCollection.items}}" name="{{name}}"></card-list>
     </section>
   </template>
   <script>
@@ -70,14 +70,6 @@
 
       reloadList: function() {
         this.$.ajax.generateRequest();
-      },
-
-      pendingReload: function() {
-        this.loading = true;
-
-        this.async(function() {
-          this.reloadList();
-        }, 1000);
       },
 
       addAssignment: function(assignment) {

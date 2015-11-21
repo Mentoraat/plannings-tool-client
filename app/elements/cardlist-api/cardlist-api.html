@@ -44,22 +44,11 @@
     </iron-ajax>
 
     <section>
-      <!--
-        While loading, show spinner
-      -->
-      <template is="dom-if" if="{{loading}}">
-        <div class="center">
-          <paper-spinner active></paper-spinner>
-        </div>
-      </template>
+      <div class="center" hidden$="{{!loading}}">
+        <paper-spinner active></paper-spinner>
+      </div>
 
-      <!--
-        Shows if we're not loading data
-      -->
-      <template is="dom-if" if="{{!loading}}">
-        <card-list collection="{{responseCollection.items}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
-      </template>
-
+      <card-list hidden$="{{loading}}" collection="{{responseCollection.items}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
     </section>
   </template>
   <script>
@@ -89,6 +78,10 @@
         this.async(function() {
           this.reloadList();
         }, 1000);
+      },
+
+      addAssignment: function(assignment) {
+        this.push('responseCollection.items', assignment);
       }
     });
   </script>

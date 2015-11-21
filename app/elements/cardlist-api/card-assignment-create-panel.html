@@ -1,0 +1,86 @@
+<dom-module id="card-assignment-create-panel">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses"
+      handle-as="json"
+      debounce-duration="300"
+      loading="{{loading}}"
+      last-response="{{courses}}">
+    </iron-ajax>
+
+    <iron-ajax
+      id="create"
+      content-type="application/json"
+      debounce-duration="300"
+      method="POST"
+      on-response="notifyList">
+    </iron-ajax>
+
+    <h2>Create new assignment</h2>
+    <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
+    <paper-input label="title" floatinglabel type="text" value="{{title}}"></paper-input>
+    <paper-input label="description" floatinglabel type="text" value="{{description}}"></paper-input>
+    <paper-input label="deadline" floatinglabel type="text" value="{{deadline}}"></paper-input>
+    <template is="dom-if" if="{{noCourses(loading)}}">
+      <span>No courses available</span>
+    </template>
+    <template is="dom-if" if="{{!noCourses(loading)}}" observe="loading courses">
+      <paper-dropdown-menu label="Course" value="{{course}}">
+        <paper-listbox class="dropdown-content">
+          <paper-item>No course</paper-item>
+          <template is="dom-repeat" items="{{courses}}">
+            <paper-item>[[item.courseId]]-[[item.year]]</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </template>
+
+    <paper-button raised on-tap="submit">Submit</paper-button>
+  </template>
+  <script>
+    Polymer({
+      is: 'card-assignment-create-panel',
+
+      attached: function() {
+        this.courses = [];
+      },
+
+      noCourses: function(loading) {
+        return loading || !this.courses || this.courses.length === 0;
+      },
+
+      notifyList: function(ajax) {
+        this.fire('create', {assignment: ajax.detail.parseResponse()});
+      },
+
+      submit: function() {
+        var ajax = this.$.create;
+
+        ajax.body = {
+          length: this.length,
+          name: this.title,
+          description: this.description,
+          deadline: this.deadline
+        };
+
+        if (this.course === "No course") {
+          ajax.url = "/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments";
+        }
+        else {
+          ajax.url = "/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/" +
+              this.course + "/assignments";
+        }
+
+        ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

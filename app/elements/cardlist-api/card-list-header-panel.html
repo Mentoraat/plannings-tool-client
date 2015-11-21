@@ -31,7 +31,11 @@
       float: right;
     }
 
-    cardslist-api {
+    .buttons {
+      width: 100%;
+    }
+
+    .cardlist-container {
       flex: 1;
       overflow-y: scroll;
     }
@@ -40,10 +44,16 @@
     <paper-scroll-header-panel fixed>
       <paper-toolbar class="flex">
         <div class="assignments-title paper-font-title">Assignments</div>
-        <paper-icon-button icon="refresh" class="refresh-button" on-tap="refresh"></paper-icon-button>
+        <div class="buttons">
+          <paper-icon-button icon="refresh" class="refresh-button" on-tap="refresh"></paper-icon-button>
+          <paper-button on-tap="switch">{{status}}</paper-icon-button>
+        </div>
       </paper-toolbar>
       <div class="container">
-        <cardslist-api id="unplanned" name="Unplanned" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+        <div class="cardlist-container">
+          <cardslist-api hidden$="{{createView}}" id="unplanned" name="Unplanned" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+          <card-assignment-create-panel on-create="addAssignment" hidden$="{{!createView}}"></card-assignment-create-panel>
+        </div>
         <card-chart id="chart"></card-chart>
       </div>
     </paper-scroll-header-panel>
@@ -52,12 +62,28 @@
     Polymer({
       is: 'card-list-header-panel',
 
+      ready: function() {
+        this.createView = false;
+        this.status = "Create";
+      },
+
       refresh: function() {
         this.$.unplanned.reloadList();
         this.refreshChart();
       },
+
       refreshChart: function() {
         this.$.chart.reloadStats();
+      },
+
+      addAssignment: function(event) {
+        this.switch();
+        this.$.unplanned.addAssignment(event.detail.assignment);
+      },
+
+      switch: function() {
+        this.createView = !this.createView;
+        this.status = this.createView ? "List" : "Create";
       }
     });
   </script>

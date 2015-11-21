@@ -29,9 +29,7 @@
       <template is="dom-repeat" items="{{collection}}">
         <card-assignment data="{{item}}" on-dropped="updateCollection"></card-assignment>
       </template>
-      <template is="dom-if" if="{{hasNoItems(collection)}}">
-        You're done planning. Good job!
-      </template>
+      <span hidden$="{{!hasNoItems(collection)}}">You're done planning. Good job!</span>
     </div>
   </template>
   <script>

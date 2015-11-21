@@ -7,6 +7,7 @@
   <template>
     <iron-ajax
       auto
+      id="user"
       url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf"
       handle-as="json"
       content-type="application/json"
@@ -110,7 +111,25 @@
       },
       renderColor: function(event, element) {
         var edition = (event.assignment ? event.assignment : event).course.edition;
-        element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);
+
+        var fn = function() {
+          element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);
+        }.bind(this);
+
+        /*
+          It might be the case that full-calendar finishes earlier than the
+          user retrieval. Therefore wait till the user response has finished
+          and execute the styling.
+
+          If, however, the user was already retrieved, we can start the styling
+          right away.
+        */
+        if (!this.user) {
+          this.$.user.addEventListener('response', fn);
+        }
+        else {
+          fn();
+        }
 
         if (event.status === "FINISHED") {
           element.css('border', '#15D115 5px solid');

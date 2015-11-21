@@ -1,4 +1,12 @@
 <dom-module id="main-panel">
+  <style>
+    paper-scroll-header-panel {
+      --paper-scroll-header-container: {
+        right: -15px;
+      }
+    }
+  </style>
+
   <template>
     <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="300px">
       <card-list-header-panel id="cardList" drawer></card-list-header-panel>

@@ -26,7 +26,7 @@
   </style>
   <template>
     <div id="cards">
-      <template is="dom-repeat" items="{{collection}}">
+      <template is="dom-repeat" items="{{collection}}" sort="sort">
         <card-assignment data="{{item}}" on-dropped="updateCollection"></card-assignment>
       </template>
       <span hidden$="{{!hasNoItems(collection)}}">You're done planning. Good job!</span>
@@ -56,6 +56,10 @@
           If we don't do this, dom-repeat deletes a TemplateInstance too much.
         */
         this.collection = [];
+      },
+
+      sort: function(one, other) {
+        return one.deadline > other.deadline;
       }
     });
   </script>

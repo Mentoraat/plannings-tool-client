@@ -7,7 +7,7 @@
   <template>
     <div id="cards">
       <template is="dom-repeat" items="{{collection}}">
-        <card-assignment data="{{item}}" index="{{index}}" on-dropped="updateCollection"></card-assignment>
+        <card-assignment color="{{getColor(user, item)}}" data="{{item}}" index="{{index}}" on-dropped="updateCollection"></card-assignment>
       </template>
     </div>
     <template is="dom-if" if="{{!collection.length}}" restamp="true">
@@ -24,11 +24,18 @@
         },
         name: {
           type: String
+        },
+        user: {
+          type: Object
         }
       },
 
       updateCollection: function(event) {
         this.splice('collection', event.detail.index, 1);
+      },
+
+      getColor: function(user, data) {
+        return user.colors[data.course.edition.courseId + ',' + data.course.edition.year];
       },
 
       /*

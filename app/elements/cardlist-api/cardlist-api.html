@@ -48,7 +48,12 @@
         <paper-spinner active></paper-spinner>
       </div>
 
-      <card-list hidden$="{{loading}}" collection="{{responseCollection.items}}" name="{{name}}"></card-list>
+      <card-list
+        hidden$="{{loading}}"
+        collection="{{responseCollection.items}}"
+        user="{{user}}"
+        name="{{name}}">
+      </card-list>
     </section>
   </template>
   <script>
@@ -58,6 +63,9 @@
       properties: {
         name: {
           type:String
+        },
+        user: {
+          type: Object
         },
         apiurl: {
           type: String

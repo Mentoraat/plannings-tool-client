@@ -51,7 +51,13 @@
       </paper-toolbar>
       <div class="container">
         <div class="cardlist-container">
-          <cardslist-api hidden$="{{createView}}" id="unplanned" name="Unplanned" apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments"></cardslist-api>
+          <cardslist-api
+            id="unplanned"
+            hidden$="{{createView}}"
+            name="Unplanned"
+            user="{{user}}"
+            apiurl="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments">
+          </cardslist-api>
           <card-assignment-create-panel on-create="addAssignment" hidden$="{{!createView}}"></card-assignment-create-panel>
         </div>
         <card-chart id="chart"></card-chart>
@@ -61,6 +67,12 @@
   <script>
     Polymer({
       is: 'card-list-header-panel',
+
+      properties: {
+        user: {
+          type: Object
+        }
+      },
 
       ready: function() {
         this.createView = false;

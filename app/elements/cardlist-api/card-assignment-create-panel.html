@@ -5,6 +5,10 @@
         display: block;
         padding: 10px;
       }
+
+      .error {
+        color: red;
+      }
     </style>
 
     <iron-ajax
@@ -21,21 +25,45 @@
       content-type="application/json"
       debounce-duration="300"
       method="POST"
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/{{course}}/assignments"
       on-response="notifyList">
     </iron-ajax>
 
     <h2>Create new assignment</h2>
-    <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
-    <paper-input label="title" floatinglabel type="text" value="{{title}}"></paper-input>
-    <paper-input label="description" floatinglabel type="text" value="{{description}}"></paper-input>
-    <paper-input label="deadline" floatinglabel type="text" value="{{deadline}}"></paper-input>
+    <paper-input
+      label="length"
+      type="number"
+      value="{{length}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="title"
+      type="text"
+      value="{{title}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="description"
+      type="text"
+      value="{{description}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="deadline"
+      type="text"
+      value="{{deadline}}"
+      required
+      auto-validate>
+    </paper-input>
     <template is="dom-if" if="{{noCourses(loading)}}">
       <span>No courses available</span>
     </template>
     <template is="dom-if" if="{{!noCourses(loading)}}" observe="loading courses">
-      <paper-dropdown-menu label="Course" value="{{course}}">
+      <paper-dropdown-menu label="Course" value="{{course}}" required>
         <paper-listbox class="dropdown-content">
-          <paper-item>No course</paper-item>
           <template is="dom-repeat" items="{{courses}}">
             <paper-item>[[item.courseId]]-[[item.year]]</paper-item>
           </template>
@@ -43,14 +71,40 @@
       </paper-dropdown-menu>
     </template>
 
-    <paper-button raised on-tap="submit">Submit</paper-button>
+    <div>
+      <span class="error" hidden$="{{!error}}">One of the fields is incorrect!</span>
+      <paper-button raised on-tap="submit">Submit</paper-button>
+    </div>
   </template>
   <script>
     Polymer({
       is: 'card-assignment-create-panel',
 
+      properties: {
+        length: {
+          type: Number,
+          observer: 'checkError'
+        },
+        title: {
+          type: String,
+          observer: 'checkError'
+        },
+        description: {
+          type: String,
+          observer: 'checkError'
+        },
+        deadline: {
+          type: Number,
+          observer: 'checkError'
+        },
+        course: {
+          type: String,
+          observer: 'checkError'
+        }
+      },
+
       attached: function() {
-        this.courses = [];
+        this.reset();
       },
 
       noCourses: function(loading) {
@@ -61,7 +115,28 @@
         this.fire('create', {assignment: ajax.detail.parseResponse()});
       },
 
+      reset: function() {
+        this.error = false;
+        this.length = undefined;
+        this.title = undefined;
+        this.description = undefined;
+        this.deadline = undefined;
+        this.course = undefined;
+      },
+
+      checkError: function() {
+        if (!this.length || !this.title || !this.description || !this.deadline || !this.course) {
+          this.error = true;
+          return true;
+        }
+        this.error = false;
+      },
+
       submit: function() {
+        if (this.checkError()) {
+          return;
+        }
+
         var ajax = this.$.create;
 
         ajax.body = {
@@ -71,15 +146,9 @@
           deadline: this.deadline
         };
 
-        if (this.course === "No course") {
-          ajax.url = "/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/assignments";
-        }
-        else {
-          ajax.url = "/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/" +
-              this.course + "/assignments";
-        }
-
         ajax.generateRequest();
+
+        this.reset();
       }
     });
   </script>

@@ -2,37 +2,17 @@
   <style>
     :host {
       display: block;
-      max-width: 100%;
-    }
-
-    paper-button {
-      background: #00A6D6;
-      margin-left: auto;
-      margin-right: auto;
-      display: block;
-    }
-
-    paper-toolbar {
-      margin-bottom: 5px;
-    }
-
-    paper-toolbar paper-material {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      top: 0;
     }
   </style>
   <template>
     <div id="cards">
       <template is="dom-repeat" items="{{collection}}">
-        <card-assignment data="{{item}}" on-dropped="updateCollection"></card-assignment>
-      </template>
-      <template is="dom-if" if="{{hasNoItems(collection)}}">
-        You're done planning. Good job!
+        <card-assignment color="{{getColor(user, item)}}" data="{{item}}" index="{{index}}" on-dropped="updateCollection"></card-assignment>
       </template>
     </div>
+    <template is="dom-if" if="{{!collection.length}}" restamp="true">
+      <span>You're done planning. Good job!</span>
+    </template>
   </template>
   <script>
     Polymer({
@@ -44,20 +24,25 @@
         },
         name: {
           type: String
+        },
+        user: {
+          type: Object
         }
       },
 
-      hasNoItems: function(arr) {
-        return arr.length === 0;
+      updateCollection: function(event) {
+        this.splice('collection', event.detail.index, 1);
       },
-      updateCollection: function() {
-        this.fire('force-refresh');
-        /*
-          Explicitly empty the collection, as jQuery draggable removed the element,
-          but Polymer does not receive a trigger for this.
-          If we don't do this, dom-repeat deletes a TemplateInstance too much.
-        */
-        this.collection = [];
+
+      getColor: function(user, data) {
+        return user.colors[data.course.edition.courseId + ',' + data.course.edition.year];
+      },
+
+      /*
+        TODO: This does not work with updateCollection for now.
+      */
+      sort: function(one, other) {
+        return one.deadline > other.deadline;
       }
     });
   </script>

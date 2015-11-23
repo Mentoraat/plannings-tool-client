@@ -44,22 +44,16 @@
     </iron-ajax>
 
     <section>
-      <!--
-        While loading, show spinner
-      -->
-      <template is="dom-if" if="{{loading}}">
-        <div class="center">
-          <paper-spinner active></paper-spinner>
-        </div>
-      </template>
+      <div class="center" hidden$="{{!loading}}">
+        <paper-spinner active></paper-spinner>
+      </div>
 
-      <!--
-        Shows if we're not loading data
-      -->
-      <template is="dom-if" if="{{!loading}}">
-        <card-list collection="{{responseCollection.items}}" name="{{name}}" on-force-refresh="pendingReload"></card-list>
-      </template>
-
+      <card-list
+        hidden$="{{loading}}"
+        collection="{{responseCollection.items}}"
+        user="{{user}}"
+        name="{{name}}">
+      </card-list>
     </section>
   </template>
   <script>
@@ -69,6 +63,9 @@
       properties: {
         name: {
           type:String
+        },
+        user: {
+          type: Object
         },
         apiurl: {
           type: String
@@ -83,12 +80,8 @@
         this.$.ajax.generateRequest();
       },
 
-      pendingReload: function() {
-        this.loading = true;
-
-        this.async(function() {
-          this.reloadList();
-        }, 1000);
+      addAssignment: function(assignment) {
+        this.push('responseCollection.items', assignment);
       }
     });
   </script>

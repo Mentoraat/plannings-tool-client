@@ -1,0 +1,155 @@
+<dom-module id="card-assignment-create-panel">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      .error {
+        color: red;
+      }
+    </style>
+
+    <iron-ajax
+      auto
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses"
+      handle-as="json"
+      debounce-duration="300"
+      loading="{{loading}}"
+      last-response="{{courses}}">
+    </iron-ajax>
+
+    <iron-ajax
+      id="create"
+      content-type="application/json"
+      debounce-duration="300"
+      method="POST"
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf/courses/{{course}}/assignments"
+      on-response="notifyList">
+    </iron-ajax>
+
+    <h2>Create new assignment</h2>
+    <paper-input
+      label="length"
+      type="number"
+      value="{{length}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="title"
+      type="text"
+      value="{{title}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="description"
+      type="text"
+      value="{{description}}"
+      required
+      auto-validate>
+    </paper-input>
+    <paper-input
+      label="deadline"
+      type="text"
+      value="{{deadline}}"
+      required
+      auto-validate>
+    </paper-input>
+    <template is="dom-if" if="{{noCourses(loading)}}">
+      <span>No courses available</span>
+    </template>
+    <template is="dom-if" if="{{!noCourses(loading)}}" observe="loading courses">
+      <paper-dropdown-menu label="Course" value="{{course}}" required>
+        <paper-listbox class="dropdown-content">
+          <template is="dom-repeat" items="{{courses}}">
+            <paper-item>[[item.courseId]]-[[item.year]]</paper-item>
+          </template>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </template>
+
+    <div>
+      <span class="error" hidden$="{{!error}}">One of the fields is incorrect!</span>
+      <paper-button raised on-tap="submit">Submit</paper-button>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'card-assignment-create-panel',
+
+      properties: {
+        length: {
+          type: Number,
+          observer: 'checkError'
+        },
+        title: {
+          type: String,
+          observer: 'checkError'
+        },
+        description: {
+          type: String,
+          observer: 'checkError'
+        },
+        deadline: {
+          type: Number,
+          observer: 'checkError'
+        },
+        course: {
+          type: String,
+          observer: 'checkError'
+        }
+      },
+
+      attached: function() {
+        this.reset();
+      },
+
+      noCourses: function(loading) {
+        return loading || !this.courses || this.courses.length === 0;
+      },
+
+      notifyList: function(ajax) {
+        this.fire('create', {assignment: ajax.detail.parseResponse()});
+      },
+
+      reset: function() {
+        this.error = false;
+        this.length = undefined;
+        this.title = undefined;
+        this.description = undefined;
+        this.deadline = undefined;
+        this.course = undefined;
+      },
+
+      checkError: function() {
+        if (!this.length || !this.title || !this.description || !this.deadline || !this.course) {
+          this.error = true;
+          return true;
+        }
+        this.error = false;
+      },
+
+      submit: function() {
+        if (this.checkError()) {
+          return;
+        }
+
+        var ajax = this.$.create;
+
+        ajax.body = {
+          length: this.length,
+          name: this.title,
+          description: this.description,
+          deadline: this.deadline
+        };
+
+        ajax.generateRequest();
+
+        this.reset();
+      }
+    });
+  </script>
+</dom-module>

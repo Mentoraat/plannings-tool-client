@@ -1,7 +1,31 @@
 <dom-module id="main-panel">
+  <style>
+    paper-scroll-header-panel {
+      --paper-scroll-header-container: {
+        right: -15px;
+      }
+    }
+    #paperDrawerPanel {
+      --paper-drawer-panel-scrim: {
+        z-index: 1;
+      }
+      --paper-drawer-panel-drawer-container: {
+        z-index: 1;
+      }
+    }
+  </style>
+
   <template>
+    <iron-ajax
+      auto
+      id="user"
+      url="/v1/users/USER-aba62cd5-caa6-4e42-a5d6-4909f03038bf"
+      handle-as="json"
+      content-type="application/json"
+      last-response="{{user}}"></iron-ajax>
+
     <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="300px">
-      <card-list-header-panel id="cardList" drawer></card-list-header-panel>
+      <card-list-header-panel id="cardList" user="{{user}}" drawer></card-list-header-panel>
 
       <!-- Main Area -->
       <paper-scroll-header-panel main fixed>
@@ -20,7 +44,7 @@
 
         <!-- Main Content -->
         <div class="content">
-          <calendar-app on-events-refreshed="refreshEvents"></calendar-app>
+          <calendar-app user="{{user}}" on-events-refreshed="refreshEvents"></calendar-app>
         </div>
       </paper-scroll-header-panel>
     </paper-drawer-panel>

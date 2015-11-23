@@ -5,6 +5,7 @@
       margin-left: auto;
       margin-right: auto;
       width: 80%;
+      --paper-card-header-background-color: #E1E1E1;
     }
 
     paper-card {
@@ -13,23 +14,24 @@
       padding: 10px;
 
       --paper-card-header: {
-        background: #E1E1E1;
+        background-color: var(--paper-card-header-background-color);
+        opacity: .65;
       }
 
       --paper-card-header-text: {
         font-weight: normal;
         font-size: initial;
         text-align: center;
+        color: white;
       }
     }
   </style>
   <template>
     <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
-      <span>{{data.course.edition.courseId}}</span>
       <div class="card-content">
-        Due: <span>{{timeConverter(data.deadline)}}</span>
+        <div>Due: {{timeConverter(data.deadline)}}</div>
+        <div>Expected study hours: {{data.length}}</div>
       </div>
-      <span>Expected study hours: {{data.length}}</span>
     </paper-card>
   </template>
   <script>
@@ -39,11 +41,18 @@
       properties: {
         data: {
           type: Object
+        },
+        index: {
+          type: Number
+        },
+        color: {
+          type: String,
+          observer: 'changeColor'
         }
       },
 
       timeConverter: function(UNIX_timestamp) {
-        var a = new Date(UNIX_timestamp * 1000);
+        var a = new Date(UNIX_timestamp);
         var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var year = a.getFullYear();
         var month = months[a.getMonth()];
@@ -55,18 +64,24 @@
         return time;
       },
 
+      changeColor: function(newValue) {
+        this.customStyle['--paper-card-header-background-color'] = newValue;
+        this.updateStyles();
+      },
+
       /*
         Equivalent of domReady. So we know the element is loaded and can
         be made draggable.
       */
       attached: function() {
-        var that = this;
         $(this).draggable({
           zIndex: 1000,
-          stop: function() {
-            that.fire('dropped');
-          }
+          revert: true
         });
+      },
+
+      dropped: function() {
+        this.fire('dropped', {index: this.index});
       }
     });
   </script>

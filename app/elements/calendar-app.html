@@ -121,7 +121,16 @@
         var edition = (event.assignment ? event.assignment : event).course.edition;
 
         var fn = function() {
-          element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);
+          var color = 'red';
+
+          if (event.status === "FINISHED") {
+            color = '#15D115 5px solid';
+          }
+          else if(moment().isBefore(event.end)) {
+            color = this.user.colors[edition.courseId + ',' + edition.year];
+          }
+
+          element.css('background-color', color);
         }.bind(this);
 
         /*
@@ -137,10 +146,6 @@
         }
         else {
           fn();
-        }
-
-        if (event.status === "FINISHED") {
-          element.css('border', '#15D115 5px solid');
         }
       },
       eventClicked: function(event) {

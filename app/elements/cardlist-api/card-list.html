@@ -35,6 +35,10 @@
       },
 
       getColor: function(user, data) {
+        if (data.deadline < new Date().getTime()) {
+          return 'red';
+        }
+
         return user.colors[data.course.edition.courseId + ',' + data.course.edition.year];
       },
 

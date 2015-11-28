@@ -105,7 +105,7 @@
             eventClick:   this.eventClicked.bind(this),
             eventDrop:    this.updateEvent.bind(this),
             eventResize:  this.updateEvent.bind(this),
-            eventAfterRender: this.renderColor.bind(this),
+            eventAfterRender: this.renderEvent.bind(this),
             drop:         (function(that) {
               return function(date) {
                 // this references the element dragged in onto the full-calendar
@@ -117,7 +117,7 @@
       },
       dayClicked: function() {
       },
-      renderColor: function(event, element) {
+      renderEvent: function(event, element) {
         var edition = (event.assignment ? event.assignment : event).course.edition;
 
         var fn = function() {
@@ -147,6 +147,15 @@
         else {
           fn();
         }
+
+        var link = $('<div>')
+            .addClass('event-finisher')
+            .html('Finish')
+            .click(function() {
+              console.log('Finished!');
+            });
+
+        element.prepend(link);
       },
       eventClicked: function(event) {
         if (event.editable){

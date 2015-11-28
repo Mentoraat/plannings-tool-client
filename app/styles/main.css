@@ -77,6 +77,10 @@ th {
   bottom: 3px;
 }
 
+.fc-time-grid-event .event-finisher {
+  float: right;
+}
+
 .fc-time-grid-event.fc-short .fc-time {
   display: none;
 }

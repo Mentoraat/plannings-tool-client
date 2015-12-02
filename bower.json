@@ -10,6 +10,7 @@
     "neon-elements": "PolymerElements/neon-elements#^1.0.0",
     "page": "visionmedia/page.js#~1.6.3",
     "paper-elements": "PolymerElements/paper-elements#^1.0.1",
+    "platinum-elements": "PolymerElements/platinum-elements#^1.0.1",
     "svg-piechart": "~1.0.1",
     "akc-meta": "git://github.com/akc42/akc-meta.git#b0a6bde0e"
   },

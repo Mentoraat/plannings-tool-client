@@ -77,6 +77,9 @@
       <span class="error" hidden$="{{!error}}">One of the fields is incorrect!</span>
       <paper-button raised on-tap="submit">Submit</paper-button>
     </div>
+
+    <h2>Upload Multiple</h2>
+    <file-upload target="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses/assignments" droppable raised>Select file</file-upload>
   </template>
   <script>
     Polymer({

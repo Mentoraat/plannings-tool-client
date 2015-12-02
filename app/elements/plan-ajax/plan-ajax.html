@@ -13,14 +13,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="plan-ajax">
   <template>
     <iron-ajax
-      auto
-      id="{{id}}"
-      url="{{url}}"
-      handle-as="{{handleas}}"
-      content-type="{{contenttype}}"
-      last-response="{{user}}"
-      headers="{{header}}"
+      id="ajax"
+      body="{{body}}"
+      params="{{params}}"
+      method="{{method}}"
+      url="/v1/{{refurl}}"
+      handle-as="{{handleAs}}"
+      last-response="{{lastResponse}}"
+      loading="{{loading}}"
+      headers='{{createHeader(token, contenttype)}}'
+      debounce-duration="300"
+      on-response="handleResponse"
       ></iron-ajax>
+
+    <akc-meta-query key="token" value="{{token}}"></akc-meta-query>
   </template>
   <script>
   (function() {
@@ -35,28 +41,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: 'application/json',
           notify: true
         },
-        id: {
+        refurl: {
           type: String,
           value: '',
           notify: true
         },
-        url: {
-          type: String,
-          value: '',
-          notify: true
-        },
-        handleas: {
+        handleAs: {
           type: String,
           value: 'json',
           notify: true
         },
-        header: {
+        auto: {
+          type: Boolean,
+          value: false
+        },
+        loading: {
+          type: Boolean,
+          notify: true,
+          value: false
+        },
+        params: {
+          type: Object,
+          value: {}
+        },
+        method: {
           type: String,
-          value: function() {
-            return '{"Authorization": "Bearer ' +
-              new Polymer.IronMetaQuery({key: 'user'}).value + '"}';
-          }
+          value: 'GET'
+        },
+        lastResponse: {
+          type: Object,
+          notify: true
+        },
+        body: {
+          type: Object
         }
+      },
+
+      ready: function() {
+        if (this.auto) {
+          this.generateRequest();
+        }
+      },
+
+      handleResponse: function(event) {
+        this.fire('response', event.detail);
+      },
+
+      createHeader: function(token, contenttype) {
+        return {
+          "Authorization": "Bearer " + token,
+          "content-type": contenttype
+        };
+      },
+
+      generateRequest: function() {
+        this.$.ajax.generateRequest();
       }
     });
   })();

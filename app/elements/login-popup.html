@@ -1,0 +1,43 @@
+<dom-module id="login-popup">
+  <template>
+    <iron-ajax
+      id="ajax"
+      url="/v1/authentication"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      on-response="handleResponse"></iron-ajax>
+
+    <akc-meta key="token" value="[[token]]"></akc-meta>
+
+    <template is="dom-if" if="{{loggedIn}}" restamp="true">
+      <main-panel></main-panel>
+    </template>
+    <template is="dom-if" if="{{!loggedIn}}" restamp="true">
+      <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'login-popup',
+      properties: {
+        loggedIn: {
+          type: Boolean,
+          value: false
+        }
+      },
+      handleResponse: function(request) {
+        this.token = request.target.lastResponse.token;
+        this.loggedIn = true;
+      },
+      tryLogIn: function() {
+        var ajax = this.$.ajax;
+        ajax.body = {
+          username: "Admin",
+          password: "abc"
+        };
+        ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

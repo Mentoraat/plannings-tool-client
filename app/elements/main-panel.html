@@ -16,13 +16,13 @@
   </style>
 
   <template>
-    <iron-ajax
+    <plan-ajax
       auto
       id="user"
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3"
+      refurl="users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3"
       handle-as="json"
       content-type="application/json"
-      last-response="{{user}}"></iron-ajax>
+      last-response="{{user}}"></plan-ajax>
 
     <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="300px">
       <card-list-header-panel id="cardList" user="{{user}}" drawer></card-list-header-panel>

@@ -1,5 +1,37 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
 <dom-module id="login-popup">
   <template>
+    <style>
+      :host {
+        /*display: block;*/
+        height: 25%;
+      }
+
+      :host:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+      }
+      paper-card {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 300px;
+
+        --paper-card-actions: {
+          text-align: center;
+        }
+      }
+
+      paper-button {
+        background-color: #4285f4;
+      }
+    </style>
     <iron-ajax
       id="ajax"
       url="/v1/authentication"
@@ -14,7 +46,15 @@
       <main-panel></main-panel>
     </template>
     <template is="dom-if" if="{{!loggedIn}}" restamp="true">
-      <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+      <paper-card heading="Log In">
+        <div class="card-content">
+          <paper-input label="Username" type="text" value="{{username}}"></paper-input>
+          <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+        </div>
+        <div class="card-actions">
+          <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+        </div>
+      </paper-card>
     </template>
   </template>
   <script>
@@ -33,8 +73,8 @@
       tryLogIn: function() {
         var ajax = this.$.ajax;
         ajax.body = {
-          username: "Admin",
-          password: "abc"
+          username: this.username,
+          password: this.password
         };
         ajax.generateRequest();
       }

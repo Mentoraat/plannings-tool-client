@@ -31,13 +31,6 @@
         });
       },
 
-      /*
-        Refetching of events doesn't work.
-        This uses the same solution as ui-angular,
-        where we have to destroy THE WHOLE CALENDAR,
-        and then recreate it. /sadface
-        @see https://github.com/angular-ui/ui-calendar/blob/6e0c509e6a822926893334545f9af53fdb439a8a/src/calendar.js#L334
-      */
       observeEvents: function(newValue, oldValue) {
         if (oldValue !== undefined) {
           this.refetchEvents();

@@ -78,8 +78,11 @@
       <paper-button raised on-tap="submit">Submit</paper-button>
     </div>
 
-    <h2>Upload Multiple</h2>
+    <h2>Upload Lectures</h2>
     <file-upload on-success="fileFinished" target="/v1/courses/lectures" droppable raised>Select file</file-upload>
+
+    <h2>Upload Assignments</h2>
+    <file-upload on-success="fileFinished" target="/v1/courses/assignments" droppable raised>Select file</file-upload>
   </template>
   <script>
     Polymer({

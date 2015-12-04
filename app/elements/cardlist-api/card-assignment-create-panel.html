@@ -13,7 +13,8 @@
 
     <plan-ajax
       auto
-      refurl="users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses"
+      isuser
+      refurl="courses"
       handle-as="json"
       debounce-duration="300"
       loading="{{loading}}"
@@ -22,10 +23,11 @@
 
     <plan-ajax
       id="create"
+      isuser
       content-type="application/json"
       debounce-duration="300"
       method="POST"
-      url="users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses/{{course}}/assignments"
+      url="courses/{{course}}/assignments"
       on-response="notifyList">
     </plan-ajax>
 

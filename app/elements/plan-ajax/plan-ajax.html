@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       body="{{body}}"
       params="{{params}}"
       method="{{method}}"
-      url="/v1/{{refurl}}"
+      url="/v1/{{createWithUser(isuser, uuid, refurl)}}"
       handle-as="{{handleAs}}"
       last-response="{{lastResponse}}"
       loading="{{loading}}"
@@ -27,6 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ></iron-ajax>
 
     <akc-meta-query key="token" value="{{token}}"></akc-meta-query>
+    <akc-meta-query key="uuid" value="{{uuid}}"></akc-meta-query>
   </template>
   <script>
   (function() {
@@ -52,6 +53,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           notify: true
         },
         auto: {
+          type: Boolean,
+          value: false
+        },
+        isuser: {
           type: Boolean,
           value: false
         },
@@ -92,6 +97,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           "Authorization": "Bearer " + token,
           "content-type": contenttype
         };
+      },
+
+      createWithUser: function(isUser, uuid, refurl) {
+        return (isUser ? 'users/USER-' + uuid + (refurl ? '/' : '') : '') + refurl;
       },
 
       generateRequest: function() {

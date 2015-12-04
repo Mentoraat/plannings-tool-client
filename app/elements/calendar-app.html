@@ -6,15 +6,17 @@
   </style>
   <template>
     <plan-ajax
-      auto
       id="user"
-      refurl="users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3"
+      auto
+      isuser
+      refurl=""
       handle-as="json"
       content-type="application/json"
       last-response="{{user}}"></plan-ajax>
     <plan-ajax
       id="occurrences"
-      refurl="users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/occurrences"
+      isUser
+      refurl="occurrences"
       handle-as="json"
       content-type="application/json"
       on-response="ajaxResponse"></plan-ajax>

@@ -41,6 +41,7 @@
       on-response="handleResponse"></iron-ajax>
 
     <akc-meta key="token" value="[[token]]"></akc-meta>
+    <akc-meta key="uuid" value="[[uuid]]"></akc-meta>
 
     <template is="dom-if" if="{{loggedIn}}" restamp="true">
       <main-panel></main-panel>
@@ -68,6 +69,7 @@
       },
       handleResponse: function(request) {
         this.token = request.target.lastResponse.token;
+        this.uuid = request.target.lastResponse.uuid;
         this.loggedIn = true;
       },
       tryLogIn: function() {

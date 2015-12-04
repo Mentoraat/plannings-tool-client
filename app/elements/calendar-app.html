@@ -105,7 +105,7 @@
             eventClick:   this.eventClicked.bind(this),
             eventDrop:    this.updateEvent.bind(this),
             eventResize:  this.updateEvent.bind(this),
-            eventAfterRender: this.renderColor.bind(this),
+            eventAfterRender: this.renderEvent.bind(this),
             drop:         (function(that) {
               return function(date) {
                 // this references the element dragged in onto the full-calendar
@@ -117,11 +117,20 @@
       },
       dayClicked: function() {
       },
-      renderColor: function(event, element) {
+      renderEvent: function(event, element) {
         var edition = (event.assignment ? event.assignment : event).course.edition;
 
         var fn = function() {
-          element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);
+          var color = 'red';
+
+          if (event.status === "FINISHED") {
+            color = '#15D115 5px solid';
+          }
+          else if(moment().isBefore(event.end)) {
+            color = this.user.colors[edition.courseId + ',' + edition.year];
+          }
+
+          element.css('background-color', color);
         }.bind(this);
 
         /*
@@ -139,9 +148,14 @@
           fn();
         }
 
-        if (event.status === "FINISHED") {
-          element.css('border', '#15D115 5px solid');
-        }
+        var link = $('<div>')
+            .addClass('event-finisher')
+            .html('Finish')
+            .click(function() {
+              console.log('Finished!');
+            });
+
+        element.prepend(link);
       },
       eventClicked: function(event) {
         if (event.editable){

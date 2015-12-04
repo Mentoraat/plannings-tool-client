@@ -21,7 +21,7 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 300px;
+        width: 350px;
 
         --paper-card-actions: {
           text-align: center;
@@ -31,10 +31,22 @@
       paper-button {
         background-color: #4285f4;
       }
+
+      .errormessage {
+        color: red;
+      }
     </style>
     <iron-ajax
-      id="ajax"
+      id="ajaxLogin"
       url="/v1/authentication"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      on-response="handleResponse"></iron-ajax>
+
+    <iron-ajax
+      id="ajaxRegister"
+      url="/v1/authentication/register"
       method="POST"
       handle-as="json"
       content-type="application/json"
@@ -47,13 +59,29 @@
       <main-panel></main-panel>
     </template>
     <template is="dom-if" if="{{!loggedIn}}" restamp="true">
-      <paper-card heading="Log In">
+      <paper-card heading="{{getHeading(registering)}}">
         <div class="card-content">
-          <paper-input label="Username" type="text" value="{{username}}"></paper-input>
-          <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+          <div hidden$="{{registering}}">
+            <paper-input label="Username" type="text" value="{{username}}"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+          </div>
+          <div hidden$="{{!registering}}">
+            <paper-input label="Username" type="text" value="{{username}}"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+            <paper-input label="Retype password" type="password" value="{{secondpassword}}"></paper-input>
+
+            <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
+          </div>
         </div>
         <div class="card-actions">
-          <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+          <div hidden$="{{registering}}">
+            <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+            <paper-button on-tap="goRegister" raised>Register</paper-button>
+          </div>
+          <div hidden$="{{!registering}}">
+            <paper-button on-tap="tryRegister" raised>Register!</paper-button>
+            <paper-button on-tap="goLogin" raised>Back to log in</paper-button>
+          </div>
         </div>
       </paper-card>
     </template>
@@ -67,18 +95,44 @@
           value: false
         }
       },
+      ready: function() {
+        this.samePassword = true;
+        this.registering = false;
+      },
       handleResponse: function(request) {
         this.token = request.target.lastResponse.token;
         this.uuid = request.target.lastResponse.uuid;
         this.loggedIn = true;
       },
       tryLogIn: function() {
-        var ajax = this.$.ajax;
+        var ajax = this.$.ajaxLogin;
         ajax.body = {
           username: this.username,
           password: this.password
         };
         ajax.generateRequest();
+      },
+      tryRegister: function() {
+        if (this.password !== this.secondpassword) {
+          this.samePassword = false;
+          return;
+        }
+
+        var ajax = this.$.ajaxRegister;
+        ajax.body = {
+          username: this.username,
+          password: this.password
+        };
+        ajax.generateRequest();
+      },
+      goRegister: function() {
+        this.registering = true;
+      },
+      goLogin: function() {
+        this.registering = false;
+      },
+      getHeading: function(registering) {
+        return registering ? 'Register' : 'Log In';
       }
     });
   </script>

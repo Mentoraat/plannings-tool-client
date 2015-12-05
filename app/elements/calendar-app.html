@@ -194,7 +194,6 @@
         if (event.status === "FINISHED") {
           element.css('border', '#15D115 5px solid');
         }
-        element.addClass('fade-in');
       },
       eventClicked: function(event) {
         if (event.editable){
@@ -243,9 +242,6 @@
         }
 
         ajax.generateRequest();
-      },
-      refetchEvents: function() {
-        this.$.calendar.refetchEvents();
       }
     });
   })();

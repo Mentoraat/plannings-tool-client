@@ -63,7 +63,7 @@
         <div class="card-content">
           <div hidden$="{{registering}}">
             <paper-input label="Username" type="text" value="{{username}}"></paper-input>
-            <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}" on-keypress="enterAndTryLogIn"></paper-input>
           </div>
           <div hidden$="{{!registering}}">
             <paper-input label="Username" type="text" value="{{username}}"></paper-input>
@@ -76,11 +76,11 @@
         <div class="card-actions">
           <div hidden$="{{registering}}">
             <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
-            <paper-button on-tap="goRegister" raised>Register</paper-button>
+            <paper-button on-tap="switchForm" raised>Register</paper-button>
           </div>
           <div hidden$="{{!registering}}">
             <paper-button on-tap="tryRegister" raised>Register!</paper-button>
-            <paper-button on-tap="goLogin" raised>Back to log in</paper-button>
+            <paper-button on-tap="switchForm" raised>Back to log in</paper-button>
           </div>
         </div>
       </paper-card>
@@ -104,6 +104,13 @@
         this.uuid = request.target.lastResponse.uuid;
         this.loggedIn = true;
       },
+
+      enterAndTryLogIn: function(event) {
+        if (event.keyCode === 13) {
+          this.tryLogIn();
+        }
+      },
+
       tryLogIn: function() {
         var ajax = this.$.ajaxLogin;
         ajax.body = {
@@ -125,11 +132,8 @@
         };
         ajax.generateRequest();
       },
-      goRegister: function() {
-        this.registering = true;
-      },
-      goLogin: function() {
-        this.registering = false;
+      switchForm: function() {
+        this.registering = !this.registering;
       },
       getHeading: function(registering) {
         return registering ? 'Register' : 'Log In';

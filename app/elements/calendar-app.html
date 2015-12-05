@@ -25,7 +25,8 @@
       isUser
       handle-as="json"
       content-type="application/json"
-      on-response="onOccurrenceResponse"></plan-ajax>
+      on-response="onOccurrenceResponse"
+      last-response="{{events}}"></plan-ajax>
     <full-calendar id="calendar" config="[[config()]]" events="[[eventSources]]"></full-calendar>
 
     <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal"></edit-event-modal>
@@ -52,7 +53,24 @@
       return value;
     }
 
+    // Reference to calendar-app
     var self;
+
+    /*
+      First time we need to fetch the events,
+      after that we can directly call the callback.
+    */
+    var callbackEvents = function(events, ajax, callback) {
+      self.onOccurrenceResponse = function() {
+        callback(ajax.lastResponse);
+      };
+
+      ajax.generateRequest();
+
+      callbackEvents = function(events, ajax, callback) {
+        callback(events);
+      };
+    };
 
     Polymer({
       is: 'calendar-app',
@@ -67,13 +85,9 @@
               {
                 events: function(start, end, timezone, callback) {
                   var ajax = self.$.occurrencesGET;
-
-                  self.onOccurrenceResponse = function() {
-                    callback(ajax.lastResponse);
-                  };
                   ajax.refurl = 'occurrences?start=' + start.format('YYYY-MM-DD') + '&end=' + end.format('YYYY-MM-DD');
 
-                  ajax.generateRequest();
+                  callbackEvents(self.events, ajax, callback);
                 },
                 eventDataTransform: function(event) {
                   event.start = moment.tz(event.start, 'Europe/Amsterdam');
@@ -91,14 +105,12 @@
       ajaxResponse: function(request) {
         switch (request.target.method) {
           case 'PUT':
-            // this.$.calendar.updateEvent(request.target.originalEvent);
-            this.$.calendar.refetchEvents();
             this.fire('events-refreshed');
             break;
           case 'POST':
-            // this.$.calendar.renderEvent(request.target.lastResponse);
-            this.$.calendar.refetchEvents();
             this.lastEvent.dropped();
+            this.events.push(request.target.lastResponse);
+            this.$.calendar.refetchEvents();
             break;
         }
       },
@@ -195,10 +207,8 @@
         var postEvent = {
           assignment: assignment,
           user: {
-            id: 1,
-            name: 'me',
-            uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
-            accessToken: 'asdf'
+            id: this.user.id,
+            name: this.user.name
           },
           editable: true
         };

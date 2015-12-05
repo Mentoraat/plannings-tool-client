@@ -37,11 +37,11 @@
   <link rel='stylesheet' href='bower_components/fullcalendar/dist/fullcalendar.css' />
 
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="bower_components/webcomponentsjs/webcomponents-lite.js" async></script>
   <!-- endbuild -->
 
   <!-- will be replaced with elements/elements.vulcanized.html -->
-  <link rel="import" href="elements/elements.html">
+  <link rel="import" href="elements/elements.html" async>
   <!-- endreplace-->
 
   <!-- build:css styles/main.css -->
@@ -49,12 +49,21 @@
   <!-- endbuild-->
 </head>
 
-<body unresolved class="fullbleed layout vertical">
+<body class="fullbleed layout vertical">
   <span id="browser-sync-binding"></span>
 
   <template is="dom-bind" id="app">
 
-  <main-panel></main-panel>
+  <login-popup></login-popup>
+
+  <!-- <platinum-sw-register auto-register
+                      clients-claim
+                      skip-waiting
+                      on-service-worker-installed="displayInstalledToast">
+  <platinum-sw-cache default-cache-strategy="networkFirst"
+                     cache-config-file="cache-config.json">
+  </platinum-sw-cache>
+</platinum-sw-register> -->
 </template>
 </body>
 

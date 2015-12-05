@@ -1,9 +1,3 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../../bower_components/paper-card/paper-card.html">
-<link rel="import" href="../../bower_components/paper-button/paper-button.html">
-<link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
-
 <!--
   API url respons needs to be a JSON list. every object in the list needs a name (string) and a deadline (UNIX-timestamp) field.
 -->
@@ -32,16 +26,17 @@
       API call to {{apiurl}}
       optional {{apiparams}}
     -->
-    <iron-ajax
+    <plan-ajax
       auto
-      url="{{apiurl}}"
+      isuser
+      refurl="{{apiurl}}"
       params='{{apiparams}}'
       handle-as="json"
       debounce-duration="300"
       id="ajax"
       loading="{{loading}}"
       last-response="{{responseCollection}}">
-    </iron-ajax>
+    </plan-ajax>
 
     <section>
       <div class="center" hidden$="{{!loading}}">

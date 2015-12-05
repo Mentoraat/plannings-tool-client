@@ -5,20 +5,29 @@
     }
   </style>
   <template>
-    <iron-ajax
-      auto
+    <plan-ajax
       id="user"
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3"
+      auto
+      isuser
+      refurl=""
       handle-as="json"
       content-type="application/json"
-      last-response="{{user}}"></iron-ajax>
-    <iron-ajax
+      last-response="{{user}}"></plan-ajax>
+    <plan-ajax
       id="occurrences"
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/occurrences"
+      isUser
+      refurl="occurrences"
       handle-as="json"
       content-type="application/json"
-      on-response="ajaxResponse"></iron-ajax>
-    <full-calendar id="calendar" config="[[config()]]" events="[[eventSources]]"></full-calendar>
+      on-response="ajaxResponse"></plan-ajax>
+    <plan-ajax
+      id="occurrencesGET"
+      isUser
+      handle-as="json"
+      content-type="application/json"
+      on-response="onOccurrenceResponse"
+      last-response="{{events}}"></plan-ajax>
+    <full-calendar id="calendar" config="{{config}}" events="[[eventSources]]"></full-calendar>
 
     <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal"></edit-event-modal>
   </template>
@@ -44,6 +53,9 @@
       return value;
     }
 
+    // Reference to calendar-app
+    var self;
+
     Polymer({
       is: 'calendar-app',
 
@@ -55,7 +67,22 @@
           type: Array,
           value: [
               {
-                url: '/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/occurrences',
+                events: function(start, end, timezone, callback) {
+                  var ajax = self.$.occurrencesGET;
+                  var refurl = 'occurrences?start=' + start.format('YYYY-MM-DD') + '&end=' + end.format('YYYY-MM-DD');
+
+                  /*
+                    The calendar switched to a new week,
+                    or this is the first time fetching
+                  */
+                  if (ajax.refurl !== refurl) {
+                    ajax.refurl = refurl;
+                    self.refetchEvents();
+                  }
+                  else {
+                    callback(self.events);
+                  }
+                },
                 eventDataTransform: function(event) {
                   event.start = moment.tz(event.start, 'Europe/Amsterdam');
                   event.end = moment.tz(event.end, 'Europe/Amsterdam');
@@ -64,59 +91,84 @@
                 }
               }
             ]
+        },
+        events: {
+          type: Array
+        },
+        config: {
+          type: Object,
+          value: function() {
+            return {
+              editable: true,
+
+              defaultView: 'agendaWeek',
+              timeFormat: 'H:mm',
+              axisFormat: 'H:mm',
+              slotLabelFormat: 'H:mm',
+              timezone: 'local',
+              height: 'auto',
+              firstDay: 1,
+              columnFormat: 'ddd D/M',
+
+              droppable: true,
+
+              header:{
+                left: 'agendaDay agendaWeek month',
+                center: 'title',
+                right: 'today prev,next'
+              },
+
+              allDayText: 'All Day',
+
+              eventClick:   this.eventClicked.bind(this),
+              eventDrop:    this.updateEvent.bind(this),
+              eventResize:  this.updateEvent.bind(this),
+              eventAfterRender: this.renderColor.bind(this),
+              drop:         (function(that) {
+                return function(date) {
+                  // this references the element dragged in onto the full-calendar
+                  that.drop(this, date);
+                };
+                // this references the Polymer object
+              })(this)
+            };
+          }
         }
       },
+      ready: function() {
+        self = this;
+      },
+
+      /*
+        In order to prevent flickering of the calendar,
+        we need to first fetch the events,
+        and then refetch the events.
+      */
+      refetchEvents: function() {
+        var ajax = this.$.occurrencesGET;
+
+        this.onOccurrenceResponse = function() {
+          this.set('events', ajax.lastResponse);
+          this.$.calendar.refetchEvents();
+        };
+
+        ajax.generateRequest();
+      },
+
       ajaxResponse: function(request) {
         switch (request.target.method) {
           case 'PUT':
-            this.$.calendar.updateEvent(request.target.originalEvent);
             this.fire('events-refreshed');
             break;
           case 'POST':
             this.lastEvent.dropped();
-            this.$.calendar.renderEvent(request.target.lastResponse);
+            this.push('events', request.target.lastResponse);
             break;
         }
+
+        this.refetchEvents();
       },
-      config: function() {
-          return {
-            editable: true,
 
-            defaultView: 'agendaWeek',
-            timeFormat: 'H:mm',
-            axisFormat: 'H:mm',
-            slotLabelFormat: 'H:mm',
-            timezone: 'local',
-            height: 'auto',
-            firstDay: 1,
-            columnFormat: 'ddd D/M',
-
-            droppable: true,
-
-            header:{
-              left: 'agendaDay agendaWeek month',
-              center: 'title',
-              right: 'today prev,next'
-            },
-
-            allDayText: 'All Day',
-
-            dayClick:     this.dayClicked.bind(this),
-            eventClick:   this.eventClicked.bind(this),
-            eventDrop:    this.updateEvent.bind(this),
-            eventResize:  this.updateEvent.bind(this),
-            eventAfterRender: this.renderColor.bind(this),
-            drop:         (function(that) {
-              return function(date) {
-                // this references the element dragged in onto the full-calendar
-                that.drop(this, date);
-              };
-              // this references the Polymer object
-            })(this)
-        };
-      },
-      dayClicked: function() {
-      },
       renderColor: function(event, element) {
         var edition = (event.assignment ? event.assignment : event).course.edition;
 
@@ -171,10 +223,8 @@
         var postEvent = {
           assignment: assignment,
           user: {
-            id: 1,
-            name: 'me',
-            uuid: 'aba62cd5-caa6-4e42-a5d6-4909f03038bf',
-            accessToken: 'asdf'
+            id: this.user.id,
+            name: this.user.name
           },
           editable: true
         };

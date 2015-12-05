@@ -1,0 +1,143 @@
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+
+<dom-module id="login-popup">
+  <template>
+    <style>
+      :host {
+        /*display: block;*/
+        height: 25%;
+      }
+
+      :host:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+      }
+      paper-card {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 350px;
+
+        --paper-card-actions: {
+          text-align: center;
+        }
+      }
+
+      paper-button {
+        background-color: #4285f4;
+      }
+
+      .errormessage {
+        color: red;
+      }
+    </style>
+    <iron-ajax
+      id="ajaxLogin"
+      url="/v1/authentication"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      on-response="handleResponse"></iron-ajax>
+
+    <iron-ajax
+      id="ajaxRegister"
+      url="/v1/authentication/register"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      on-response="handleResponse"></iron-ajax>
+
+    <akc-meta key="token" value="[[token]]"></akc-meta>
+    <akc-meta key="uuid" value="[[uuid]]"></akc-meta>
+
+    <template is="dom-if" if="{{loggedIn}}" restamp="true">
+      <main-panel></main-panel>
+    </template>
+    <template is="dom-if" if="{{!loggedIn}}" restamp="true">
+      <paper-card heading="{{getHeading(registering)}}">
+        <div class="card-content">
+          <div hidden$="{{registering}}">
+            <paper-input label="Username" type="text" value="{{username}}"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}" on-keypress="enterAndTryLogIn"></paper-input>
+          </div>
+          <div hidden$="{{!registering}}">
+            <paper-input label="Username" type="text" value="{{username}}"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+            <paper-input label="Retype password" type="password" value="{{secondpassword}}"></paper-input>
+
+            <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div hidden$="{{registering}}">
+            <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+            <paper-button on-tap="switchForm" raised>Register</paper-button>
+          </div>
+          <div hidden$="{{!registering}}">
+            <paper-button on-tap="tryRegister" raised>Register!</paper-button>
+            <paper-button on-tap="switchForm" raised>Back to log in</paper-button>
+          </div>
+        </div>
+      </paper-card>
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'login-popup',
+      properties: {
+        loggedIn: {
+          type: Boolean,
+          value: false
+        }
+      },
+      ready: function() {
+        this.samePassword = true;
+        this.registering = false;
+      },
+      handleResponse: function(request) {
+        this.token = request.target.lastResponse.token;
+        this.uuid = request.target.lastResponse.uuid;
+        this.loggedIn = true;
+      },
+
+      enterAndTryLogIn: function(event) {
+        if (event.keyCode === 13) {
+          this.tryLogIn();
+        }
+      },
+
+      tryLogIn: function() {
+        var ajax = this.$.ajaxLogin;
+        ajax.body = {
+          username: this.username,
+          password: this.password
+        };
+        ajax.generateRequest();
+      },
+      tryRegister: function() {
+        if (this.password !== this.secondpassword) {
+          this.samePassword = false;
+          return;
+        }
+
+        var ajax = this.$.ajaxRegister;
+        ajax.body = {
+          username: this.username,
+          password: this.password
+        };
+        ajax.generateRequest();
+      },
+      switchForm: function() {
+        this.registering = !this.registering;
+      },
+      getHeading: function(registering) {
+        return registering ? 'Register' : 'Log In';
+      }
+    });
+  </script>
+</dom-module>

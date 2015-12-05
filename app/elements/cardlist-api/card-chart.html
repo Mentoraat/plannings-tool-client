@@ -11,12 +11,13 @@
         margin: 15px;
       }
     </style>
-    <iron-ajax
+    <plan-ajax
       auto
+      isuser
       id="ajax"
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses/assignments/stats"
+      refurl="courses/assignments/stats"
       handle-as="json"
-      last-response="{{data}}"></iron-ajax>
+      last-response="{{data}}"></plan-ajax>
       <paper-toolbar><span>Current progress</span></paper-toolbar>
       <svg-piechart class="content"
         data="{{data}}"

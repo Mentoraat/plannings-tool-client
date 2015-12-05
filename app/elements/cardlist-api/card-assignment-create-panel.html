@@ -11,23 +11,25 @@
       }
     </style>
 
-    <iron-ajax
+    <plan-ajax
       auto
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses"
+      isuser
+      refurl="courses"
       handle-as="json"
       debounce-duration="300"
       loading="{{loading}}"
       last-response="{{courses}}">
-    </iron-ajax>
+    </plan-ajax>
 
-    <iron-ajax
+    <plan-ajax
       id="create"
+      isuser
       content-type="application/json"
       debounce-duration="300"
       method="POST"
-      url="/v1/users/USER-025e6e3e-7eea-44c3-b75a-5e959fad94e3/courses/{{course}}/assignments"
+      url="courses/{{course}}/assignments"
       on-response="notifyList">
-    </iron-ajax>
+    </plan-ajax>
 
     <h2>Create new assignment</h2>
     <paper-input

@@ -27,7 +27,7 @@
       content-type="application/json"
       debounce-duration="300"
       method="POST"
-      url="courses/{{course}}/assignments"
+      refurl="courses/{{course}}/assignments"
       on-response="notifyList">
     </plan-ajax>
 
@@ -77,6 +77,9 @@
       <span class="error" hidden$="{{!error}}">One of the fields is incorrect!</span>
       <paper-button raised on-tap="submit">Submit</paper-button>
     </div>
+
+    <file-upload-wrapper on-success="fileFinished" target="/v1/courses/lectures">Upload Lectures</file-upload-wrapper>
+    <file-upload-wrapper on-success="fileFinished" target="/v1/courses/assignments">Upload Assignments</file-upload-wrapper>
   </template>
   <script>
     Polymer({
@@ -151,6 +154,10 @@
         ajax.generateRequest();
 
         this.reset();
+      },
+
+      fileFinished: function() {
+        this.fire('uploaded');
       }
     });
   </script>

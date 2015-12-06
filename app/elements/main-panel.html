@@ -25,8 +25,8 @@
       content-type="application/json"
       last-response="{{user}}"></plan-ajax>
 
-    <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="300px">
-      <card-list-header-panel id="cardList" user="{{user}}" drawer></card-list-header-panel>
+    <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="350px">
+      <card-list-header-panel id="cardList" user="{{user}}" on-refresh="refreshAll" drawer></card-list-header-panel>
 
       <!-- Main Area -->
       <paper-scroll-header-panel main fixed>
@@ -45,7 +45,7 @@
 
         <!-- Main Content -->
         <div class="content">
-          <calendar-app user="{{user}}" on-events-refreshed="refreshEvents"></calendar-app>
+          <calendar-app id="calendar" user="{{user}}" on-events-refreshed="refreshEvents"></calendar-app>
         </div>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
@@ -55,6 +55,11 @@
       is: 'main-panel',
       refreshEvents: function() {
         this.$.cardList.refreshChart();
+      },
+
+      refreshAll: function() {
+        this.$.calendar.refetchEvents();
+        this.refreshEvents();
       }
     });
   </script>

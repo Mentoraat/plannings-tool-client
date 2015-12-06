@@ -33,6 +33,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   (function() {
     'use strict';
 
+    var delay = 0;
+
     Polymer({
       is: 'plan-ajax',
 
@@ -84,12 +86,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready: function() {
         if (this.auto) {
-          this.generateRequest();
+          this.async(this.generateRequest, delay);
+
+          delay += 50;
         }
       },
 
       handleResponse: function(event) {
         this.fire('response', event.detail);
+        delay -= 50;
       },
 
       createHeader: function(token, contenttype) {

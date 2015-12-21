@@ -26,6 +26,7 @@ var ensureFiles = require('./tasks/ensure-files.js');
 var url = require('url');
 var proxy = require('proxy-middleware');
 var latex = require('gulp-latex');
+var stylemod = require('gulp-style-modules');
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -103,7 +104,7 @@ var compileLatex = function() {
 };
 
 // Compile and automatically prefix stylesheets
-gulp.task('styles', function() {
+gulp.task('styles', ['modularize-styles'], function() {
   return styleTask('styles', ['**/*.css']);
 });
 
@@ -174,6 +175,26 @@ gulp.task('fonts', function () {
   return gulp.src(['app/fonts/**'])
     .pipe(gulp.dest('dist/fonts'))
     .pipe(load.size({title: 'fonts'}));
+});
+
+var styles = [
+  'app/bower_components/fullcalendar/dist/fullcalendar.min.css',
+  'app/styles/fullcalendar-material.css'
+];
+
+gulp.task('modularize-styles', function() {
+  var getFileName = function(file) {
+    var fixedPath = file.path.replace('.min', '');
+    var extension = path.extname(file.path);
+    return path.basename(fixedPath, extension) + "-styles";
+  };
+
+  return gulp.src(styles)
+    .pipe(stylemod({
+      filename: getFileName,
+      moduleId: getFileName
+    }))
+    .pipe(gulp.dest('app/styles'));
 });
 
 // Scan your HTML for assets & optimize them

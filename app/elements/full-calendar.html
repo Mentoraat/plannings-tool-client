@@ -1,10 +1,12 @@
+<link rel='import' href='../styles/fullcalendar-styles.html' />
+<link rel='import' href='../styles/fullcalendar-material-styles.html' />
+<script src='../bower_components/fullcalendar/dist/fullcalendar.js'></script>
+
 <dom-module id="full-calendar">
-  <style>
-    :host {
-      display: block;
-    }
-  </style>
   <template>
+    <style include="fullcalendar-styles"></style>
+    <style include="fullcalendar-material-styles"></style>
+
     <div id="calendar">
 
     </div>
@@ -21,6 +23,12 @@
           type: Array,
           observer: 'observeEvents'
         }
+      },
+
+      ready: function() {
+        // Enable scoping of css to a container.
+        // See https://www.polymer-project.org/1.0/docs/devguide/styling.html#scope-subtree
+        this.scopeSubtree(this.$.calendar, true);
       },
 
       attached: function() {

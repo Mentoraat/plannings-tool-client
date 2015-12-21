@@ -41,7 +41,7 @@
   <!-- endbuild -->
 
   <!-- will be replaced with elements/elements.vulcanized.html -->
-  <link rel="import" href="elements/elements.html" async>
+  <link rel="import" href="elements.html" async>
   <!-- endreplace-->
 
   <!-- build:css styles/main.css -->
@@ -56,14 +56,14 @@
 
   <login-popup></login-popup>
 
-  <!-- <platinum-sw-register auto-register
+  <platinum-sw-register auto-register
                       clients-claim
                       skip-waiting
                       on-service-worker-installed="displayInstalledToast">
-  <platinum-sw-cache default-cache-strategy="networkFirst"
-                     cache-config-file="cache-config.json">
-  </platinum-sw-cache>
-</platinum-sw-register> -->
+    <platinum-sw-cache default-cache-strategy="networkFirst"
+                       cache-config-file="cache-config.json">
+    </platinum-sw-cache>
+  </platinum-sw-register>
 </template>
 </body>
 

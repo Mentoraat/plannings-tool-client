@@ -35,7 +35,7 @@
       width: 100%;
     }
 
-    .cardlist-container {
+    #cardListContainer {
       flex: 1;
       overflow-y: scroll;
     }
@@ -47,7 +47,7 @@
     }
   </style>
   <template>
-    <paper-scroll-header-panel fixed>
+    <paper-scroll-header-panel id="paperScrollPanel" fixed>
       <paper-toolbar class="flex">
         <div class="assignments-title paper-font-title">Assignments</div>
         <div class="buttons">
@@ -56,7 +56,7 @@
         </div>
       </paper-toolbar>
       <div class="container">
-        <div class="cardlist-container">
+        <div id="cardListContainer">
           <cardslist-api
             id="unplanned"
             hidden$="{{createView}}"
@@ -83,6 +83,12 @@
       ready: function() {
         this.createView = false;
         this.status = "Create";
+
+        // Hack to not hide scrollcontainer on Mac only
+        // http://www.sitekickr.com/blog/mac-css-hack/
+        if (navigator.userAgent.indexOf('Mac') > 0) {
+          this.$.cardListContainer.className += ' macContainer';
+        }
       },
 
       refresh: function() {

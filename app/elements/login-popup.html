@@ -42,6 +42,7 @@
       method="POST"
       handle-as="json"
       content-type="application/json"
+      on-error="handleLoginError"
       on-response="handleResponse"></iron-ajax>
 
     <iron-ajax
@@ -64,6 +65,8 @@
           <div hidden$="{{registering}}">
             <paper-input label="Username" type="text" value="{{username}}"></paper-input>
             <paper-input label="Password" type="password" value="{{password}}" on-keypress="enterAndTryLogIn"></paper-input>
+
+            <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
           </div>
           <div hidden$="{{!registering}}">
             <paper-input label="Username" type="text" value="{{username}}"></paper-input>
@@ -97,6 +100,7 @@
       },
       ready: function() {
         this.samePassword = true;
+        this.validLogin = true;
         this.registering = false;
       },
       handleResponse: function(request) {
@@ -112,6 +116,8 @@
       },
 
       tryLogIn: function() {
+        this.validLogin = true;
+
         var ajax = this.$.ajaxLogin;
         ajax.body = {
           username: this.username,
@@ -125,6 +131,8 @@
           return;
         }
 
+        this.samePassword = true;
+
         var ajax = this.$.ajaxRegister;
         ajax.body = {
           username: this.username,
@@ -137,6 +145,10 @@
       },
       getHeading: function(registering) {
         return registering ? 'Register' : 'Log In';
+      },
+
+      handleLoginError: function() {
+        this.validLogin = false;
       }
     });
   </script>

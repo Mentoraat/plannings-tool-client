@@ -33,8 +33,7 @@
     "run-sequence": "^1.0.2",
     "through2": "^2.0.0",
     "url": "^0.11.0",
-    "vulcanize": ">= 1.4.2",
-    "web-component-tester": "^4.0.0"
+    "vulcanize": ">= 1.4.2"
   },
   "scripts": {
     "test": "gulp test:local",

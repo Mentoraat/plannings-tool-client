@@ -146,6 +146,7 @@ gulp.task('images', function() {
 gulp.task('copy', function() {
   var app = gulp.src([
     'app/*',
+    '!app/elements.html',
     '!app/test',
     '!app/elements',
     '!app/bower_components',
@@ -158,7 +159,7 @@ gulp.task('copy', function() {
   // Copy over only the bower_components we need
   // These are things which cannot be vulcanized
   var bower = gulp.src([
-    'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
+    'app/bower_components/**/*'
   ]).pipe(gulp.dest(dist('bower_components')));
 
   var pdfs = compileLatex();
@@ -206,13 +207,13 @@ gulp.task('html', function() {
 
 // Vulcanize granular configuration
 gulp.task('vulcanize', function() {
-  return gulp.src('app/elements/elements.html')
+  return gulp.src('app/elements.html')
     .pipe(load.vulcanize({
       stripComments: true,
       inlineCss: true,
       inlineScripts: true
     }))
-    .pipe(gulp.dest(dist('elements')))
+    .pipe(gulp.dest(dist()))
     .pipe(load.size({title: 'vulcanize'}));
 });
 
@@ -306,7 +307,7 @@ gulp.task('default', ['clean'], function(cb) {
 
 // Load tasks for web-component-tester
 // Adds tasks for `gulp test:local` and `gulp test:remote`
-require('web-component-tester').gulp.init(gulp);
+// require('web-component-tester').gulp.init(gulp);
 
 // Load custom tasks from the `tasks` directory
 try {

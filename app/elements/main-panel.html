@@ -24,7 +24,7 @@
       <card-list-header-panel id="cardList" user="{{user}}" on-refresh="refreshAll" drawer></card-list-header-panel>
 
       <!-- Main Area -->
-      <paper-scroll-header-panel main fixed>
+      <paper-scroll-header-panel id="paperScrollPanel" main fixed>
 
         <!-- Main Toolbar -->
         <paper-toolbar id="mainToolbar">
@@ -48,6 +48,15 @@
   <script>
     Polymer({
       is: 'main-panel',
+
+      ready: function() {
+        // Hack to not hide scrollcontainer on Mac only
+        // http://www.sitekickr.com/blog/mac-css-hack/
+        if (navigator.userAgent.indexOf('Mac') > 0) {
+          this.$.paperScrollPanel.$.mainContainer.className += ' macContainer';
+        }
+      },
+
       refreshEvents: function() {
         this.$.cardList.refreshChart();
       },

@@ -31,18 +31,19 @@
         }
       },
 
-      ready: function() {
+      attached: function() {
+        var calendar = this.config;
+        calendar.eventSources = this.events;
+        $(this.$.calendar).fullCalendar(calendar);
+
         // Enable scoping of css to a container.
         // See https://www.polymer-project.org/1.0/docs/devguide/styling.html#scope-subtree
         this.scopeSubtree(this.$.calendar, true);
-      },
 
-      attached: function() {
-        this.async(function() {
-          var calendar = this.config;
-          calendar.eventSources = this.events;
-          $(this.$.calendar).fullCalendar(calendar);
-        });
+        // Handles bug of non-existing document anchor that renders the size
+        // of the content-skeleton incorrectly. Therefore all events and
+        // dragging is incorrectly placed.
+        $(this.$.calendar).fullCalendar('getView').updateSize();
       },
 
       observeEvents: function(newValue, oldValue) {

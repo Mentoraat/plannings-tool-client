@@ -50,12 +50,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
             <paper-button tabindex="0" dialog-dismiss class="cancelButton" title="Don't save the changes"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
-            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton" title="You have finished the assignment"><iron-icon icon="check"></iron-icon>Finish</paper-button>
+            <paper-button tabindex="0" dialog-confirm on-tap="openFinishDialog" class="finishButton" title="You have finished the assignment"><iron-icon icon="check"></iron-icon>Finish</paper-button>
           </div>
         </template>
         <template is="dom-if" if="{{finished}}" restamp="true">
           <paper-toolbar><span>This Occurrence Was Finished</span></paper-toolbar>
-          <span>You finished this occurrence. It took you {{length}} hours.</span>
+          <p>Time planned for this task: {{length}} hours.</p>
+          <p>Time spent on this task: {{event.actualLength}} hours.</p>
+          <h4>Your notes:</h4>
+          <p>{{event.notes}}</p>
 
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss class="saveButton"><iron-icon icon="clear"></iron-icon>Close</paper-button>
@@ -64,6 +67,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
       </div>
     </paper-dialog>
+    <paper-dialog id="finishEventDialog" transition="paper-dialog-transition-center" modal>
+      <div>
+          <paper-toolbar><span>Finish Occurrence</span></paper-toolbar>
+          <paper-input label="How many hours did you work?" floatinglabel type="number" value="{{actualLength}}"></paper-input>
+          <paper-input label="Add your notes here..." floatinglabel type="textarea" value="{{notes}}"></paper-input>
+          <div class="buttons">
+            <paper-button tabindex="0" dialog-dismiss on-tap="unfinishEvent" class="unfinishButton" title="un-finish the assignment"><iron-icon icon="undo"></iron-icon>Unfinish</paper-button>
+            <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton" title="Close this window"><iron-icon icon="check"></iron-icon>Save changes</paper-button>
+          </div>
+      </div>
+    </paper-dialog>
+
   </template>
   <script>
   (function() {
@@ -73,7 +88,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       properties: {
         event: {
           type: Object
-        }
+        },
+        actualLength: {
+          type: Number
+        },
+        notes : {
+          type: String
+        },
+
       },
 
       ready: function() {
@@ -90,6 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.length = moment.duration(
           this.event.end.diff(this.event.start)
         ).asHours();
+        this.actualLength = this.length;
 
         this.$.editEventDialog.open();
 
@@ -97,19 +120,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.finished = true;
         }
       },
+
       cancelDialog: function() {
         this.$.editEventDialog.cancel();
       },
+
+      openFinishDialog: function() {
+        this.$.finishEventDialog.open();
+        this.finishEvent();
+      },
+
+      closeFinishDialog: function() {
+        this.$.finishEventDialog.cancel();
+      },
+
       finishEvent: function() {
         this.updateEvent('FINISHED');
       },
+
       unfinishEvent: function() {
         this.updateEvent('UNFINISHED');
       },
+
       updateEvent: function(status) {
         this.event.status = status;
+        this.event.actualLength = this.actualLength;
+        this.event.notes = this.notes;
         this.fire('updated', this.event);
       },
+      
       saveEvent: function() {
         this.event.title = this.title;
 

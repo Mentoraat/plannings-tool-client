@@ -63,6 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss class="saveButton"><iron-icon icon="clear"></iron-icon>Close</paper-button>
             <paper-button tabindex="0" dialog-confirm class="cancelButton" on-tap="unfinishEvent" title="You have unfinished the assignment"><iron-icon icon="check"></iron-icon>Unfinish</paper-button>
+            <paper-button tabindex="0" dialog-confirm class="finishButton" on-tap="openFinishDialog" title="You have finished the assignment"><iron-icon icon="create"></iron-icon>Edit Notes</paper-button>
           </div>
         </template>
       </div>
@@ -148,7 +149,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.event.notes = this.notes;
         this.fire('updated', this.event);
       },
-      
+
       saveEvent: function() {
         this.event.title = this.title;
 

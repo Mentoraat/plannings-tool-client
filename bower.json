@@ -2,7 +2,7 @@
   "name": "planningtool",
   "version": "0.1.0",
   "dependencies": {
-    "polymer": "Polymer/Polymer#^1.0.0",
+    "polymer": "Polymer/Polymer#1.2.4",
     "fullcalendar": "~2.4.0",
     "iron-elements": "PolymerElements/iron-elements#^1.0.0",
     "jquery-ui": "~1.11.4",

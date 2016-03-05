@@ -66,6 +66,14 @@
 
       updateEvent: function(event) {
         $(this.$.calendar).fullCalendar('updateEvent', event);
+      },
+
+      select: function(start, end) {
+        $(this.$.calendar).fullCalendar('select', start, end);
+      },
+
+      unselect: function() {
+        $(this.$.calendar).fullCalendar('unselect');
       }
     });
   </script>

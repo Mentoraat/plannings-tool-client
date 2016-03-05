@@ -124,6 +124,8 @@
               eventDrop:    this.updateEvent.bind(this),
               eventResize:  this.updateEvent.bind(this),
               eventAfterRender: this.renderColor.bind(this),
+              dayClick:     this.dayClicked.bind(this),
+              select:       this.timeSelected.bind(this),
               drop:         (function(that) {
                 return function(date) {
                   // this references the element dragged in onto the full-calendar
@@ -201,6 +203,31 @@
           dialog.event = event;
           dialog.openDialog();
         }
+      },
+      dayClicked: function(date) {
+        this.$.calendar.select(moment(date));
+      },
+      timeSelected: function(start, end) {
+        // Else we do not see the backdrop while prompting the title
+        this.async(function() {
+          var title = window.prompt('Event title');
+          if (title) {
+            this.drop({
+              data: {
+                course: {
+                  // Magic id to reference user events
+                  uuid: 'USER-' + this.user.user.id
+                },
+                name: title,
+                length: moment.duration(end.diff(start)).asHours()
+              },
+              // Invoked after the POST was succeeded
+              dropped: function() {
+                this.$.calendar.unselect();
+              }.bind(this)
+            }, start);
+          }
+        }, 1);
       },
       updateEventFromModal: function(event) {
         this.updateEvent(event.detail);

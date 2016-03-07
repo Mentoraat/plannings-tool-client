@@ -30,6 +30,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #f44336;
       }
 
+      .unplanButton {
+        background: #f44336;
+        color: #fff;
+      }
+
       .finishButton {
         background: #4caf50;
         color: #fff;
@@ -39,6 +44,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-top: 5px;
       }
     </style>
+
+    <plan-ajax
+      isuser
+      id="unplanEvent"
+      handle-as="json"
+      method="DELETE"
+      debounce-duration="300">
+    </plan-ajax>
+
     <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
       <div>
         <template is="dom-if" if="{{!finished}}" restamp="true">
@@ -50,6 +64,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
             <paper-button tabindex="0" dialog-dismiss class="cancelButton" title="Don't save the changes"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+            <paper-button tabindex="0" dialog-dismiss on-tap="unplanEvent" raised class="unplanButton" title="unplan"><iron-icon icon="undo"></iron-icon>Unplan</paper-button>
             <paper-button tabindex="0" dialog-confirm on-tap="openFinishDialog" class="finishButton" title="You have finished the assignment"><iron-icon icon="check"></iron-icon>Finish</paper-button>
           </div>
         </template>
@@ -137,6 +152,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       finishEvent: function() {
         this.updateEvent('FINISHED');
+      },
+
+      unplanEvent: function() {
+        console.log(this.event);
+        var ajax = this.$.unplanEvent;
+        var refurl = 'occurrences/courses/COURSE-' + this.event.assignment.course.uuid + '/' + this.event.assignment.id;
+        ajax.refurl = refurl;
+        ajax.generateRequest();
       },
 
       unfinishEvent: function() {

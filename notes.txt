@@ -1,3 +1,0 @@
-3. Toevoegen assignment -> student occurrence
-4. Default week is huidige week: nummertje voor week
-8. Eigen occurrences moeten kunnen deleten

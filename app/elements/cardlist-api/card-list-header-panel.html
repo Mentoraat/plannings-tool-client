@@ -92,12 +92,16 @@
       },
 
       refresh: function() {
-        this.$.unplanned.reloadList();
+        this.refreshList();
         this.refreshChart();
       },
 
       refreshChart: function() {
         this.$.chart.reloadStats();
+      },
+
+      refreshList: function() {
+        this.$.unplanned.reloadList();
       },
 
       addAssignment: function(event) {

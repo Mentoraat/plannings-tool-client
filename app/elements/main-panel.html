@@ -40,7 +40,7 @@
 
         <!-- Main Content -->
         <div class="content">
-          <calendar-app id="calendar" user="{{user}}" on-events-refreshed="refreshEvents"></calendar-app>
+          <calendar-app id="calendar" user="{{user}}" on-events-refreshed="refreshEvents" on-event-delete="refreshList"></calendar-app>
         </div>
       </paper-scroll-header-panel>
     </paper-drawer-panel>
@@ -64,6 +64,10 @@
       refreshAll: function() {
         this.$.calendar.refetchEvents();
         this.refreshEvents();
+      },
+
+      refreshList: function() {
+        this.$.cardList.refreshList();
       }
     });
   </script>

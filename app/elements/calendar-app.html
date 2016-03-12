@@ -194,7 +194,7 @@
         }
 
         if (event.status === "FINISHED") {
-          element.css('border', '#15D115 5px solid');
+          element[0].className += " finishedFC ";
         }
       },
       eventClicked: function(event) {

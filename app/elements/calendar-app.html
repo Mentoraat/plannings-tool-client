@@ -200,7 +200,7 @@
       eventClicked: function(event, jsevent) {
         if (event.editable){
           if(jsevent.shiftKey) {
-            if(event.status == "UNFINISHED") {
+            if(event.status === "UNFINISHED") {
               event.status = "FINISHED";
             }
             else {

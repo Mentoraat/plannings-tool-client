@@ -197,11 +197,22 @@
           element.css('border', '#15D115 5px solid');
         }
       },
-      eventClicked: function(event) {
+      eventClicked: function(event, jsevent) {
         if (event.editable){
-          var dialog = this.$.editEvent;
-          dialog.event = event;
-          dialog.openDialog();
+          if(jsevent.shiftKey) {
+            if(event.status == "UNFINISHED") {
+              event.status = "FINISHED";
+            }
+            else {
+              event.status = "UNFINISHED";
+            }
+            this.updateEvent(event);
+          }
+          else {
+            var dialog = this.$.editEvent;
+            dialog.event = event;
+            dialog.openDialog();
+          }
         }
       },
       dayClicked: function(date) {

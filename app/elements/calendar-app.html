@@ -29,7 +29,7 @@
       last-response="{{events}}"></plan-ajax>
     <full-calendar id="calendar" config="{{config}}" events="[[eventSources]]"></full-calendar>
 
-    <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal"></edit-event-modal>
+    <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal" on-removal="removeEventFromCalendar"></edit-event-modal>
   </template>
   <script>
   (function() {
@@ -215,6 +215,16 @@
 
         this.$.occurrences.originalEvent = event;
         this.performAjax('PUT', correctMoments(fixedEvent, event.start, event.end));
+      },
+      removeEventFromCalendar: function(event) {
+        var assignment = event.detail.assignment.id;
+        var course = event.detail.assignment.course.uuid;
+        this.set('events', this.events.filter(function(el) {
+          return !el.assignment ||
+                 el.assignment.id !== assignment ||
+                 el.assignment.course.uuid !== course;
+        }));
+        this.$.calendar.refetchEvents();
       },
       drop: function(event, date) {
         var assignment = copy(event.data);

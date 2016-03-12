@@ -155,11 +155,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       unplanEvent: function() {
-        console.log(this.event);
         var ajax = this.$.unplanEvent;
         var refurl = 'occurrences/courses/COURSE-' + this.event.assignment.course.uuid + '/' + this.event.assignment.id;
         ajax.refurl = refurl;
         ajax.generateRequest();
+        this.fire('removal', this.event);
       },
 
       unfinishEvent: function() {

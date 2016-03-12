@@ -50,7 +50,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       id="unplanEvent"
       handle-as="json"
       method="DELETE"
-      debounce-duration="300">
+      debounce-duration="300"
+      on-response="successDelete">
     </plan-ajax>
 
     <paper-dialog id="editEventDialog" transition="paper-dialog-transition-center" modal>
@@ -159,6 +160,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var refurl = 'occurrences/courses/COURSE-' + this.event.assignment.course.uuid + '/' + this.event.assignment.id;
         ajax.refurl = refurl;
         ajax.generateRequest();
+      },
+
+      successDelete: function() {
         this.fire('removal', this.event);
       },
 

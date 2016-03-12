@@ -225,6 +225,7 @@
                  el.assignment.course.uuid !== course;
         }));
         this.$.calendar.refetchEvents();
+        this.fire('event-delete');
       },
       drop: function(event, date) {
         var assignment = copy(event.data);

@@ -47,12 +47,22 @@
     }
   </style>
   <template>
+    <plan-ajax
+      auto
+      isuser
+      refurl="courses"
+      handle-as="json"
+      debounce-duration="300"
+      loading="{{loading}}"
+      last-response="{{courses}}">
+    </plan-ajax>
+
     <paper-scroll-header-panel id="paperScrollPanel" fixed>
       <paper-toolbar class="flex">
         <div class="assignments-title paper-font-title">Assignments</div>
         <div class="buttons">
           <paper-icon-button icon="refresh" class="refresh-button" on-tap="refresh"></paper-icon-button>
-          <paper-button on-tap="switch">{{status}}</paper-icon-button>
+          <paper-button on-tap="switch" hidden$="{{hasNoCourses}}">{{status}}</paper-icon-button>
         </div>
       </paper-toolbar>
       <div class="container">
@@ -64,7 +74,13 @@
             user="{{user}}"
             apiurl="courses/assignments">
           </cardslist-api>
-          <card-assignment-create-panel on-create="addAssignment" on-uploaded="fireRefreshed" hidden$="{{!createView}}"></card-assignment-create-panel>
+          <card-assignment-create-panel
+            on-create="addAssignment"
+            on-uploaded="fireRefreshed"
+            loading="{{loading}}"
+            courses="{{courses}}"
+            hidden$="{{!createView}}">
+          </card-assignment-create-panel>
         </div>
         <card-chart id="chart"></card-chart>
       </div>
@@ -77,10 +93,15 @@
       properties: {
         user: {
           type: Object
+        },
+        courses: {
+          type: Array,
+          observer: '_hasCourses'
         }
       },
 
       ready: function() {
+        this.hasNoCourses = true;
         this.createView = false;
         this.status = "Create";
 
@@ -89,6 +110,7 @@
         if (navigator.userAgent.indexOf('Mac') > 0) {
           this.$.cardListContainer.className += ' macContainer';
         }
+
       },
 
       refresh: function() {
@@ -116,6 +138,10 @@
 
       fireRefreshed: function() {
         this.fire('refresh');
+      },
+
+      _hasCourses: function() {
+        this.hasNoCourses = this.courses.length === 0;
       }
     });
   </script>

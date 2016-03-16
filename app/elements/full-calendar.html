@@ -43,10 +43,6 @@
         // See https://www.polymer-project.org/1.0/docs/devguide/styling.html#scope-subtree
         this.scopeSubtree(this.$.calendar, true);
 
-        // Handles bug of non-existing document anchor that renders the size
-        // of the content-skeleton incorrectly. Therefore all events and
-        // dragging is incorrectly placed.
-        $(this.$.calendar).fullCalendar('getView').updateSize();
       },
 
       observeEvents: function(newValue, oldValue) {
@@ -56,6 +52,10 @@
       },
 
       refetchEvents: function() {
+        // Handles bug of non-existing document anchor that renders the size
+        // of the content-skeleton incorrectly. Therefore all events and
+        // dragging is incorrectly placed.
+        $(this.$.calendar).fullCalendar('getView').updateSize();
         $(this.$.calendar).fullCalendar('refetchEvents');
       },
 

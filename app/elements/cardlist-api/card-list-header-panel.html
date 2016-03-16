@@ -66,9 +66,13 @@
           </cardslist-api>
           <card-assignment-create-panel on-create="addAssignment" on-uploaded="fireRefreshed" hidden$="{{!createView}}"></card-assignment-create-panel>
         </div>
+        <div class="buttons">
+            <assignment-modal></assignment-modal>
+        </div>
         <card-chart id="chart"></card-chart>
       </div>
     </paper-scroll-header-panel>
+
   </template>
   <script>
     Polymer({

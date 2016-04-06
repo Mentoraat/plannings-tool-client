@@ -8,11 +8,7 @@
         text-align: center;
         margin-top: 5px;
       }
-
-      /*svg-piechart {
-        margin: 15px;
-      }*/
-
+      
       material-progress-bars {
         width: 90%;
         margin: 20px 5%;
@@ -44,13 +40,6 @@
       handle-as="json"
       last-response="{{data}}"></plan-ajax>
       <paper-toolbar><span>Current progress</span></paper-toolbar>
-      <!-- <svg-piechart class="content"
-        data="{{data}}"
-        colors='[
-          "rgb(139, 195, 74)",
-          "rgba(255, 0, 0, .7)"
-        ]'></svg-piechart> -->
-
       <material-progress-bars max="{{_totalTime(data)}}" bar-height="22" animated>
         <div class="bar done" data-value$="[[data.0]]">
           <span><iron-icon icon="icons:check"></iron-icon>([[data.0]]h)</span>

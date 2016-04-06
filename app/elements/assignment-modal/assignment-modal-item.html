@@ -48,8 +48,9 @@
       saveEvent: function() {
         var ajax = this.$.updateAssignmentAjax;
         ajax.refurl = "courses/" + this.data.course.edition.courseId + "-" + this.data.course.edition.year + "/assignments";
-        if (this.data)
+        if (this.data) {
           ajax.body = this.data;
+        }
         ajax.generateRequest();
       }
     });

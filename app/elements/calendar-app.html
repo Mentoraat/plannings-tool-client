@@ -164,6 +164,7 @@
             this.fire('events-refreshed');
             break;
           case 'POST':
+            this.fire('events-refreshed');
             this.lastEvent.dropped();
             this.push('events', request.target.lastResponse);
             break;
@@ -248,7 +249,7 @@
         var fixedEvent = {
           status: event.status,
           assignment: event.assignment,
-          actualLength: event.actualLength,
+          actualLength: event.actualLength || moment.duration(event.end.diff(event.start)).asHours(),
           notes: event.notes,
         };
 
@@ -265,6 +266,7 @@
         }));
         this.$.calendar.refetchEvents();
         this.fire('event-delete');
+        this.fire('events-refreshed');
       },
       drop: function(event, date) {
         var assignment = copy(event.data);

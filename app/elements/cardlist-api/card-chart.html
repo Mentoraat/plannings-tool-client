@@ -1,3 +1,5 @@
+<link rel="import" href="../../bower_components/material-progress/material-progress.html">
+
 <dom-module id="card-chart">
   <template>
     <style>
@@ -7,8 +9,31 @@
         margin-top: 5px;
       }
 
-      svg-piechart {
+      /*svg-piechart {
         margin: 15px;
+      }*/
+
+      material-progress-bars {
+        width: 90%;
+        margin: 20px 5%;
+        @apply(--paper-font-body2);
+      }
+      material-progress-bars > .bar > span {
+        text-align: end;
+        font-size: 0.5em;
+        @apply(--layout-flex);
+      }
+      .bar {
+        background-color: var(--paper-deep-orange-500);
+      }
+      .bar.done {
+        background-color: var(--paper-green-500);
+      }
+      .bar.planned {
+        background-color: var(--paper-cyan-500);
+      }
+      .bar.total {
+        background-color: var(--paper-red-500);
       }
     </style>
     <plan-ajax
@@ -19,18 +44,54 @@
       handle-as="json"
       last-response="{{data}}"></plan-ajax>
       <paper-toolbar><span>Current progress</span></paper-toolbar>
-      <svg-piechart class="content"
+      <!-- <svg-piechart class="content"
         data="{{data}}"
         colors='[
           "rgb(139, 195, 74)",
           "rgba(255, 0, 0, .7)"
-        ]'></svg-piechart>
+        ]'></svg-piechart> -->
+
+      <material-progress-bars max="{{_totalTime(data)}}" bar-height="22" animated>
+        <div class="bar done" data-value$="[[data.0]]">
+          <span><iron-icon icon="icons:check"></iron-icon>([[data.0]]h)</span>
+        </div>
+        <div class="bar planned" data-value$="[[data.1]]">
+          <span><iron-icon icon="icons:query-builder"></iron-icon>([[data.1]]h)</span>
+        </div>
+        <div class="bar total" data-value$="[[data.2]]">
+          <span><iron-icon icon="icons:warning"></iron-icon>([[data.2]]h)</span>
+        </div>
+      </material-progress-bars>
   </template>
   <script>
     Polymer({
       is: 'card-chart',
       reloadStats: function() {
         this.$.ajax.generateRequest();
+      },
+
+      properties: {
+        done: {
+          type: Number
+        },
+        planned: {
+          type: Number
+        },
+        todo: {
+          type: Number
+        },
+      },
+
+      ready: function () {
+        this.done = 33;
+        this.planned = 33;
+        this.todo = 34;
+      },
+
+      _totalTime: function(values) {
+        return values.reduce(function(previous, current) {
+          return previous + current;
+        })
       }
     });
   </script>

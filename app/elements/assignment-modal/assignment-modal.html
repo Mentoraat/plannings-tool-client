@@ -1,0 +1,78 @@
+<dom-module id="assignment-modal">
+  <style>
+    :host {
+      display: block;
+    }
+
+    #editAssignments {
+      overflow: scroll;
+    }
+
+    .dismissButton {
+      background: rgba(255, 0, 0, 0.701961);
+      color: #fff;
+    }
+
+    .assignment-grid {
+      width: 90vw;
+      overflow: hidden;
+
+      display: flex;
+      flex-flow: row wrap;
+      align-content: space-between;
+    }
+  </style>
+  <template>
+    <plan-ajax
+      id="getAssignmentsAjax"
+      auto
+      isuser
+      refurl="assignmentsAsTeacher"
+      handle-as="json"
+      method="GET"
+      content-type="application/json"
+      last-response="{{assignments}}"></plan-ajax>
+    <paper-button tabindex="0" dialog-dismiss on-tap="openDialog" raised class="saveButton" title="Save the changes">Edit</paper-button>
+
+    <paper-dialog id="editAssignments" transition="paper-dialog-transition-center" on-iron-overlay-opened="patchOverlay" with-backdrop>
+      <div>
+        <paper-toolbar><span>Edit Assignments</span></paper-toolbar>
+        <div class="assignment-grid">
+          <template is="dom-repeat" items="{{assignments}}">
+            <assignment-modal-item data="{{item}}"></assignment-modal-item>
+          </template>
+        </div>
+
+        <div class="buttons">
+          <paper-button tabindex="0" on-tap="closeDialog" dialog-dismiss raised class="dismissButton" title="dismiss"><iron-icon icon="close"></iron-icon>Close</paper-button>
+        </div>
+      </div>
+    </paper-dialog>
+  </template>
+  <script>
+    Polymer({
+      is: 'assignment-modal',
+
+      properties: {
+        assignments: {
+          type: Object
+        }
+      },
+
+      ready: function() {
+      },
+
+      patchOverlay: function(e) {
+        this.insertBefore(e.target.backdropElement, e.target);
+      },
+
+      openDialog: function() {
+        this.$.editAssignments.open();
+      },
+
+      closeDialog: function() {
+        this.$.editAssignments.close();
+      }
+    });
+  </script>
+</dom-module>

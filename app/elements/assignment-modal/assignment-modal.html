@@ -34,7 +34,7 @@
       last-response="{{assignments}}"></plan-ajax>
     <paper-button tabindex="0" dialog-dismiss on-tap="openDialog" raised class="saveButton" title="Save the changes">Edit</paper-button>
 
-    <paper-dialog id="editAssignments" transition="paper-dialog-transition-center" on-iron-overlay-opened="patchOverlay" modal>
+    <paper-dialog id="editAssignments" transition="paper-dialog-transition-center" on-iron-overlay-opened="patchOverlay" with-backdrop>
       <div>
         <paper-toolbar><span>Edit Assignments</span></paper-toolbar>
         <div class="assignment-grid">
@@ -44,7 +44,7 @@
         </div>
 
         <div class="buttons">
-          <paper-button tabindex="0" dialog-dismiss raised class="dismissButton" title="dismiss"><iron-icon icon="close"></iron-icon>Close</paper-button>
+          <paper-button tabindex="0" on-tap="closeDialog" dialog-dismiss raised class="dismissButton" title="dismiss"><iron-icon icon="close"></iron-icon>Close</paper-button>
         </div>
       </div>
     </paper-dialog>
@@ -68,6 +68,10 @@
 
       openDialog: function() {
         this.$.editAssignments.open();
+      },
+
+      closeDialog: function() {
+        this.$.editAssignments.close();
       }
     });
   </script>

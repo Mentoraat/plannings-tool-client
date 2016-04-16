@@ -8,7 +8,7 @@
         text-align: center;
         margin-top: 5px;
       }
-      
+
       material-progress-bars {
         width: 90%;
         margin: 20px 5%;
@@ -40,17 +40,22 @@
       handle-as="json"
       last-response="{{data}}"></plan-ajax>
       <paper-toolbar><span>Current progress</span></paper-toolbar>
-      <material-progress-bars max="{{_totalTime(data)}}" bar-height="22" animated>
-        <div class="bar done" data-value$="[[data.0]]">
-          <span><iron-icon icon="icons:check"></iron-icon>([[data.0]]h)</span>
-        </div>
-        <div class="bar planned" data-value$="[[data.1]]">
-          <span><iron-icon icon="icons:query-builder"></iron-icon>([[data.1]]h)</span>
-        </div>
-        <div class="bar total" data-value$="[[data.2]]">
-          <span><iron-icon icon="icons:warning"></iron-icon>([[data.2]]h)</span>
-        </div>
-      </material-progress-bars>
+      <div class="list">
+        <template is="dom-repeat" items="{{data}}" as="course">
+          <span>{{course.name}}</span>
+          <material-progress-bars max="{{_totalTime(course.data)}}" bar-height="22" animated>
+            <div class="bar done" data-value$="[[course.data.0]]">
+              <span><iron-icon icon="icons:check"></iron-icon>([[course.data.0]]h)</span>
+            </div>
+            <div class="bar planned" data-value$="[[course.data.1]]">
+              <span><iron-icon icon="icons:query-builder"></iron-icon>([[course.data.1]]h)</span>
+            </div>
+            <div class="bar total" data-value$="[[course.data.2]]">
+              <span><iron-icon icon="icons:warning"></iron-icon>([[course.data.2]]h)</span>
+            </div>
+          </material-progress-bars>
+        </template>
+      </div>
   </template>
   <script>
     Polymer({
@@ -59,28 +64,10 @@
         this.$.ajax.generateRequest();
       },
 
-      properties: {
-        done: {
-          type: Number
-        },
-        planned: {
-          type: Number
-        },
-        todo: {
-          type: Number
-        },
-      },
-
-      ready: function () {
-        this.done = 33;
-        this.planned = 33;
-        this.todo = 34;
-      },
-
       _totalTime: function(values) {
         return values.reduce(function(previous, current) {
           return previous + current;
-        })
+        });
       }
     });
   </script>

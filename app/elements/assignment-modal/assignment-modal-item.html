@@ -1,0 +1,58 @@
+<dom-module id="assignment-modal-item">
+  <style>
+    :host {
+      display: block;
+      width: 15%;
+      min-width: 15%;
+      flex: 1;
+      margin: 2.5% 2.5%;
+    }
+    #card {
+      width: 100%;
+    }
+  </style>
+  <template>
+    <plan-ajax
+      id="updateAssignmentAjax"
+      isuser
+      refurl=""
+      handle-as="json"
+      method="PUT"
+      content-type="application/json"></plan-ajax>
+
+    <paper-card id="card" class="card" heading="{{data.name}} - {{data.course.edition.courseId}}" elevation="2" data-event="{{data}}">
+      <div class="card-content">
+        <paper-input label="name" floatinglabel type="text" value="{{data.name}}"></paper-input>
+        <paper-input label="description" floatinglabel type="text" value="{{data.description}}"></paper-input>
+        <paper-input label="deadline" floatinglabel type="number" value="{{data.deadline}}"></paper-input>
+        <paper-input label="length" floatinglabel type="number" value="{{data.length}}"></paper-input>
+        <div class="buttons">
+          <paper-button tabindex="0" on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
+        </div>
+      </div>
+    </paper-card>
+  </template>
+  <script>
+    Polymer({
+      is: 'assignment-modal-item',
+
+      properties: {
+        data: {
+          type: Object
+        }
+      },
+
+      ready: function() {
+      },
+
+      saveEvent: function() {
+        var ajax = this.$.updateAssignmentAjax;
+        ajax.refurl = "courses/" + this.data.course.edition.courseId + "-" + this.data.course.edition.year + "/assignments";
+        if (this.data) {
+          ajax.body = this.data;
+        }
+        ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

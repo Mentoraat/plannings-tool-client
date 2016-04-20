@@ -65,6 +65,7 @@
       method="POST"
       handle-as="json"
       content-type="application/json"
+      on-error="handleRegisterError"
       on-response="handleResponse"></iron-ajax>
 
     <akc-meta key="token" value="[[token]]"></akc-meta>
@@ -77,8 +78,8 @@
       <paper-card heading="{{getHeading(registering)}}">
         <div class="card-content">
           <div hidden$="{{registering}}">
-            <paper-input label="Username" type="text" value="{{username}}" on-keypress="enterAndTryLogIn"></paper-input>
-            <paper-input label="Password" type="password" value="{{password}}" on-keypress="enterAndTryLogIn"></paper-input>
+            <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
 
             <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
           </div>
@@ -88,6 +89,7 @@
             <paper-input label="Retype password" type="password" value="{{secondpassword}}"></paper-input>
 
             <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
+            <span class="errormessage" hidden$="{{usernameFree}}">That username already exists.</span>
           </div>
         </div>
         <div class="card-actions">
@@ -119,6 +121,7 @@
       ready: function() {
         this.samePassword = true;
         this.validLogin = true;
+        this.usernameFree = true;
         this.registering = false;
       },
       handleResponse: function(request) {
@@ -146,6 +149,8 @@
         ajax.generateRequest();
       },
       tryRegister: function() {
+        this.usernameFree = true;
+
         if (this.password !== this.secondpassword) {
           this.samePassword = false;
           return;
@@ -170,6 +175,10 @@
 
       handleLoginError: function() {
         this.validLogin = false;
+      },
+
+      handleRegisterError: function() {
+        this.usernameFree = false;
       },
 
       openResetDialog: function() {

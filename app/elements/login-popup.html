@@ -2,12 +2,12 @@
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
 
 <dom-module id="login-popup">
   <template>
     <style>
       :host {
-        /*display: block;*/
         height: 25%;
       }
 
@@ -21,15 +21,29 @@
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 350px;
+        width: 450px;
 
         --paper-card-actions: {
-          text-align: center;
+          text-align: right;
         }
+      }
+      .card-actions .login-popup {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
       }
 
       paper-button {
+        flex: 1;
         background-color: #4285f4;
+        color: #f0f0f0;
+        text-align: center;
+      }
+
+      paper-button.clear {
+        flex-grow: 2;
+        background-color: #fff;
+        color: #333;
       }
 
       .errormessage {
@@ -78,12 +92,16 @@
         </div>
         <div class="card-actions">
           <div hidden$="{{registering}}">
+            <paper-button id="forgotpwd1" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+            <paper-tooltip for="forgotpwd1" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
             <paper-button on-tap="switchForm" raised>Register</paper-button>
-            <paper-button on-tap="tryLogIn" raised>Log in!</paper-button>
+            <paper-button on-tap="tryLogIn" raised>Log in</paper-button>
           </div>
           <div hidden$="{{!registering}}">
-            <paper-button on-tap="switchForm" raised>Back to log in</paper-button>
-            <paper-button on-tap="tryRegister" raised>Register!</paper-button>
+            <paper-button id="forgotpwd2" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+            <paper-tooltip for="forgotpwd2" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
+            <paper-button on-tap="switchForm" raised>Cancel</paper-button>
+            <paper-button on-tap="tryRegister" raised>Register</paper-button>
           </div>
         </div>
       </paper-card>
@@ -122,7 +140,7 @@
 
         var ajax = this.$.ajaxLogin;
         ajax.body = {
-          username: this.username,
+          username: this.username.toLowerCase(),
           password: this.password
         };
         ajax.generateRequest();
@@ -137,7 +155,8 @@
 
         var ajax = this.$.ajaxRegister;
         ajax.body = {
-          username: this.username,
+          username: this.username.toLowerCase(),
+          email: this.email,
           password: this.password
         };
         ajax.generateRequest();
@@ -151,6 +170,10 @@
 
       handleLoginError: function() {
         this.validLogin = false;
+      },
+
+      openResetDialog: function() {
+        window.alert('Not yet implemented. Contact us at gijsw @ ch.tudelft.nl');
       }
     });
   </script>

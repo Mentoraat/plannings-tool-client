@@ -1,3 +1,5 @@
+<link rel="import" href="../../bower_components/paper-tooltip/paper-tooltip.html">
+
 <dom-module id="card-assignment">
   <style>
     :host {
@@ -39,6 +41,7 @@
         <span>Expected study hours: {{data.length}}</span>
       </div>
     </paper-card>
+    <paper-tooltip for="card" position="bottom" offset="-20" animation-delay="0">{{data.description}}</paper-tooltip>
   </template>
   <script>
     Polymer({

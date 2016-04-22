@@ -25,13 +25,18 @@
         text-align: center;
         color: white;
       }
+
+      --paper-card-content: {
+        padding: 8px;
+        text-align: center;
+      }
     }
   </style>
   <template>
     <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
       <div class="card-content">
-        <!-- <div>Due: {{timeConverter(data.deadline)}}</div> -->
-        <div>Expected study hours: {{data.length}}</div>
+        <span>Due: {{timeConverter(data.deadline)}}</span>
+        <span>Expected study hours: {{data.length}}</span>
       </div>
     </paper-card>
   </template>

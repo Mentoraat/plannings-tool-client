@@ -84,12 +84,19 @@
             <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
           </div>
           <div hidden$="{{!registering}}">
-            <paper-input label="Username" type="text" value="{{username}}"></paper-input>
-            <paper-input label="Password" type="password" value="{{password}}"></paper-input>
-            <paper-input label="Retype password" type="password" value="{{secondpassword}}"></paper-input>
+            <paper-input required auto-validate error-message="needs some text!"
+                label="Username" type="text" value="{{username}}"
+                on-keydown="enterAndTryRegister"></paper-input>
+            <paper-input required auto-validate error-message="needs some text!"
+                label="Password" type="password" value="{{password}}"
+                on-keydown="enterAndTryRegister"></paper-input>
+            <paper-input required auto-validate error-message="needs some text!"
+                label="Retype password" type="password" value="{{secondpassword}}"
+                on-keydown="enterAndTryRegister"></paper-input>
 
             <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
             <span class="errormessage" hidden$="{{usernameFree}}">That username already exists.</span>
+            <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
           </div>
         </div>
         <div class="card-actions">
@@ -122,6 +129,7 @@
         this.samePassword = true;
         this.validLogin = true;
         this.usernameFree = true;
+        this.fieldsFilled = true;
         this.registering = false;
       },
       handleResponse: function(request) {
@@ -138,6 +146,16 @@
         }
       },
 
+      enterAndTryRegister: function(event) {
+        this.usernameFree = true;
+        this.fieldsFilled = true;
+
+        // If keyCode is [Enter], try register.
+        if (event.keyCode === 13) {
+          this.tryRegister();
+        }
+      },
+
       tryLogIn: function() {
         this.validLogin = true;
 
@@ -149,10 +167,13 @@
         ajax.generateRequest();
       },
       tryRegister: function() {
-        this.usernameFree = true;
-
         if (this.password !== this.secondpassword) {
           this.samePassword = false;
+          return;
+        }
+
+        if (!(this.username && this.password)) {
+          this.fieldsFilled = false;
           return;
         }
 

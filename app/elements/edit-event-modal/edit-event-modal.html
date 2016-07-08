@@ -63,9 +63,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
 
           <div class="buttons">
-            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
             <paper-button tabindex="0" dialog-dismiss class="cancelButton" title="Don't save the changes"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
             <paper-button tabindex="0" dialog-dismiss on-tap="unplanEvent" raised class="unplanButton" title="unplan"><iron-icon icon="undo"></iron-icon>Unplan</paper-button>
+            <paper-button tabindex="0" dialog-dismiss on-tap="saveEvent" raised class="saveButton" title="Save the changes"><iron-icon icon="save"></iron-icon>Save</paper-button>
             <paper-button tabindex="0" dialog-confirm on-tap="openFinishDialog" class="finishButton" title="You have finished the assignment"><iron-icon icon="check"></iron-icon>Finish</paper-button>
           </div>
         </template>

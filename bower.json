@@ -2,8 +2,8 @@
   "name": "planningtool",
   "version": "0.1.0",
   "dependencies": {
-    "polymer": "Polymer/Polymer#1.2.4",
-    "fullcalendar": "~2.4.0",
+    "polymer": "Polymer/Polymer#1.6.0",
+    "fullcalendar": "2.9.0",
     "iron-elements": "PolymerElements/iron-elements#^1.0.0",
     "jquery-ui": "~1.11.4",
     "moment-timezone": "~0.4.0",
@@ -14,7 +14,7 @@
     "svg-piechart": "~1.0.1",
     "akc-meta": "git://github.com/akc42/akc-meta.git#b0a6bde0e",
     "file-upload": "~1.6.1",
-    "material-progress": "^0.1.2"
+    "material-progress": "0.1.2"
   },
   "devDependencies": {
     "web-component-tester": "*",

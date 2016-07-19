@@ -67,8 +67,11 @@
         var month = months[a.getMonth()];
         var date = a.getDate();
         var hour = a.getHours();
+        hour = hour < 10 ? "0" + hour : hour;
         var min = a.getMinutes();
+        min = min < 10 ? "0" + min : min;
         var sec = a.getSeconds();
+        sec = sec < 10 ? "0" + sec : sec;
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
         return time;
       },

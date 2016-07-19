@@ -35,10 +35,10 @@
     }
   </style>
   <template>
-    <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
+    <paper-card id="card" class="card" heading="{{data.name}} - {{data.course.edition.courseId}}" elevation="2" data-event="{{data}}">
       <div class="card-content">
         <span>Due: {{timeConverter(data.deadline)}}</span>
-        <span>Expected study hours: {{data.length}}</span>
+        <span>Expected time needed: {{data.length}} hours</span>
       </div>
     </paper-card>
     <paper-tooltip for="card" position="bottom" offset="-20" animation-delay="0">{{data.description}}</paper-tooltip>
@@ -93,6 +93,7 @@
       },
 
       dropped: function() {
+        console.log(this.data);
         this.fire('dropped', {index: this.index});
       }
     });

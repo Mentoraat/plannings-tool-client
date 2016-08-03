@@ -88,7 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div>
           <paper-toolbar><span>Finish Occurrence</span></paper-toolbar>
           <paper-input label="How many hours did you work?" floatinglabel type="number" value="{{actualLength}}"></paper-input>
-          <paper-input label="Add your notes here..." floatinglabel type="textarea" value="{{notes}}"></paper-input>
+          <paper-input label="Notes for self reflection (optional)" floatinglabel type="textarea" value="{{notes}}"></paper-input>
           <div class="buttons">
             <paper-button tabindex="0" dialog-dismiss on-tap="unfinishEvent" class="unfinishButton" title="un-finish the assignment"><iron-icon icon="undo"></iron-icon>Unfinish</paper-button>
             <paper-button tabindex="0" dialog-confirm on-tap="finishEvent" class="finishButton" title="Close this window"><iron-icon icon="check"></iron-icon>Save changes</paper-button>

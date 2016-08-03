@@ -35,7 +35,7 @@
     }
   </style>
   <template>
-    <paper-card id="card" class="card" heading="{{data.name}} - {{data.course.edition.courseId}}" elevation="2" data-event="{{data}}">
+    <paper-card id="card" class="card" heading="[{{data.course.edition.courseId}}] {{data.name}}" elevation="2" data-event="{{data}}">
       <div class="card-content">
         <span>Due: {{timeConverter(data.deadline)}}</span>
         <span>Expected time needed: {{data.length}} hours</span>

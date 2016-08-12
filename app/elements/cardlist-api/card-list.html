@@ -98,6 +98,8 @@
       },
 
       reFilter: function() {
+        this.groups = [];
+        this.items = [];
         this.set('groups', this.updateTabs(this.collection));
         this.set('items', this.filterItems(this.collection));
       }

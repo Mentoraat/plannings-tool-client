@@ -28,7 +28,7 @@
         collection: {
           type: Array,
           value: [],
-          observer: 'getData'
+          observer: 'reFilter'
         },
         name: {
           type: String
@@ -79,7 +79,7 @@
         // Force an ALL option to the first position
         courses.unshift("ALL");
 
-        this.groups = courses;
+        return courses;
       },
 
       filterItems: function(items) {
@@ -88,18 +88,18 @@
         }
         // All
         if (this.selected === 0) {
-          this.items = items;
+          return items;
         }
         else {
-          this.items = items.filter(function (item) {
+          return items.filter(function (item) {
             return item.course.edition.courseId === this.groups[this.selected];
           }, this);
         }
       },
 
       reFilter: function() {
-        this.updateTabs(this.collection);
-        this.filterItems(this.collection);
+        this.set('groups', this.updateTabs(this.collection));
+        this.set('items', this.filterItems(this.collection));
       }
     });
   </script>

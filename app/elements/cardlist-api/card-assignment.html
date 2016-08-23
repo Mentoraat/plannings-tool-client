@@ -19,19 +19,25 @@
       --paper-card-header: {
         background-color: var(--paper-card-header-background-color);
         opacity: .65;
-      }
+      };
 
       --paper-card-header-text: {
         font-weight: normal;
         font-size: initial;
         text-align: center;
         color: white;
-      }
+      };
 
       --paper-card-content: {
         padding: 8px;
         text-align: center;
-      }
+      };
+    }
+
+    paper-tooltip {
+      --paper-tooltip: {
+        font-size: 14px;
+      };
     }
   </style>
   <template>
@@ -39,9 +45,11 @@
       <div class="card-content">
         <span>Due: {{timeConverter(data.deadline)}}</span>
         <span>Expected time needed: {{data.length}} hours</span>
+        <hr />
+        <span>{{_truncate(data.description)}}</span>
       </div>
     </paper-card>
-    <paper-tooltip for="card" position="bottom" offset="-20" animation-delay="0">{{data.description}}</paper-tooltip>
+    <paper-tooltip for="card" position="bottom" animation-delay="0">{{data.description}}</paper-tooltip>
   </template>
   <script>
     Polymer({
@@ -79,6 +87,13 @@
       changeColor: function(newValue) {
         this.customStyle['--paper-card-header-background-color'] = newValue;
         this.updateStyles();
+      },
+
+      _truncate: function(description) {
+        if (description.length > 50) {
+          return description.substring(0, 50) + ' ...';
+        }
+        return description;
       },
 
       /*

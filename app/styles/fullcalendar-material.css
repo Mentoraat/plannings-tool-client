@@ -6,6 +6,10 @@
   opacity: 0.65;
 }
 
+.full-calendar {
+  font-family: "Roboto", sans-serif;
+}
+
 /* Bolds the name of the event and inherits the font size */
 .fc-event {
   font-size: inherit;

@@ -35,10 +35,10 @@
     }
   </style>
   <template>
-    <paper-card id="card" class="card" heading="{{data.name}}" elevation="2" data-event="{{data}}">
+    <paper-card id="card" class="card" heading="[{{data.course.edition.courseId}}] {{data.name}}" elevation="2" data-event="{{data}}">
       <div class="card-content">
         <span>Due: {{timeConverter(data.deadline)}}</span>
-        <span>Expected study hours: {{data.length}}</span>
+        <span>Expected time needed: {{data.length}} hours</span>
       </div>
     </paper-card>
     <paper-tooltip for="card" position="bottom" offset="-20" animation-delay="0">{{data.description}}</paper-tooltip>
@@ -67,8 +67,11 @@
         var month = months[a.getMonth()];
         var date = a.getDate();
         var hour = a.getHours();
+        hour = hour < 10 ? "0" + hour : hour;
         var min = a.getMinutes();
+        min = min < 10 ? "0" + min : min;
         var sec = a.getSeconds();
+        sec = sec < 10 ? "0" + sec : sec;
         var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
         return time;
       },

@@ -7,22 +7,23 @@
 <dom-module id="login-popup">
   <template>
     <style>
-      :host {
-        height: 25%;
+      .loginbg {
+        height: 100vh;
+        background: url("../images/planningstool-bg.jpg");
+        background-position: 25% center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
       }
 
-      :host:before {
-        content: '';
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
-      }
       paper-card {
         display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 450px;
-
+        flex: 1;
+        max-width: 450px;
+        width: 100%;
+        padding: 16px;
         --paper-card-actions: {
           text-align: right;
         }
@@ -75,45 +76,47 @@
       <main-panel></main-panel>
     </template>
     <template is="dom-if" if="{{!loggedIn}}" restamp="true">
-      <paper-card heading="{{getHeading(registering)}}">
-        <div class="card-content">
-          <div hidden$="{{registering}}">
-            <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
-            <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
+      <div class="loginbg">
+        <paper-card class="loginCard" heading="{{getHeading(registering)}}">
+          <div class="card-content">
+            <div hidden$="{{registering}}">
+              <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
+              <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
 
-            <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
-          </div>
-          <div hidden$="{{!registering}}">
-            <paper-input required auto-validate error-message="needs some text!"
-                label="Username" type="text" value="{{username}}"
-                on-keydown="enterAndTryRegister"></paper-input>
-            <paper-input required auto-validate error-message="needs some text!"
-                label="Password" type="password" value="{{password}}"
-                on-keydown="enterAndTryRegister"></paper-input>
-            <paper-input required auto-validate error-message="needs some text!"
-                label="Retype password" type="password" value="{{secondpassword}}"
-                on-keydown="enterAndTryRegister"></paper-input>
+              <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
+            </div>
+            <div hidden$="{{!registering}}">
+              <paper-input required auto-validate error-message="needs some text!"
+                  label="Username" type="text" value="{{username}}"
+                  on-keydown="enterAndTryRegister"></paper-input>
+              <paper-input required auto-validate error-message="needs some text!"
+                  label="Password" type="password" value="{{password}}"
+                  on-keydown="enterAndTryRegister"></paper-input>
+              <paper-input required auto-validate error-message="needs some text!"
+                  label="Retype password" type="password" value="{{secondpassword}}"
+                  on-keydown="enterAndTryRegister"></paper-input>
 
-            <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
-            <span class="errormessage" hidden$="{{usernameFree}}">That username already exists.</span>
-            <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
+              <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
+              <span class="errormessage" hidden$="{{usernameFree}}">That username already exists.</span>
+              <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
+            </div>
           </div>
-        </div>
-        <div class="card-actions">
-          <div hidden$="{{registering}}">
-            <paper-button id="forgotpwd1" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
-            <paper-tooltip for="forgotpwd1" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
-            <paper-button on-tap="switchForm" raised>Register</paper-button>
-            <paper-button on-tap="tryLogIn" raised>Log in</paper-button>
+          <div class="card-actions">
+            <div hidden$="{{registering}}">
+              <paper-button id="forgotpwd1" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+              <paper-tooltip for="forgotpwd1" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
+              <paper-button on-tap="switchForm" raised>Register</paper-button>
+              <paper-button on-tap="tryLogIn" raised>Log in</paper-button>
+            </div>
+            <div hidden$="{{!registering}}">
+              <paper-button id="forgotpwd2" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+              <paper-tooltip for="forgotpwd2" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
+              <paper-button on-tap="switchForm" raised>Cancel</paper-button>
+              <paper-button on-tap="tryRegister" raised>Register</paper-button>
+            </div>
           </div>
-          <div hidden$="{{!registering}}">
-            <paper-button id="forgotpwd2" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
-            <paper-tooltip for="forgotpwd2" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
-            <paper-button on-tap="switchForm" raised>Cancel</paper-button>
-            <paper-button on-tap="tryRegister" raised>Register</paper-button>
-          </div>
-        </div>
-      </paper-card>
+        </paper-card>
+      </div>
     </template>
   </template>
   <script>

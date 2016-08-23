@@ -3,6 +3,10 @@
     :host {
       display: block;
     }
+
+    full-calendar {
+      margin: 16px;
+    }
   </style>
   <template>
     <plan-ajax
@@ -86,6 +90,8 @@
                 eventDataTransform: function(event) {
                   event.start = moment.tz(event.start, 'Europe/Amsterdam');
                   event.end = moment.tz(event.end, 'Europe/Amsterdam');
+                  var courseId = (event.assignment ? event.assignment : event).course.edition.courseId;
+                  event.title = '[' + courseId + '] ' + event.title;
 
                   return event;
                 }
@@ -109,7 +115,7 @@
               height: 'auto',
               firstDay: 1,
               columnFormat: 'ddd D/M',
-              titleFormat: "([week] W), MMM D YYYY",
+              titleFormat: "([week] W)",
 
               droppable: true,
 
@@ -223,7 +229,7 @@
       timeSelected: function(start, end) {
         // Else we do not see the backdrop while prompting the title
         this.async(function() {
-          var title = window.prompt('Event title');
+          var title = window.prompt('Enter a task name');
           if (title) {
             this.drop({
               data: {

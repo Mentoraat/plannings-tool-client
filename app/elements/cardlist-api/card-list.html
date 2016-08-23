@@ -12,7 +12,7 @@
       </template>
     </paper-tabs>
     <div id="cards">
-      <template is="dom-repeat" items="{{items}}">
+      <template id="cardsRepeat" is="dom-repeat" items="{{items}}">
         <card-assignment color="{{getColor(user, item)}}" data="{{item}}" index="{{index}}" on-dropped="removeDroppedItem"></card-assignment>
       </template>
     </div>
@@ -66,14 +66,14 @@
       sort: function(one, other) {
         return one.deadline > other.deadline;
       },
-      
+
       updateTabs: function(items) {
         var courses = items.map(function(item) {
           return item.course.edition.courseId;
         });
 
         courses = courses.sort().filter(function(item, pos, ary) {
-          return !pos || item != ary[pos - 1];
+          return !pos || item !== ary[pos - 1];
         });
 
         // Force an ALL option to the first position
@@ -100,6 +100,7 @@
       reFilter: function() {
         this.groups = [];
         this.items = [];
+        this.$.cardsRepeat.render();
         this.set('groups', this.updateTabs(this.collection));
         this.set('items', this.filterItems(this.collection));
       }

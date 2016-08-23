@@ -89,6 +89,12 @@
               <paper-input required auto-validate error-message="needs some text!"
                   label="Username" type="text" value="{{username}}"
                   on-keydown="enterAndTryRegister"></paper-input>
+              <paper-input required auto-validate error-message="needs a number!"
+                  label="Student number" type="number" value="{{studentnumber}}"
+                  on-keydown="enterAndTryRegister"></paper-input>
+              <paper-input required auto-validate error-message="needs an email address!"
+                  label="Student email address" type="email" value="{{email}}"
+                  on-keydown="enterAndTryRegister"></paper-input>
               <paper-input required auto-validate error-message="needs some text!"
                   label="Password" type="password" value="{{password}}"
                   on-keydown="enterAndTryRegister"></paper-input>
@@ -97,7 +103,7 @@
                   on-keydown="enterAndTryRegister"></paper-input>
 
               <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
-              <span class="errormessage" hidden$="{{usernameFree}}">That username already exists.</span>
+              <span class="errormessage" hidden$="{{registerError}}">[[registerErrorMessage]]</span>
               <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
             </div>
           </div>
@@ -131,7 +137,7 @@
       ready: function() {
         this.samePassword = true;
         this.validLogin = true;
-        this.usernameFree = true;
+        this.registerError = true;
         this.fieldsFilled = true;
         this.registering = false;
       },
@@ -150,7 +156,7 @@
       },
 
       enterAndTryRegister: function(event) {
-        this.usernameFree = true;
+        this.registerError = true;
         this.fieldsFilled = true;
 
         // If keyCode is [Enter], try register.
@@ -175,7 +181,7 @@
           return;
         }
 
-        if (!(this.username && this.password)) {
+        if (!(this.username && this.password && this.studentnumber)) {
           this.fieldsFilled = false;
           return;
         }
@@ -186,7 +192,8 @@
         ajax.body = {
           username: this.username.toLowerCase(),
           email: this.email,
-          password: this.password
+          password: this.password,
+          studentnumber: this.studentnumber
         };
         ajax.generateRequest();
       },
@@ -201,8 +208,10 @@
         this.validLogin = false;
       },
 
-      handleRegisterError: function() {
-        this.usernameFree = false;
+      handleRegisterError: function(e) {
+        this.registerError = false;
+        var response = e.detail.request.response;
+        this.registerErrorMessage = response ? response.message : 'Server failure. Please try again later.';
       },
 
       openResetDialog: function() {

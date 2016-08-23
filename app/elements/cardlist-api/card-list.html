@@ -50,8 +50,8 @@
       },
 
       removeDroppedItem: function(event) {
-        let droppedElement = this.items[event.detail.index];
-        let collectionIndex = this.collection.indexOf(droppedElement);
+        var droppedElement = this.items[event.detail.index];
+        var collectionIndex = this.collection.indexOf(droppedElement);
         this.collection.splice(collectionIndex, 1);
         this.reFilter();
       },
@@ -90,11 +90,10 @@
         if (this.selected === 0) {
           return items;
         }
-        else {
-          return items.filter(function (item) {
-            return item.course.edition.courseId === this.groups[this.selected];
-          }, this);
-        }
+
+        return items.filter(function (item) {
+          return item.course.edition.courseId === this.groups[this.selected];
+        }, this);
       },
 
       reFilter: function() {

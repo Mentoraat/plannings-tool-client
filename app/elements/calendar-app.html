@@ -90,6 +90,8 @@
                 eventDataTransform: function(event) {
                   event.start = moment.tz(event.start, 'Europe/Amsterdam');
                   event.end = moment.tz(event.end, 'Europe/Amsterdam');
+                  var courseId = (event.assignment ? event.assignment : event).course.edition.courseId;
+                  event.title = '[' + courseId + '] ' + event.title;
 
                   return event;
                 }
@@ -179,13 +181,6 @@
 
       renderColor: function(event, element) {
         var edition = (event.assignment ? event.assignment : event).course.edition;
-
-        var node = document.createElement("span");
-        var textnode = document.createTextNode(" [" + edition.courseId + "] ");
-        node.appendChild(textnode);
-        node.style.float = "left";
-        node.style.padding = "0 5px 0 0";
-        element[0].firstChild.children[1].appendChild(node);
 
         var fn = function() {
           element.css('background-color', this.user.colors[edition.courseId + ',' + edition.year]);

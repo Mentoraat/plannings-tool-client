@@ -43,8 +43,8 @@
   <template>
     <paper-card id="card" class="card" heading="[{{data.course.edition.courseId}}] {{data.name}}" elevation="2" data-event="{{data}}">
       <div class="card-content">
-        <span>Due: {{timeConverter(data.deadline)}}</span>
-        <span>Expected time needed: {{data.length}} hours</span>
+        <div>Due: {{timeConverter(data.deadline)}}</div>
+        <div>Expected time needed: {{data.length}} hours</div>
         <hr />
         <span>{{_truncate(data.description)}}</span>
       </div>
@@ -69,6 +69,11 @@
       },
 
       timeConverter: function(UNIX_timestamp) {
+        // Personal events do not have a due date
+        if (UNIX_timestamp === 0) {
+          return 'No deadline set';
+        }
+
         var a = new Date(UNIX_timestamp);
         var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
         var year = a.getFullYear();
@@ -90,6 +95,10 @@
       },
 
       _truncate: function(description) {
+        if (!description) {
+          return 'No description provided';
+        }
+
         if (description.length > 50) {
           return description.substring(0, 50) + ' ...';
         }

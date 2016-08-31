@@ -1,3 +1,5 @@
+<link rel="import" href="./create-occurrence-dialog/create-occurrence-dialog.html">
+
 <dom-module id="calendar-app">
   <style>
     :host {
@@ -34,6 +36,7 @@
     <full-calendar id="calendar" config="{{config}}" events="[[eventSources]]"></full-calendar>
 
     <edit-event-modal id="editEvent" event="{{editEvent}}" on-updated="updateEventFromModal" on-removal="removeEventFromCalendar"></edit-event-modal>
+    <create-occurrence-dialog id="personalEventDialog" on-occurrence-created="addOccurrence"></create-occurrence-dialog>
   </template>
   <script>
   (function() {
@@ -229,24 +232,22 @@
       timeSelected: function(start, end) {
         // Else we do not see the backdrop while prompting the title
         this.async(function() {
-          var title = window.prompt('Enter a task name');
-          if (title) {
-            this.drop({
-              data: {
-                course: {
-                  // Magic id to reference user events
-                  uuid: 'USER-' + this.user.user.id
-                },
-                name: title,
-                length: moment.duration(end.diff(start)).asHours()
-              },
-              // Invoked after the POST was succeeded
-              dropped: function() {
-                this.$.calendar.unselect();
-              }.bind(this)
-            }, start);
-          }
+          this.$.personalEventDialog.open(Date.parse(start), Date.parse(end));
         }, 1);
+      },
+      addOccurrence: function(e) {
+        var occur = e.detail.data;
+        occur.course = {
+          // Magic id to reference user events
+          uuid: 'USER-' + this.user.user.id
+        }
+        this.drop({
+          data: occur,
+          // Invoked after the POST was succeeded
+          dropped: function() {
+            this.$.calendar.unselect();
+          }.bind(this)
+        }, e.detail.start);
       },
       updateEventFromModal: function(event) {
         this.updateEvent(event.detail);

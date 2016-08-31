@@ -1,0 +1,66 @@
+<dom-module id="create-occurrence-dialog">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <paper-dialog id="createDialog" transition="paper-dialog-transition-center" on-iron-overlay-closed="submit" modal>
+      <div>
+        <paper-toolbar><span>Create occurrence</span></paper-toolbar>
+        <span>Change the name and length of the occurrence.</span>
+        <paper-input label="event name" floatinglabel type="string" value="{{name}}"></paper-input>
+        <paper-input label="length" floatinglabel type="number" value="{{length}}"></paper-input>
+
+        <div class="buttons">
+          <paper-button tabindex="0" dialog-dismiss class="cancelButton" title="Don't save the changes"><iron-icon icon="clear"></iron-icon>Cancel</paper-button>
+          <paper-button tabindex="0" dialog-confirm class="saveButton" title="Save the changes" raised><iron-icon icon="save"></iron-icon>Save</paper-button>
+        </div>
+      </div>
+    </paper-dialog>
+        
+    </template>
+    <script>
+      Polymer({
+        is: 'create-occurrence-dialog',
+
+        properties: {
+          name: {
+            type: String
+          },
+          length: {
+            type: Number
+          },
+          start: {
+            type: Date
+          },
+          end: {
+            type: Date
+          }
+        },
+
+        open: function(start, end) {
+          this.start = start;
+          this.end = end;
+          this.$.createDialog.open();
+        },
+
+        submit: function(e) {
+          if (e.detail.confirmed) {
+            this.fire('occurrence-created', {
+              data: {
+                name: this.name,
+                length: this.length
+              },
+              start: moment(this.start),
+              end: moment(this.end)
+            });
+          }
+          this.name = "";
+          this.length = 1;
+          this.start = 0;
+          this.end = 0;
+        }
+      });
+    </script>
+</dom-module>

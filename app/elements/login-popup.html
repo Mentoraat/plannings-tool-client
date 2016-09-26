@@ -50,6 +50,13 @@
       .errormessage {
         color: red;
       }
+
+      paper-input[type="number"] {
+        --paper-input-container-input-webkit-spinner: {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
     </style>
     <iron-ajax
       id="ajaxLogin"
@@ -90,7 +97,7 @@
                   label="Username" type="text" value="{{username}}"
                   on-keydown="enterAndTryRegister"></paper-input>
               <paper-input required auto-validate error-message="needs a number!"
-                  label="Student number" type="number" value="{{studentnumber}}"
+                  label="Student number" type="number" value="{{studentnumber}}" min=1000000 max=9999999
                   on-keydown="enterAndTryRegister"></paper-input>
               <paper-input required auto-validate error-message="needs an email address!"
                   label="Student email address" type="email" value="{{email}}"

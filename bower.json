@@ -15,12 +15,16 @@
     "akc-meta": "git://github.com/akc42/akc-meta.git#b0a6bde0e",
     "file-upload": "~1.6.1",
     "material-progress": "^0.1.2",
-    "paper-tabs": "PolymerElements/paper-tabs#^1.6.2"
+    "paper-tabs": "PolymerElements/paper-tabs#^1.6.2",
+    "paper-input": "timvdlippe/paper-input#spinner-mixin"
   },
   "devDependencies": {
     "web-component-tester": "*",
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
   },
   "appPath": "app",
-  "moduleName": "planningtoolApp"
+  "moduleName": "planningtoolApp",
+  "resolutions": {
+    "paper-input": "spinner-mixin"
+  }
 }

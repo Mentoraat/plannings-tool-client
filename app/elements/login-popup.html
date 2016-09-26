@@ -69,6 +69,14 @@
       on-error="handleRegisterError"
       on-response="handleResponse"></iron-ajax>
 
+    <iron-ajax
+      id="ajaxForgotPassword"
+      url="/v1/authentication/resetpassword"
+      method="POST"
+      handle-as="json"
+      content-type="application/json"
+      on-error="handleForgotPasswordError"></iron-ajax>
+
     <akc-meta key="token" value="[[token]]"></akc-meta>
     <akc-meta key="uuid" value="[[uuid]]"></akc-meta>
 
@@ -79,13 +87,13 @@
       <div class="loginbg">
         <paper-card class="loginCard" heading="{{getHeading(registering)}}">
           <div class="card-content">
-            <div hidden$="{{registering}}">
+            <div hidden$="{{!formLoginOpen}}">
               <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
               <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
 
               <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
             </div>
-            <div hidden$="{{!registering}}">
+            <div hidden$="{{!formRegisterOpen}}">
               <paper-input required auto-validate error-message="needs some text!"
                   label="Username" type="text" value="{{username}}"
                   on-keydown="enterAndTryRegister"></paper-input>
@@ -106,19 +114,30 @@
               <span class="errormessage" hidden$="{{registerError}}">[[registerErrorMessage]]</span>
               <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
             </div>
+            <div hidden$="{{!formForgotPassword}}">
+              <paper-input required auto-validate error-message="needs some text!"
+                  label="Username" type="text" value="{{username}}"
+                  on-keydown="removeForgotPasswordMessage"></paper-input>
+              <paper-input required auto-validate error-message="needs some text!"
+                  label="Your email address" type="email" value="{{email}}"
+                  on-keydown="removeForgotPasswordMessage"></paper-input>
+              <span class="errormessage" hidden$="{{forgotPasswordError}}">[[forgotPasswordErrorMessage]]</span>
+            </div>
           </div>
           <div class="card-actions">
-            <div hidden$="{{registering}}">
-              <paper-button id="forgotpwd1" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
-              <paper-tooltip for="forgotpwd1" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
+            <div hidden$="{{!formLoginOpen}}">
+              <paper-button on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
               <paper-button on-tap="switchForm" raised>Register</paper-button>
               <paper-button on-tap="tryLogIn" raised>Log in</paper-button>
             </div>
-            <div hidden$="{{!registering}}">
-              <paper-button id="forgotpwd2" on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
-              <paper-tooltip for="forgotpwd2" position="bottom" animation-delay="0">Not yet implemented. Contact us at gijsw @ ch.tudelft.nl</paper-tooltip>
+            <div hidden$="{{!formRegisterOpen}}">
+              <paper-button on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
               <paper-button on-tap="switchForm" raised>Cancel</paper-button>
               <paper-button on-tap="tryRegister" raised>Register</paper-button>
+            </div>
+            <div hidden$="{{!formForgotPassword}}">
+              <paper-button on-tap="closeForgotPassword" raised>Cancel</paper-button>
+              <paper-button on-tap="sendForgotPassword" raised>Send email</paper-button>
             </div>
           </div>
         </paper-card>
@@ -138,8 +157,11 @@
         this.samePassword = true;
         this.validLogin = true;
         this.registerError = true;
+        this.forgotPasswordError = true;
         this.fieldsFilled = true;
-        this.registering = false;
+        this.formLoginOpen = true;
+        this.formRegisterOpen = false;
+        this.formForgotPassword = false;
       },
       handleResponse: function(request) {
         this.token = request.target.lastResponse.token;
@@ -198,7 +220,17 @@
         ajax.generateRequest();
       },
       switchForm: function() {
-        this.registering = !this.registering;
+        this.formLoginOpen = !this.formLoginOpen;
+        this.formRegisterOpen = !this.formRegisterOpen;
+      },
+      openResetDialog: function() {
+        this.formForgotPassword = true;
+        this.formLoginOpen = false;
+        this.formRegisterOpen = false;
+      },
+      closeForgotPassword: function() {
+        this.formForgotPassword = false;
+        this.formLoginOpen = true;
       },
       getHeading: function(registering) {
         return registering ? 'Register' : 'Log In';
@@ -214,8 +246,21 @@
         this.registerErrorMessage = response ? response.message : 'Server failure. Please try again later.';
       },
 
-      openResetDialog: function() {
-        window.alert('Not yet implemented. Contact us at gijsw @ ch.tudelft.nl');
+      sendForgotPassword: function() {
+        var ajax = this.$.ajaxForgotPassword;
+        ajax.body = {
+          username: this.username.toLowerCase(),
+          email: this.email
+        };
+        ajax.generateRequest();
+      },
+
+      handleForgotPasswordError: function(e) {
+        this.forgotPasswordError = false;
+        this.forgotPasswordErrorMessage = e.detail.request.response.message;
+      },
+      removeForgotPasswordMessage: function() {
+        this.forgotPasswordError = true;
       }
     });
   </script>

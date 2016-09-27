@@ -1,0 +1,92 @@
+<link rel="import" href="account-page.html">
+
+<dom-module id="register-page">
+  <template>
+    <account-page id="account" sub-route="/register" heading="Register" body="[[body]]" on-iron-error="handleRegisterError">
+      <div class="card-content">
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Username" type="text" value="{{username}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs a number!"
+            label="Student number" type="number" value="{{studentnumber}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs an email address!"
+            label="Student email address" type="email" value="{{email}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Password" type="password" value="{{password}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Retype password" type="password" value="{{secondpassword}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+
+        <span class="errormessage" hidden$="{{samePassword}}">The passwords do not match.</span>
+        <span class="errormessage" hidden$="{{registerError}}">[[registerErrorMessage]]</span>
+        <span class="errormessage" hidden$="{{fieldsFilled}}">A field is left empty.</span>
+      </div>
+      <div class="card-actions">
+        <paper-button on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+        <paper-button on-tap="openLoginDialog" raised>Cancel</paper-button>
+        <paper-button on-tap="tryRegister" raised>Register</paper-button>
+      </div>
+    </account-page>
+  </template>
+  <script>
+    Polymer({
+      is: 'register-page',
+      properties: {
+        selected: {
+          type: String,
+          notify: true
+        }
+      },
+      ready: function() {
+        this.samePassword = true;
+        this.registerError = true;
+        this.fieldsFilled = true;
+      },
+      openResetDialog: function() {
+        this.selected = "forgot-password-request";
+      },
+      openLoginDialog: function() {
+        this.selected = "";
+      },
+      enterAndTryRegister: function(event) {
+        this.registerError = true;
+        this.fieldsFilled = true;
+
+        // If keyCode is [Enter], try register.
+        if (event.keyCode === 13) {
+          this.tryRegister();
+        }
+      },
+      tryRegister: function() {
+        if (this.password !== this.secondpassword) {
+          this.samePassword = false;
+          return;
+        }
+
+        if (!(this.username && this.password && this.studentnumber)) {
+          this.fieldsFilled = false;
+          return;
+        }
+
+        this.samePassword = true;
+
+        this.body = {
+          username: this.username.toLowerCase(),
+          email: this.email,
+          password: this.password,
+          studentnumber: this.studentnumber
+        };
+        this.$.account.generateRequest();
+      },
+
+      handleRegisterError: function(e) {
+        this.registerError = false;
+        var response = e.detail.request.response;
+        this.registerErrorMessage = response ? response.message : 'Server failure. Please try again later.';
+      }
+    });
+  </script>
+</dom-module>

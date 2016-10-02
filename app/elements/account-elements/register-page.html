@@ -1,0 +1,103 @@
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="account-page.html">
+
+<dom-module id="register-page">
+  <template>
+    <account-page id="account" sub-route="/register" heading="Register" body="[[body]]" on-iron-error="handleRegisterError" on-iron-success="handleResponse">
+      <div class="card-content">
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Username" type="text" value="{{username}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs a number!"
+            label="Student number" type="number" value="{{studentnumber}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs an email address!"
+            label="Student email address" type="email" value="{{email}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Password" type="password" value="{{password}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+        <paper-input required auto-validate error-message="needs some text!"
+            label="Retype password" type="password" value="{{secondpassword}}"
+            on-keydown="enterAndTryRegister"></paper-input>
+
+        <span class="errormessage" hidden$="{{registerError}}">[[registerErrorMessage]]</span>
+      </div>
+      <div class="card-actions">
+        <paper-button on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+        <paper-button on-tap="openLoginDialog" raised>Cancel</paper-button>
+        <paper-button on-tap="tryRegister" raised>Register</paper-button>
+      </div>
+    </account-page>
+  </template>
+  <script>
+    Polymer({
+      is: 'register-page',
+      properties: {
+        selected: {
+          type: String,
+          notify: true
+        },
+        token: {
+          type: String,
+          notify: true
+        },
+        uuid: {
+          type: String,
+          notify: true
+        }
+      },
+      ready: function() {
+        this.registerError = true;
+      },
+      openResetDialog: function() {
+        this.selected = "forgot-password-request";
+      },
+      openLoginDialog: function() {
+        this.selected = "";
+      },
+      enterAndTryRegister: function(event) {
+        this.registerError = true;
+
+        // If keyCode is [Enter], try register.
+        if (event.keyCode === 13) {
+          this.tryRegister();
+        }
+      },
+      tryRegister: function() {
+        if (this.password !== this.secondpassword) {
+          this.registerError = false;
+          this.registerErrorMessage = 'The passwords do not match.';
+          return;
+        }
+
+        if (!(this.username && this.password && this.studentnumber)) {
+          this.registerError = false;
+          this.registerErrorMessage = 'A field is left empty.';
+          return;
+        }
+
+        this.body = {
+          username: this.username.toLowerCase(),
+          email: this.email,
+          password: this.password,
+          studentnumber: this.studentnumber
+        };
+        this.$.account.generateRequest();
+      },
+
+      handleResponse: function(request) {
+        this.token = request.detail.response.token;
+        this.uuid = request.detail.response.uuid;
+        this.selected = "app";
+      },
+
+      handleRegisterError: function(e) {
+        this.registerError = false;
+        var response = e.detail.request.response;
+        this.registerErrorMessage = response ? response.message : 'Server failure. Please try again later.';
+      }
+    });
+  </script>
+</dom-module>

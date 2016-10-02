@@ -1,54 +1,64 @@
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../assignment-create-panel/card-assignment-create-panel.html">
+<link rel="import" href="../assignment-modal/assignment-modal.html">
+<link rel="import" href="../plan-ajax/plan-ajax.html">
+<link rel="import" href="cardlist-api.html">
+<link rel="import" href="card-chart.html">
+
+
 <dom-module id="card-list-header-panel">
-  <style>
-    :host {
-      display: block;
-    }
-
-    paper-scroll-header-panel {
-      height: 100%;
-    }
-
-    .container {
-      display: flex;
-      justify-content: space-between;
-      flex-direction: column;
-      height: 100%;
-      border-left: 2px solid #e1e1e1;
-    }
-
-    .assignments-title {
-      width: 100%;
-    }
-
-    .assignments-title > div {
-      display: inline;
-    }
-
-    paper-scroll-header-panel {
-      height: 100%;
-    }
-
-    .refresh-button {
-      float: right;
-    }
-
-    .buttons {
-      width: 100%;
-    }
-
-    #cardListContainer, #chart {
-      flex: 1;
-      overflow-y: scroll;
-    }
-
-    paper-button {
-      font-family: "Roboto", "Noto", sans-serif;
-      --paper-button-flat-keyboard-focus: {
-        font-weight: normal;
-      }
-    }
-  </style>
   <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      paper-scroll-header-panel {
+        height: 100%;
+      }
+
+      .container {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        height: 100%;
+        border-left: 2px solid #e1e1e1;
+      }
+
+      .assignments-title {
+        width: 100%;
+      }
+
+      .assignments-title > div {
+        display: inline;
+      }
+
+      paper-scroll-header-panel {
+        height: 100%;
+      }
+
+      .refresh-button {
+        float: right;
+      }
+
+      .buttons {
+        width: 100%;
+      }
+
+      #cardListContainer, #chart {
+        flex: 1;
+        overflow-y: scroll;
+      }
+
+      paper-button {
+        font-family: "Roboto", "Noto", sans-serif;
+        --paper-button-flat-keyboard-focus: {
+          font-weight: normal;
+        }
+      }
+    </style>
     <plan-ajax
       auto
       isuser
@@ -85,7 +95,7 @@
           </card-assignment-create-panel>
         </div>
         <div class="buttons">
-            <assignment-modal></assignment-modal>
+          <assignment-modal></assignment-modal>
         </div>
         <card-chart id="chart"></card-chart>
       </div>

@@ -1,0 +1,30 @@
+<link rel="import" href="../account-elements/login-page.html">
+
+<dom-module id="login-check">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <template is="dom-if" if="[[token]]" restamp="true">
+      <content></content>
+    </template>
+    <template is="dom-if" if="[[!token]]">
+      Logging in...
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'login-check',
+      properties: {
+        token: String
+      },
+      attached: function() {
+        if (!this.token) {
+          this.fire('not-logged-in');
+        }
+      }
+    });
+  </script>
+</dom-module>

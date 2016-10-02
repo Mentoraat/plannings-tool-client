@@ -12,11 +12,12 @@
     "paper-elements": "PolymerElements/paper-elements#^1.0.1",
     "platinum-elements": "PolymerElements/platinum-elements#^1.0.1",
     "svg-piechart": "~1.0.1",
-    "akc-meta": "git://github.com/akc42/akc-meta.git#b0a6bde0e",
     "file-upload": "~1.6.1",
     "material-progress": "^0.1.2",
     "paper-tabs": "PolymerElements/paper-tabs#^1.6.2",
-    "paper-input": "timvdlippe/paper-input#spinner-mixin"
+    "paper-input": "timvdlippe/paper-input#spinner-mixin",
+    "app-route": "polymerelements/app-route#^0.9.2",
+    "iron-lazy-pages": "timvdlippe/iron-lazy-pages#^1.4.1"
   },
   "devDependencies": {
     "web-component-tester": "*",

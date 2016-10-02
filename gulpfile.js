@@ -27,6 +27,7 @@ var url = require('url');
 var proxy = require('proxy-middleware');
 var latex = require('gulp-latex');
 var stylemod = require('gulp-style-modules');
+var historyApiFallback = require('connect-history-api-fallback')
 
 var AUTOPREFIXER_BROWSERS = [
   'ie >= 10',
@@ -280,7 +281,7 @@ gulp.task('serve', ['styles', 'elements', 'images'], function () {
     // https: true,
     server: {
       baseDir: ['.tmp', 'app'],
-      middleware: [proxy(proxyOptions)]
+      middleware: [proxy(proxyOptions), historyApiFallback()]
     }
   });
 

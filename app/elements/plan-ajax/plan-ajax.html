@@ -1,14 +1,4 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
-<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="plan-ajax">
   <template>
@@ -25,13 +15,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       debounce-duration="300"
       on-response="handleResponse"
       ></iron-ajax>
-
-    <akc-meta-query key="token" value="{{token}}"></akc-meta-query>
-    <akc-meta-query key="uuid" value="{{uuid}}"></akc-meta-query>
   </template>
   <script>
   (function() {
     'use strict';
+
+    var ajaxes = [];
+    var token, uuid;
 
     Polymer({
       is: 'plan-ajax',
@@ -83,9 +73,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       attached: function() {
+        this.token = token;
+        this.uuid = uuid;
         if (this.auto) {
           this.generateRequest();
         }
+        ajaxes.push(this);
+      },
+
+      detached: function() {
+        var index = ajaxes.indexOf(this);
+        if (index < 0) {
+          return;
+        }
+        ajaxes.splice(index, 1);
       },
 
       handleResponse: function(event) {
@@ -105,6 +106,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       generateRequest: function() {
         this.$.ajax.generateRequest();
+      },
+
+      setTokenAndUuid: function(newToken, newUuid) {
+        token = newToken;
+        uuid = newUuid;
+        for (var i = 0, l = ajaxes.length; i < l; i++) {
+          ajaxes[i].token = token;
+          ajaxes[i].uuid = uuid;
+        }
       }
     });
   })();

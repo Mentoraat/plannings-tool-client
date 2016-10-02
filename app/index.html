@@ -38,28 +38,23 @@
   <script src="bower_components/webcomponentsjs/webcomponents-lite.js" async></script>
   <!-- endbuild -->
 
-  <link rel="import" href="elements.html" async>
+  <link rel="import" href="main-app.html" async>
 
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild-->
+  <style>
+  html, body {
+    margin: 0;
+  }
+  </style>
 </head>
 
 <body class="fullbleed layout vertical">
   <span id="browser-sync-binding"></span>
 
   <template is="dom-bind" id="app">
-
-  <login-popup></login-popup>
-
-  <!-- <platinum-sw-register auto-register
-                      clients-claim
-                      skip-waiting
-                      on-service-worker-installed="displayInstalledToast">
-    <platinum-sw-cache default-cache-strategy="networkFirst"
-                       cache-config-file="cache-config.json">
-    </platinum-sw-cache>
-  </platinum-sw-register> -->
+    <main-app></main-app>
 </template>
 </body>
 

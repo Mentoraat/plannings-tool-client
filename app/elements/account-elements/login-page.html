@@ -4,7 +4,7 @@
 
 <dom-module id="login-page">
   <template>
-    <account-page id="account" sub-route="" heading="Log in" body="[[body]]" on-iron-error="handleLoginError" on-iron-success="handleResponse">
+    <account-page id="account" sub-route="" heading="Log in" body="[[body]]" on-iron-error="displayLoginError" on-iron-success="handleResponse">
       <div class="card-content">
         <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
         <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
@@ -66,7 +66,7 @@
         this.$.account.generateRequest();
       },
 
-      handleLoginError: function() {
+      displayLoginError: function() {
         this.validLogin = false;
       }
     });

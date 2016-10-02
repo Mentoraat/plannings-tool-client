@@ -12,7 +12,6 @@
     "paper-elements": "PolymerElements/paper-elements#^1.0.1",
     "platinum-elements": "PolymerElements/platinum-elements#^1.0.1",
     "svg-piechart": "~1.0.1",
-    "akc-meta": "git://github.com/akc42/akc-meta.git#b0a6bde0e",
     "file-upload": "~1.6.1",
     "material-progress": "^0.1.2",
     "paper-tabs": "PolymerElements/paper-tabs#^1.6.2",
@@ -24,5 +23,8 @@
     "test-fixture": "PolymerElements/test-fixture#^1.0.0"
   },
   "appPath": "app",
-  "moduleName": "planningtoolApp"
+  "moduleName": "planningtoolApp",
+  "resolutions": {
+    "paper-input": "spinner-mixin"
+  }
 }

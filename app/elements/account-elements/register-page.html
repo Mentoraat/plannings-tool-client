@@ -3,15 +3,15 @@
 <link rel="import" href="account-page.html">
 
 <dom-module id="register-page">
-  <style>
-    paper-input[type="number"] {
-      --paper-input-container-input-webkit-spinner: {
-      -webkit-appearance: none;
-        margin: 0;
-      }
-    }
-  </style>
   <template>
+    <style>
+      paper-input[type="number"] {
+        --paper-input-container-input-webkit-spinner: {
+        -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    </style>
     <account-page id="account" sub-route="/register" heading="Register" body="[[body]]" on-iron-error="handleRegisterError" on-iron-success="handleResponse">
       <div class="card-content">
         <paper-input required auto-validate error-message="needs some text!"

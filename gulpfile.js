@@ -147,7 +147,7 @@ gulp.task('images', function() {
 gulp.task('copy', function() {
   var app = gulp.src([
     'app/*',
-    '!app/elements.html',
+    '!app/main-app.html',
     '!app/test',
     '!app/elements',
     '!app/bower_components',
@@ -208,7 +208,7 @@ gulp.task('html', function() {
 
 // Vulcanize granular configuration
 gulp.task('vulcanize', function() {
-  return gulp.src('app/elements.html')
+  return gulp.src('app/main-app.html')
     .pipe(load.vulcanize({
       stripComments: true,
       inlineCss: true,

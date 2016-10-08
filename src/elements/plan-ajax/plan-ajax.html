@@ -1,0 +1,122 @@
+<link rel="import" href="../../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="plan-ajax">
+  <template>
+    <iron-ajax
+      id="ajax"
+      body="{{body}}"
+      params="{{params}}"
+      method="{{method}}"
+      url="/v1/{{createWithUser(isuser, uuid, refurl)}}"
+      handle-as="{{handleAs}}"
+      last-response="{{lastResponse}}"
+      loading="{{loading}}"
+      headers='{{createHeader(token, contenttype)}}'
+      debounce-duration="300"
+      on-response="handleResponse"
+      ></iron-ajax>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    var ajaxes = [];
+    var token, uuid;
+
+    Polymer({
+      is: 'plan-ajax',
+
+      properties: {
+        contenttype: {
+          type: String,
+          value: 'application/json',
+          notify: true
+        },
+        refurl: {
+          type: String,
+          value: '',
+          notify: true
+        },
+        handleAs: {
+          type: String,
+          value: 'json',
+          notify: true
+        },
+        auto: {
+          type: Boolean,
+          value: false
+        },
+        isuser: {
+          type: Boolean,
+          value: false
+        },
+        loading: {
+          type: Boolean,
+          notify: true,
+          value: false
+        },
+        params: {
+          type: Object,
+          value: {}
+        },
+        method: {
+          type: String,
+          value: 'GET'
+        },
+        lastResponse: {
+          type: Object,
+          notify: true
+        },
+        body: {
+          type: Object
+        }
+      },
+
+      attached: function() {
+        this.token = token;
+        this.uuid = uuid;
+        if (this.auto) {
+          this.generateRequest();
+        }
+        ajaxes.push(this);
+      },
+
+      detached: function() {
+        var index = ajaxes.indexOf(this);
+        if (index < 0) {
+          return;
+        }
+        ajaxes.splice(index, 1);
+      },
+
+      handleResponse: function(event) {
+        this.fire('response', event.detail);
+      },
+
+      createHeader: function(token, contenttype) {
+        return {
+          "Authorization": "Bearer " + token,
+          "Content-type": contenttype
+        };
+      },
+
+      createWithUser: function(isUser, uuid, refurl) {
+        return (isUser ? 'users/USER-' + uuid + (refurl ? '/' : '') : '') + refurl;
+      },
+
+      generateRequest: function() {
+        this.$.ajax.generateRequest();
+      },
+
+      setTokenAndUuid: function(newToken, newUuid) {
+        token = newToken;
+        uuid = newUuid;
+        for (var i = 0, l = ajaxes.length; i < l; i++) {
+          ajaxes[i].token = token;
+          ajaxes[i].uuid = uuid;
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

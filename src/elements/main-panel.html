@@ -1,0 +1,82 @@
+<link rel="import" href="../../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../../bower_components/paper-scroll-header-panel/paper-scroll-header-panel.html">
+<link rel="import" href="../../bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="cardlist-api/card-list-header-panel.html">
+<link rel="import" href="plan-ajax/plan-ajax.html">
+<link rel="import" href="calendar-app.html">
+
+<dom-module id="main-panel">
+  <style>
+    #paperDrawerPanel {
+      --paper-drawer-panel-scrim: {
+        z-index: 1;
+      }
+      --paper-drawer-panel-drawer-container: {
+        z-index: 1;
+      }
+    }
+  </style>
+
+  <template>
+    <plan-ajax
+      auto
+      isuser
+      id="user"
+      refurl=""
+      handle-as="json"
+      content-type="application/json"
+      last-response="{{user}}"></plan-ajax>
+
+    <paper-drawer-panel id="paperDrawerPanel" right-drawer drawer-width="350px">
+      <card-list-header-panel id="cardList" user="{{user}}" on-refresh="refreshAll" drawer></card-list-header-panel>
+
+      <!-- Main Area -->
+      <paper-scroll-header-panel id="paperScrollPanel" main fixed>
+
+        <!-- Main Toolbar -->
+        <paper-toolbar id="mainToolbar">
+          <paper-icon-button id="paperToggle" icon="menu" paper-drawer-toggle></paper-icon-button>
+          <span class="flex"></span>
+
+          <!-- Application name -->
+          <div class="middle middle-container center horizontal layout">
+            <div class="app-name paper-font-title">Planningstool</div>
+          </div>
+
+        </paper-toolbar>
+
+        <!-- Main Content -->
+        <div class="content">
+          <calendar-app id="calendar" user="{{user}}" on-events-refreshed="refreshEvents" on-event-delete="refreshList"></calendar-app>
+        </div>
+      </paper-scroll-header-panel>
+    </paper-drawer-panel>
+  </template>
+  <script>
+    Polymer({
+      is: 'main-panel',
+
+      ready: function() {
+        // Hack to not hide scrollcontainer on Mac only
+        // http://www.sitekickr.com/blog/mac-css-hack/
+        if (navigator.userAgent.indexOf('Mac') > 0) {
+          this.$.paperScrollPanel.$.mainContainer.className += ' macContainer';
+        }
+      },
+
+      refreshEvents: function() {
+        this.$.cardList.refreshChart();
+      },
+
+      refreshAll: function() {
+        this.$.calendar.refetchEvents();
+        this.refreshEvents();
+      },
+
+      refreshList: function() {
+        this.$.cardList.refreshList();
+      }
+    });
+  </script>
+</dom-module>

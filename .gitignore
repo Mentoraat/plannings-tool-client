@@ -1,9 +1,12 @@
-/node_modules
-/dist
-/.tmp
-/.sass-cache
-/app/bower_components
+node_modules/
+dist/
+.tmp/
+bower_components/
+build/
 npm-debug.log
+
+# Generated certificates
+*.pem
 
 # Latex output
 *.log

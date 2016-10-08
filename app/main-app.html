@@ -20,7 +20,7 @@
       }
     </style>
     <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="/:selected" data="{{data}}"></app-route>
+    <app-route route="{{route}}" pattern="/:selected" data="{{data}}" query-params="{{queryParams}}"></app-route>
 
     <plan-ajax id="ajax"></plan-ajax>
 
@@ -35,7 +35,7 @@
         <forgot-password-request-page selected="{{data.selected}}"></forgot-password-request-page>
       </template>
       <template is="iron-lazy-page" data-route="forgot-password-reset">
-        <forgot-password-reset-page selected="{{data.selected}}"></forgot-password-reset-page>
+        <forgot-password-reset-page selected="{{data.selected}}" token="[[queryParams.token]]"></forgot-password-reset-page>
       </template>
       <template is="iron-lazy-page" data-route="app">
         <login-check token="[[token]]" on-not-logged-in="_selectLoginPage">

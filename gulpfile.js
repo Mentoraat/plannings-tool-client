@@ -16,6 +16,7 @@ const gulpif = require('gulp-if');
 const uglify = require('gulp-uglify');
 const cssSlam = require('css-slam').gulp;
 const htmlMinifier = require('gulp-html-minifier');
+const stylemod = require('gulp-style-modules');
 
 // Got problems? Try logging 'em
 // const logging = require('plylog');
@@ -95,11 +96,32 @@ function dependencies() {
     .pipe(project.rejoin());
 }
 
+var styles = [
+  'bower_components/fullcalendar/dist/fullcalendar.min.css',
+  'styles/fullcalendar-material.css'
+];
+
+function modularizeStyles() {
+  var getFileName = function(file) {
+    var fixedPath = file.path.replace('.min', '');
+    var extension = path.extname(file.path);
+    return path.basename(fixedPath, extension) + "-styles";
+  };
+
+  return gulp.src(styles)
+    .pipe(stylemod({
+      filename: getFileName,
+      moduleId: getFileName
+    }))
+    .pipe(gulp.dest('styles'));
+};
+
 // Clean the build directory, split all source and dependency files into streams
 // and process them, and output bundled and unbundled versions of the project
 // with their own service workers
 gulp.task('default', gulp.series([
   clean([global.config.build.rootDirectory]),
+  modularizeStyles,
   project.merge(source, dependencies),
   project.serviceWorker
 ]));

@@ -12,11 +12,14 @@
     "gulp-uglify": "^2.0.0",
     "merge-stream": "^1.0.0",
     "plylog": "^0.4.0",
-    "polymer-build": "^0.4.0"
+    "polymer-build": "^0.4.0",
+    "polyserve": "git+https://github.com/timvdLippe/polyserve.git#proxy"
   },
   "scripts": {
+    "postinstall": "cd ./node_modules/polyserve && npm install && npm run build",
     "build": "node ./node_modules/gulp/bin/gulp.js",
-    "serve": "polyserve --root build/unbundled/ -P h2 --proxy-root v1 --proxy-target localhost --proxy-port 9000"
+    "serve": "node ./node_modules/polyserve/bin/polyserve -P h2 --proxy-root v1 --proxy-target https://localhost:9000",
+    "serve-build": "node ./node_modules/polyserve/bin/polyserve --root build/unbundled/ -P h2 --proxy-root v1 --proxy-target https://localhost:9000"
   },
   "engines": {
     "node": ">=0.10.0"

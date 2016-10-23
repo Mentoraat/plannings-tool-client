@@ -114,7 +114,9 @@ function modularizeStyles() {
       moduleId: getFileName
     }))
     .pipe(gulp.dest('styles'));
-};
+}
+
+gulp.task('modularize-styles', modularizeStyles);
 
 // Clean the build directory, split all source and dependency files into streams
 // and process them, and output bundled and unbundled versions of the project

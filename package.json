@@ -16,7 +16,7 @@
     "polyserve": "git+https://github.com/timvdLippe/polyserve.git#proxy"
   },
   "scripts": {
-    "postinstall": "cd ./node_modules/polyserve && npm install && npm run build -s || true",
+    "postinstall": "node node_modules/gulp/bin/gulp.js modularize-styles && cd ./node_modules/polyserve && npm install && npm run build -s || true",
     "build": "node ./node_modules/gulp/bin/gulp.js",
     "serve": "node ./node_modules/polyserve/bin/polyserve -P h2 --proxy-root v1 --proxy-target http://localhost:9000/v1/",
     "serve-build": "node ./node_modules/polyserve/bin/polyserve --root build/unbundled/ -P h2 --proxy-root v1 --proxy-target http://localhost:9000/v1/"

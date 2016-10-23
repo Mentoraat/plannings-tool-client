@@ -1,0 +1,19 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/main-app.html",
+  "sourceGlobs": [
+   "src/elements/**/*",
+   "images/**/*",
+   "styles/**/*",
+   "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "favicon.ico",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js",
+    "bower_components/jquery/dist/jquery.min.js",
+    "bower_components/jquery-ui/jquery-ui.min.js",
+    "bower_components/moment/min/moment.min.js",
+    "bower_components/moment-timezone/builds/moment-timezone-with-data.min.js"
+  ]
+}

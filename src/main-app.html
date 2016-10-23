@@ -1,0 +1,67 @@
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-lazy-pages/iron-lazy-pages.html">
+
+<!-- Custom elements -->
+<link rel="import" href="elements/main-panel.html">
+<link rel="import" href="elements/account-elements/login-page.html">
+<link rel="import" href="elements/account-elements/register-page.html">
+<link rel="import" href="elements/account-elements/forgot-password-request-page.html">
+<link rel="import" href="elements/account-elements/forgot-password-reset-page.html">
+<link rel="import" href="elements/plan-ajax/login-check.html">
+<link rel="import" href="elements/plan-ajax/plan-ajax.html">
+
+<dom-module id="main-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:selected" data="{{data}}" query-params="{{queryParams}}"></app-route>
+
+    <plan-ajax id="ajax"></plan-ajax>
+
+    <iron-lazy-pages selected="{{data.selected}}" attr-for-selected="data-route" fallback-selection="app">
+      <template is="iron-lazy-page" data-route="">
+        <login-page selected="{{data.selected}}" token="{{token}}" uuid="{{uuid}}"></login-page>
+      </template>
+      <template is="iron-lazy-page" data-route="register">
+        <register-page selected="{{data.selected}}" token="{{token}}" uuid="{{uuid}}"></register-page>
+      </template>
+      <template is="iron-lazy-page" data-route="forgot-password-request">
+        <forgot-password-request-page selected="{{data.selected}}"></forgot-password-request-page>
+      </template>
+      <template is="iron-lazy-page" data-route="forgot-password-reset">
+        <forgot-password-reset-page selected="{{data.selected}}" token="[[queryParams.token]]"></forgot-password-reset-page>
+      </template>
+      <template is="iron-lazy-page" data-route="app">
+        <login-check token="[[token]]" on-not-logged-in="_selectLoginPage">
+          <main-panel></main-panel>
+        </login-check>
+      </template>
+    </iron-lazy-pages>
+  </template>
+  <script>
+    Polymer({
+      is: 'main-app',
+      properties: {
+        token: String,
+        uuid: String,
+        user: Object
+      },
+      observers: [
+        '_processLoggedinUser(token, uuid)'
+      ],
+
+      _processLoggedinUser: function(token, uuid) {
+        this.$.ajax.setTokenAndUuid(token, uuid);
+      },
+
+      _selectLoginPage: function() {
+        this.set('data.selected', '');
+      }
+    });
+  </script>
+</dom-module>

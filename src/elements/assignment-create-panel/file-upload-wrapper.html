@@ -1,0 +1,31 @@
+<link rel="import" href="../../../bower_components/file-upload/file-upload.html">
+
+<dom-module id="file-upload-wrapper">
+  <template>
+    <akc-meta-query key="token" value="{{token}}"></akc-meta-query>
+
+    <h2><content></content></h2>
+    <file-upload on-success="onSuccess" method="POST" target="{{target}}" headers={{createHeader(token)}} droppable raised>Select file</file-upload>
+  </template>
+  <script>
+    Polymer({
+      is: 'file-upload-wrapper',
+
+      properties: {
+        target: {
+          type: String
+        }
+      },
+
+      onSuccess: function() {
+        this.fire('success');
+      },
+
+      createHeader: function(token) {
+        return {
+          "Authorization": "Bearer " + token
+        };
+      }
+    });
+  </script>
+</dom-module>

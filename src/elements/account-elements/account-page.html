@@ -1,0 +1,96 @@
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+
+<dom-module id="account-page">
+  <template>
+    <style>
+      .bg {
+        height: 100vh;
+        background: url("../../../images/planningstool-bg.jpg");
+        background-position: 25% center;
+        background-repeat: no-repeat;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+
+      paper-card {
+        display: block;
+        flex: 1;
+        max-width: 450px;
+        width: 100%;
+        padding: 16px;
+        --paper-card-actions: {
+          text-align: right;
+        }
+      }
+      .card-actions .login-popup {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+
+      paper-button {
+        flex: 1;
+        background-color: #4285f4;
+        color: #f0f0f0;
+        text-align: center;
+      }
+
+      paper-button.clear {
+        flex-grow: 2;
+        background-color: #fff;
+        color: #333;
+      }
+
+      .errormessage {
+        color: red;
+      }
+      .card-actions ::content .card-actions {
+        display: flex;
+      }
+    </style>
+
+    <iron-ajax
+      id="ajax"
+      url="/v1/authentication[[subRoute]]"
+      method="POST"
+      body="[[body]]"
+      handle-as="json"
+      content-type="application/json"
+      on-error="handleError"
+      on-response="handleResponse"></iron-ajax>
+
+    <div class="bg">
+      <paper-card class="loginCard" heading="[[heading]]">
+        <div class="card-content">
+          <content select=".card-content"></content>
+        </div>
+        <div class="card-actions">
+          <content select=".card-actions"></content>
+        </div>
+      </paper-card>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'account-page',
+      properties: {
+        body: Object,
+        heading: String,
+        subRoute: String
+      },
+      handleError: function(e) {
+        this.fire('iron-error', e.detail, {bubbles: false});
+      },
+      handleResponse: function(e) {
+        this.fire('iron-success', e.detail, {bubbles: false});
+      },
+      generateRequest: function() {
+        this.$.ajax.generateRequest();
+      }
+    });
+  </script>
+</dom-module>

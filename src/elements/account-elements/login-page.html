@@ -1,0 +1,74 @@
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="account-page.html">
+
+<dom-module id="login-page">
+  <template>
+    <account-page id="account" sub-route="" heading="Log in" body="[[body]]" on-iron-error="displayLoginError" on-iron-success="handleResponse">
+      <div class="card-content">
+        <paper-input label="Username" type="text" value="{{username}}" on-keydown="enterAndTryLogIn"></paper-input>
+        <paper-input label="Password" type="password" value="{{password}}" on-keydown="enterAndTryLogIn"></paper-input>
+
+        <span class="errormessage" hidden$="{{validLogin}}">Failed to log in.</span>
+      </div>
+      <div class="card-actions">
+        <paper-button on-tap="openResetDialog" class="clear">Forgot password?</paper-button>
+        <paper-button on-tap="openRegisterDialog" raised>Register</paper-button>
+        <paper-button on-tap="tryLogIn" raised>Log in</paper-button>
+      </div>
+    </account-page>
+  </template>
+  <script>
+    Polymer({
+      is: 'login-page',
+      properties: {
+        selected: {
+          type: String,
+          notify: true
+        },
+        token: {
+          type: String,
+          notify: true
+        },
+        uuid: {
+          type: String,
+          notify: true
+        }
+      },
+      ready: function() {
+        this.validLogin = true;
+      },
+      handleResponse: function(request) {
+        this.token = request.detail.response.token;
+        this.uuid = request.detail.response.uuid;
+        this.selected = "app";
+      },
+      openResetDialog: function() {
+        this.selected = "forgot-password-request";
+      },
+      openRegisterDialog: function() {
+        this.selected = "register";
+      },
+      enterAndTryLogIn: function(event) {
+        this.validLogin = true;
+        // If keyCode is [Enter], try the login.
+        if (event.keyCode === 13) {
+          this.tryLogIn();
+        }
+      },
+      tryLogIn: function() {
+        this.validLogin = true;
+
+        this.body = {
+          username: this.username.toLowerCase(),
+          password: this.password
+        };
+        this.$.account.generateRequest();
+      },
+
+      displayLoginError: function() {
+        this.validLogin = false;
+      }
+    });
+  </script>
+</dom-module>
